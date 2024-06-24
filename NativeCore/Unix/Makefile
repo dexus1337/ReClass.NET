@@ -63,7 +63,7 @@ before_debug:
 
 after_debug:
 
-debug: before_debug out_debug32 out_debug64 after_debug
+debug: before_debug out_debug64 after_debug
 
 out_debug32: before_debug $(OBJ32_DEBUG) $(DEP_DEBUG)
 	$(CXX) $(LIBDIR_DEBUG) -o $(OUT32_DEBUG) $(OBJ32_DEBUG) $(LDFLAGS32_DEBUG) $(LIB_DEBUG)
@@ -206,7 +206,7 @@ before_release:
 
 after_release:
 
-release: before_release out_release32 out_release64 after_release
+release: before_release out_release64 after_release
 
 out_release32: before_release $(OBJ32_RELEASE) $(DEP_RELEASE)
 	$(CXX) $(LIBDIR_RELEASE) -o $(OUT32_RELEASE) $(OBJ32_RELEASE) $(LDFLAGS32_RELEASE) $(LIB_RELEASE)
