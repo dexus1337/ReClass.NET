@@ -55,6 +55,11 @@ This is a port of ReClass to the .NET platform with lots of additional features.
 - Unreal Plugin (not available anymore) (by [DrP3pp3r](https://github.com/DrP3pp3r))
 - [DriverReader](https://github.com/niemand-sec/ReClass.NET-DriverReader) (by [Niemand](https://github.com/niemand-sec))
 
+- [Playstation 4: Frame4 Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-Frame4Plugin)
+- [Playstation 4: PS4Debug Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-PS4DebugPlugin)
+
+
+
 To install a plugin just copy it in the "Plugins" folder.
 If you want to develop your own plugin just learn from the code of the [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin) and [Frostbite Plugin](https://github.com/ReClassNET/ReClass.NET-FrostbitePlugin) repositories. If you have developed a nice plugin, leave me a message and I will add it to the list above.
 
