@@ -30,6 +30,7 @@ namespace ReClassNET.Forms
 		public ProcessBrowserForm(string previousProcess)
 		{
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			processDataGridView.AutoGenerateColumns = false;
 

@@ -21,6 +21,7 @@ namespace ReClassNET.Forms
 			allClasses = classes.ToList();
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			ShowFilteredClasses();
 		}

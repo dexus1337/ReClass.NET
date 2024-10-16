@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
@@ -25,6 +25,7 @@ namespace ReClassNET.Forms
 		public LogForm()
 		{
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			entriesDataGridView.AutoGenerateColumns = false;
 			entriesDataGridView.DataSource = items;

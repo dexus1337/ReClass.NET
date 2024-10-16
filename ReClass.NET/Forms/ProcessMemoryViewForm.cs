@@ -24,6 +24,7 @@ namespace ReClassNET
 			this.classesView = classesView;
 
 			InitializeComponent();
+      _ = new DarkModeCS(this);
 
 			sectionsDataGridView.AutoGenerateColumns = false;
 

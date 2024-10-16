@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
@@ -33,6 +33,7 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			valueTypeComboBox.SetAvailableValues(
 				ScanValueType.Byte,

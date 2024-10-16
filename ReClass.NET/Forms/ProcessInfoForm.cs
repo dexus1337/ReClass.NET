@@ -27,6 +27,7 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			tabControl.ImageList = new ImageList();
 			tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Category);

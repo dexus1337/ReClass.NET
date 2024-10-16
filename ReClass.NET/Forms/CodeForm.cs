@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
@@ -26,6 +26,7 @@ namespace ReClassNET.Forms
 			Contract.Requires(enums != null);
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			codeRichTextBox.SetInnerMargin(5, 5, 5, 5);
 

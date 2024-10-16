@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using ReClassNET.UI;
@@ -16,6 +16,7 @@ namespace ReClassNET.Forms
 			this.currentSize = currentSize;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			bytesNumericUpDown.Maximum = int.MaxValue;
 

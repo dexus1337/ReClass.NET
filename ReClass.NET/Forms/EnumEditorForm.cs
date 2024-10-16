@@ -18,6 +18,7 @@ namespace ReClassNET.Forms
 			Contract.Requires(@enum != null);
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			this.@enum = @enum;
 

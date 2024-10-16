@@ -35,6 +35,7 @@ namespace ReClassNET.Forms
 			Contract.Requires(pluginManager != null);
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			// Plugins Tab
 

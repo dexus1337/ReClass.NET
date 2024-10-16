@@ -75,6 +75,7 @@ namespace ReClassNET.Forms
 			Contract.Ensures(currentProject != null);
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 			UpdateWindowTitle();
 
 			mainMenuStrip.Renderer = new CustomToolStripProfessionalRenderer(true, true);

@@ -26,6 +26,7 @@ namespace ReClassNET.Forms
 			this.typeMapping = typeMapping;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			var imageList = new ImageList();
 			imageList.Images.Add(Properties.Resources.B16x16_Gear);

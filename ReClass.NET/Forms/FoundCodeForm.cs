@@ -37,6 +37,7 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			foundCodeDataGridView.AutoGenerateColumns = false;
 			infoTextBox.Font = new Font(FontFamily.GenericMonospace, infoTextBox.Font.Size);

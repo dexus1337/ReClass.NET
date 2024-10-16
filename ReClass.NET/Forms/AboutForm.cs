@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ReClassNET.UI;
+using DarkModeForms;
 
 namespace ReClassNET.Forms
 {
@@ -10,6 +11,7 @@ namespace ReClassNET.Forms
 		public AboutForm()
 		{
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			bannerBox.Icon = Properties.Resources.ReClassNet.ToBitmap();
 			bannerBox.Title = Constants.ApplicationName;

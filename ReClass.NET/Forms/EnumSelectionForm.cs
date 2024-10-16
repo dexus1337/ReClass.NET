@@ -21,6 +21,7 @@ namespace ReClassNET.Forms
 			this.project = project;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			ShowFilteredEnums();
 		}

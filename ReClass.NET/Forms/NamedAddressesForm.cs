@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -20,6 +20,7 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			DisplayNamedAddresses();
 		}

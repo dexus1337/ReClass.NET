@@ -44,6 +44,7 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
+			_ = new DarkModeForms.DarkModeCS(this);
 
 			toolStripPanel.Renderer = new CustomToolStripProfessionalRenderer(true, false);
 			menuToolStrip.Renderer = new CustomToolStripProfessionalRenderer(false, false);
