@@ -102,16 +102,23 @@ RUN apt-get update \
 [Youtube Playlist](https://www.youtube.com/playlist?list=PLO246BmtoITanq3ygMCL8_w0eov4D8hjk)
 
 ## Screenshots
+
 Process Selection
+
 ![image](https://github.com/user-attachments/assets/f7b327dc-50d7-44d5-b033-9c398cb5e999)
+
 PS4
+
 ![image](https://github.com/user-attachments/assets/c8501516-482d-4264-9128-c5542183fcb8)
+
 
 Memory Viewer  
 ![image](https://github.com/user-attachments/assets/d0ea7cc9-e89e-427f-965a-d57061531b5d)
 
+
 Memory Scanner  
 ![image](https://github.com/user-attachments/assets/7805d290-1406-42a1-b87f-891508b2d0ed)
+
 
 Pointer Preview  
 ![](https://abload.de/img/memorypreview2gsfp.jpg)
@@ -124,11 +131,13 @@ Plugins
 ![image](https://github.com/user-attachments/assets/83532067-00e2-4a23-8e83-cd2cbfc540e1)
 ![image](https://github.com/user-attachments/assets/3c0843d3-c48a-4b27-b23b-cb953f32a380)
 
+
 Settings  
 ![image](https://github.com/user-attachments/assets/338b41ee-69e7-411c-8e57-3729e70378b7)
 ![image](https://github.com/user-attachments/assets/219f47b8-7fdf-49c7-99bf-9b64f82f3ee0)
 ![image](https://github.com/user-attachments/assets/a561947e-3660-4705-9c64-4f615a020f50)
 ![image](https://github.com/user-attachments/assets/aede026b-b875-429a-8ef2-5eceb6b47f21)
+
 
 ## Authors / Special Thanks
 - [KN4CK3R](https://github.com/KN4CK3R)
