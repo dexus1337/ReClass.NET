@@ -64,7 +64,7 @@ To install a plugin just copy it in the "Plugins" folder.
 If you want to develop your own plugin just learn from the code of the [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin) and [Frostbite Plugin](https://github.com/ReClassNET/ReClass.NET-FrostbitePlugin) repositories. If you have developed a nice plugin, leave me a message and I will add it to the list above.
 
 ## Installation
-Just download the [latest version](https://github.com/ReClassNET/ReClass.NET/releases) and start the x86 / x64 version or let the launcher decide.
+Just download the [latest version](https://github.com/TetzkatLipHoka/ReClass.NET/releases) and start the x86 / x64 version or let the launcher decide.
 
 ## Tips
 - Lots of elements have a context menu. Just right-click it and see what you can do there.
@@ -102,14 +102,16 @@ RUN apt-get update \
 [Youtube Playlist](https://www.youtube.com/playlist?list=PLO246BmtoITanq3ygMCL8_w0eov4D8hjk)
 
 ## Screenshots
-Process Selection  
-![](https://abload.de/img/processgya2k.jpg)
+Process Selection
+![image](https://github.com/user-attachments/assets/f7b327dc-50d7-44d5-b033-9c398cb5e999)
+PS4
+![image](https://github.com/user-attachments/assets/c8501516-482d-4264-9128-c5542183fcb8)
 
 Memory Viewer  
-![](https://abload.de/img/memoryviewerb4y1s.jpg)
+![image](https://github.com/user-attachments/assets/d0ea7cc9-e89e-427f-965a-d57061531b5d)
 
 Memory Scanner  
-![](https://abload.de/img/scannerytub1.jpg)
+![image](https://github.com/user-attachments/assets/7805d290-1406-42a1-b87f-891508b2d0ed)
 
 Pointer Preview  
 ![](https://abload.de/img/memorypreview2gsfp.jpg)
@@ -119,11 +121,14 @@ Code Generator
 ![](https://abload.de/img/codegenerator24qzce.jpg)
 
 Plugins  
-![](https://abload.de/img/plugin1mda4r.jpg)
-![](https://abload.de/img/plugin25dxk1.jpg)
+![image](https://github.com/user-attachments/assets/83532067-00e2-4a23-8e83-cd2cbfc540e1)
+![image](https://github.com/user-attachments/assets/3c0843d3-c48a-4b27-b23b-cb953f32a380)
 
 Settings  
-![](https://abload.de/img/settings8sz4b.jpg)
+![image](https://github.com/user-attachments/assets/338b41ee-69e7-411c-8e57-3729e70378b7)
+![image](https://github.com/user-attachments/assets/219f47b8-7fdf-49c7-99bf-9b64f82f3ee0)
+![image](https://github.com/user-attachments/assets/a561947e-3660-4705-9c64-4f615a020f50)
+![image](https://github.com/user-attachments/assets/aede026b-b875-429a-8ef2-5eceb6b47f21)
 
 ## Authors / Special Thanks
 - [KN4CK3R](https://github.com/KN4CK3R)
