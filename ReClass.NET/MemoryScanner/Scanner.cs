@@ -346,25 +346,25 @@ namespace ReClassNET.MemoryScanner
 			if (sections.Count > 0)
 			{
 				var address = sections[0].Start;
-				var size = sections[0].Size.ToInt32();
+				long size = sections[0].Size.ToInt64(); // ToInt32
 
 				for (var i = 1; i < sections.Count; ++i)
 				{
 					var section = sections[i];
-					if (address + size != section.Start)
+					if (address + (int)size != section.Start)
 					{
-						regions.Add(new ConsolidatedMemoryRegion { Address = address, Size = size });
+						regions.Add(new ConsolidatedMemoryRegion { Address = address, Size = (int)size });
 
 						address = section.Start;
-						size = section.Size.ToInt32();
+						size = section.Size.ToInt64(); // ToInt32
 					}
 					else
 					{
-						size += section.Size.ToInt32();
+						size += section.Size.ToInt64(); // ToInt32
 					}
 				}
 
-				regions.Add(new ConsolidatedMemoryRegion { Address = address, Size = size });
+				regions.Add(new ConsolidatedMemoryRegion { Address = address, Size = (int)size });
 			}
 
 			return regions;
