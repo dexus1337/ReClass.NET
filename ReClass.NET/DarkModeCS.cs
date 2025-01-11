@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System.Drawing;
 using System;
 using System.ComponentModel;
@@ -311,8 +311,11 @@ namespace DarkModeForms
 		/// <summary>Option to make all Panels Borders Rounded</summary>
 		public bool RoundedPanels { get; set; } = false;
 
-		/// <summary>The PArent form for them all.</summary>
+		/// <summary>The Parent form for them all.</summary>
 		public Form OwnerForm { get; set; }
+
+		/// <summary>The Parent components.</summary>
+		public ComponentCollection Components { get; set; }
 
 		/// <summary>Windows Colors. Can be customized.</summary>
 		public OSThemeColors OScolors { get; set; }
@@ -331,6 +334,7 @@ namespace DarkModeForms
 
 			//Sets the Properties:
 			OwnerForm = _Form;
+			Components = null;
 			ColorizeIcons = _ColorizeIcons;
 			RoundedPanels = _RoundedPanels;
 
@@ -420,6 +424,12 @@ namespace DarkModeForms
 							};
 						OwnerForm.ControlAdded -= ownerFormControlAdded; //prevent uncontrolled multiple addition
 						OwnerForm.ControlAdded += ownerFormControlAdded;
+					}
+
+					if (Components != null)
+					{
+						foreach (var item in Components.OfType<ContextMenuStrip>())
+    					    ThemeControl(item);
 					}
 				}
 			}
@@ -545,6 +555,10 @@ namespace DarkModeForms
 			if (control is ComboBox comboBox)
 			{
 				// Fixing a glitch that makes all instances of the ComboBox showing as having a Selected value, even when they dont
+				if (comboBox.DropDownStyle != ComboBoxStyle.DropDownList)
+				{
+					comboBox.SelectionStart = comboBox.Text.Length;
+				}
 				control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
 
 				// Fixes a glitch showing the Combo Backgroud white when the control is Disabled:

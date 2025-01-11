@@ -23,6 +23,7 @@ namespace ReClassNET.Forms
 
 		private bool isScanning = false;
 		private DateTime lastRefineTime;
+		public DarkModeForms.DarkModeCS darkMode = null;  
 
 		public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process)
 		{
@@ -33,7 +34,11 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+        Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
 
 			valueTypeComboBox.SetAvailableValues(
 				ScanValueType.Byte,

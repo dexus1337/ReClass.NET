@@ -14,6 +14,7 @@ namespace ReClassNET.Forms
 	{
 		private readonly Settings settings;
 		private readonly CppTypeMapping typeMapping;
+		public DarkModeForms.DarkModeCS darkMode = null;  
 
 		public TabControl SettingsTabControl => settingsTabControl;
 
@@ -23,10 +24,14 @@ namespace ReClassNET.Forms
 			Contract.Requires(typeMapping != null);
 
 			this.settings = settings;
-			this.typeMapping = typeMapping;
+			this.typeMapping = typeMapping;		
 
 			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+                Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
 
 			var imageList = new ImageList();
 			imageList.Images.Add(Properties.Resources.B16x16_Gear);

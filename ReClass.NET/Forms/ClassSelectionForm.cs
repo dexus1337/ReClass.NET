@@ -11,6 +11,7 @@ namespace ReClassNET.Forms
 	public partial class ClassSelectionForm : IconForm
 	{
 		private readonly List<ClassNode> allClasses;
+		public DarkModeForms.DarkModeCS darkMode = null; 
 
 		public ClassNode SelectedClass => classesListBox.SelectedItem as ClassNode;
 
@@ -20,8 +21,12 @@ namespace ReClassNET.Forms
 
 			allClasses = classes.ToList();
 
-			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+			InitializeComponent();     
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+        Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};      
 
 			ShowFilteredClasses();
 		}

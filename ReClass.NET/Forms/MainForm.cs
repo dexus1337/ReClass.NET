@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -69,13 +70,21 @@ namespace ReClassNET.Forms
 			Text = title;
 		}
 
+		public DarkModeForms.DarkModeCS darkMode = null;
 		public MainForm()
 		{
 			Contract.Ensures(pluginManager != null);
 			Contract.Ensures(currentProject != null);
 
 			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+				Components = components != null ? components.Components:null,
+				//[Optional] Choose your preferred color mode here:
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
+
 			UpdateWindowTitle();
 
 			mainMenuStrip.Renderer = new CustomToolStripProfessionalRenderer(true, true);

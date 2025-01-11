@@ -15,6 +15,7 @@ namespace ReClassNET
 	public partial class ProcessMemoryViewer : IconForm
 	{
 		private readonly ClassNodeView classesView;
+		public DarkModeForms.DarkModeCS darkMode = null;  
 
 		public ProcessMemoryViewer(RemoteProcess process, ClassNodeView classesView)
 		{
@@ -24,7 +25,11 @@ namespace ReClassNET
 			this.classesView = classesView;
 
 			InitializeComponent();
-      _ = new DarkModeCS(this);
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+        Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
 
 			sectionsDataGridView.AutoGenerateColumns = false;
 

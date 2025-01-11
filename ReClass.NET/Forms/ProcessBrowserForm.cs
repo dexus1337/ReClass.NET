@@ -26,11 +26,16 @@ namespace ReClassNET.Forms
 
 		/// <summary>Gets if symbols should get loaded.</summary>
 		public bool LoadSymbols => loadSymbolsCheckBox.Checked;
+		public DarkModeForms.DarkModeCS darkMode = null;
 
 		public ProcessBrowserForm(string previousProcess)
 		{
 			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+        Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
 
 			processDataGridView.AutoGenerateColumns = false;
 

@@ -8,6 +8,7 @@ namespace ReClassNET.Forms
 	public partial class InputBytesForm : IconForm
 	{
 		private readonly int currentSize;
+		public DarkModeForms.DarkModeCS darkMode = null;   
 
 		public int Bytes => (int)bytesNumericUpDown.Value;
 
@@ -16,7 +17,11 @@ namespace ReClassNET.Forms
 			this.currentSize = currentSize;
 
 			InitializeComponent();
-			_ = new DarkModeForms.DarkModeCS(this);
+			darkMode = new DarkModeForms.DarkModeCS(this)
+			{
+        Components = components != null ? components.Components:null,
+				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
+			};
 
 			bytesNumericUpDown.Maximum = int.MaxValue;
 
