@@ -171,6 +171,7 @@ namespace ReClassNET.Forms
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolbarMenuItem = new ReClassNET.Controls.TypeToolStripMenuItem();
 			this.redoToolbarMenuItem = new ReClassNET.Controls.TypeToolStripMenuItem();
+                        this.searchClassValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -389,6 +390,7 @@ namespace ReClassNET.Forms
             this.initClassToolStripMenuItem,
             this.dissectNodesToolStripMenuItem,
             this.toolStripSeparator9,
+            this.searchClassValuesToolStripMenuItem,
             this.searchForEqualValuesToolStripMenuItem,
             this.toolStripSeparator15,
             this.findOutWhatAccessesThisAddressToolStripMenuItem,
@@ -1398,6 +1400,14 @@ namespace ReClassNET.Forms
 			this.aboutToolStripMenuItem.Text = "About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
+			// searchClassValuesToolStripMenuItem
+			// 
+			this.searchClassValuesToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Eye;
+			this.searchClassValuesToolStripMenuItem.Name = "searchClassValuesToolStripMenuItem";
+			this.searchClassValuesToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+			this.searchClassValuesToolStripMenuItem.Text = "Search class values...";
+			this.searchClassValuesToolStripMenuItem.Click += new System.EventHandler(this.searchClassValuesToolStripMenuItem_Click);
+			// 
 			// undoToolbarMenuItem
 			// 
 			this.undoToolbarMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Undo;
@@ -1598,5 +1608,6 @@ namespace ReClassNET.Forms
 		private TypeToolStripMenuItem initClassFromRTTIToolStripBarMenuItem;
 		private TypeToolStripMenuItem undoToolbarMenuItem;
 		private TypeToolStripMenuItem redoToolbarMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem searchClassValuesToolStripMenuItem;
 	}
 }

@@ -470,7 +470,7 @@ namespace ReClassNET.Controls
 
 						return true;
 					}
-					if ((key == Keys.Down || key == Keys.Up) && selectionCaret != null && selectionAnchor != null)
+					if ((key == Keys.Down || key == Keys.Up || key == Keys.Home || key == Keys.End) && selectionCaret != null && selectionAnchor != null)
 					{
 						HotSpot toSelect;
 						bool isAtEnd;
@@ -489,7 +489,7 @@ namespace ReClassNET.Controls
 							toSelect = temp.FirstOrDefault();
 							isAtEnd = toSelect != null && toSelect == temp.LastOrDefault();
 						}
-						else
+						else if (key == Keys.Up)
 						{
 							var temp = query
 								.TakeWhile(h => h.Node != selectionCaret.Node)
@@ -498,7 +498,23 @@ namespace ReClassNET.Controls
 							toSelect = temp.LastOrDefault();
 							isAtEnd = toSelect != null && toSelect == temp.FirstOrDefault();
 						}
+						else if (key == Keys.Home)
+						{
+							var temp = query
+								.Skip(1) // skip top-level class node
+								.ToList();
 
+							toSelect = temp.FirstOrDefault();
+							isAtEnd = toSelect != null && toSelect == temp.FirstOrDefault();
+						}
+						else
+						{
+							var temp = query.ToList();
+
+							toSelect = temp.LastOrDefault();
+							isAtEnd = toSelect != null && toSelect == temp.LastOrDefault();
+						}
+ 
 						if (toSelect != null && !(toSelect.Node is ClassNode))
 						{
 							if (modifier != Keys.Shift)
