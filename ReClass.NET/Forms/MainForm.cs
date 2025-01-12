@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,6 +22,7 @@ using ReClassNET.Project;
 using ReClassNET.UI;
 using ReClassNET.Util;
 using ReClassNET.Util.Conversion;
+using SD.Tools.Algorithmia.Commands;
 
 namespace ReClassNET.Forms
 {
@@ -106,7 +106,10 @@ namespace ReClassNET.Forms
 			};
 
 			pluginManager = new PluginManager(new DefaultPluginHost(this, Program.RemoteProcess, Program.Logger));
+
+			CommandQueueManagerSingleton.GetInstance().CommandQueueActionPerformed += OnCommandQueueActionPerformed;
 		}
+
 
 		protected override void OnLoad(EventArgs e)
 		{
@@ -146,6 +149,8 @@ namespace ReClassNET.Forms
 			{
 				AttachToProcess(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo]);
 			}
+
+			SetStateOfUndoRedoButtons();
 		}
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
@@ -1073,7 +1078,36 @@ namespace ReClassNET.Forms
 			{
 				return;
 			}
+
+			var cmd = new UndoablePeriodCommand("InitClassFromRTTI");
+			CommandQueueManagerSingleton.GetInstance().BeginUndoablePeriod(cmd);
 			memoryViewControl.InitCurrentClassFromRTTI(node as ClassNode);
+			CommandQueueManagerSingleton.GetInstance().EndUndoablePeriod(cmd);
+		}
+
+
+		private void SetStateOfUndoRedoButtons()
+		{
+			undoToolbarMenuItem.Enabled = CommandQueueManagerSingleton.GetInstance().CanUndo(Program.CommandQueueID);
+			redoToolbarMenuItem.Enabled = CommandQueueManagerSingleton.GetInstance().CanDo(Program.CommandQueueID);
+		}
+
+
+		private void OnCommandQueueActionPerformed(object sender, CommandQueueActionPerformedEventArgs e)
+		{
+			SetStateOfUndoRedoButtons();
+		}
+
+
+		private void undoToolbarMenuItem_Click(object sender, EventArgs e)
+		{
+			CommandQueueManagerSingleton.GetInstance().UndoLastCommand();
+		}
+
+
+		private void redoToolbarMenuItem_Click(object sender, EventArgs e)
+		{
+			CommandQueueManagerSingleton.GetInstance().RedoLastCommand();
 		}
 	}
 }
