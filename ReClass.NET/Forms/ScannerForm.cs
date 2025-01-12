@@ -36,7 +36,7 @@ namespace ReClassNET.Forms
 		private CancellationTokenSource cts;
 
 		private string addressFilePath;
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public ScannerForm(RemoteProcess process)
 		{

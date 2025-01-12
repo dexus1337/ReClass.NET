@@ -8,7 +8,7 @@ namespace ReClassNET.Forms
 {
 	public partial class AboutForm : IconForm
 	{
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public AboutForm()
 		{

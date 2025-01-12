@@ -29,7 +29,7 @@ namespace ReClassNET.Forms
 		private volatile bool acceptNewRecords = true;
 
 		public event StopEventHandler Stop;
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public FoundCodeForm(RemoteProcess process, IntPtr address, HardwareBreakpointTrigger trigger)
 		{

@@ -12,7 +12,7 @@ namespace ReClassNET.Forms
 	public partial class EnumEditorForm : IconForm
 	{
 		private readonly EnumDescription @enum;
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public EnumEditorForm(EnumDescription @enum)
 		{

@@ -14,7 +14,7 @@ namespace ReClassNET.Forms
 	{
 		private readonly Settings settings;
 		private readonly CppTypeMapping typeMapping;
-		public DarkModeForms.DarkModeCS darkMode = null;  
+		public static DarkModeForms.DarkModeCS darkMode = null;  
 
 		public TabControl SettingsTabControl => settingsTabControl;
 

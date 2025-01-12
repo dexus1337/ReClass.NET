@@ -70,7 +70,10 @@ namespace ReClassNET.Forms
 			Text = title;
 		}
 
-		public DarkModeForms.DarkModeCS darkMode = null;
+		//public static DarkModeForms.DarkModeCS darkMode = null;
+
+		public static DarkModeForms.DarkModeCS darkMode = null;
+
 		public MainForm()
 		{
 			Contract.Ensures(pluginManager != null);

@@ -15,7 +15,7 @@ namespace ReClassNET
 	public partial class ProcessMemoryViewer : IconForm
 	{
 		private readonly ClassNodeView classesView;
-		public DarkModeForms.DarkModeCS darkMode = null;  
+		public static DarkModeForms.DarkModeCS darkMode = null;  
 
 		public ProcessMemoryViewer(RemoteProcess process, ClassNodeView classesView)
 		{

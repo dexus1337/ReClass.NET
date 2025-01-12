@@ -11,7 +11,7 @@ namespace ReClassNET.Forms
 	public partial class EnumSelectionForm : IconForm
 	{
 		private readonly ReClassNetProject project;
-		public DarkModeForms.DarkModeCS darkMode = null;   
+		public static DarkModeForms.DarkModeCS darkMode = null;   
 
 		public EnumDescription SelectedItem => itemListBox.SelectedItem as EnumDescription;
 

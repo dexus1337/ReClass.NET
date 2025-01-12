@@ -12,7 +12,7 @@ namespace ReClassNET.Forms
 	public partial class NamedAddressesForm : IconForm
 	{
 		private readonly RemoteProcess process;
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public NamedAddressesForm(RemoteProcess process)
 		{

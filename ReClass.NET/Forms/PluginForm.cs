@@ -30,7 +30,7 @@ namespace ReClassNET.Forms
 			}
 		}
 
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		internal PluginForm(PluginManager pluginManager)
 		{

@@ -26,7 +26,7 @@ namespace ReClassNET.Forms
 
 		/// <summary>Gets if symbols should get loaded.</summary>
 		public bool LoadSymbols => loadSymbolsCheckBox.Checked;
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public ProcessBrowserForm(string previousProcess)
 		{

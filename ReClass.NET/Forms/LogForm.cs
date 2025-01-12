@@ -21,7 +21,7 @@ namespace ReClassNET.Forms
 		}
 
 		private readonly List<LogItem> items = new List<LogItem>();
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
 
 		public LogForm()
 		{

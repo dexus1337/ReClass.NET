@@ -19,7 +19,7 @@ namespace ReClassNET.Forms
 {
 	public partial class CodeForm : IconForm
 	{
-		public DarkModeForms.DarkModeCS darkMode = null;
+		public static DarkModeForms.DarkModeCS darkMode = null;
     
 		public CodeForm(ICodeGenerator generator, IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger)
 		{
