@@ -29,7 +29,7 @@ namespace ReClassNET.Forms
 		private volatile bool acceptNewRecords = true;
 
 		public event StopEventHandler Stop;
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public FoundCodeForm(RemoteProcess process, IntPtr address, HardwareBreakpointTrigger trigger)
 		{
@@ -38,12 +38,6 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
-
 			foundCodeDataGridView.AutoGenerateColumns = false;
 			infoTextBox.Font = new Font(FontFamily.GenericMonospace, infoTextBox.Font.Size);
 

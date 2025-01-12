@@ -7,17 +7,12 @@ namespace ReClassNET.Forms
 {
 	public partial class AboutForm : IconForm
 	{
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public AboutForm()
 		{
 		  InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-				Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
-
+			
 			bannerBox.Icon = Properties.Resources.ReClassNet.ToBitmap();
 			bannerBox.Title = Constants.ApplicationName;
 			bannerBox.Text = $"Version: {Constants.ApplicationVersion}";

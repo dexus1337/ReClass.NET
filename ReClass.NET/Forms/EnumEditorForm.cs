@@ -12,18 +12,13 @@ namespace ReClassNET.Forms
 	public partial class EnumEditorForm : IconForm
 	{
 		private readonly EnumDescription @enum;
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public EnumEditorForm(EnumDescription @enum)
 		{
 			Contract.Requires(@enum != null);
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode, // DarkModeCS.DisplayMode.SystemDefault
-			};
 
 			this.@enum = @enum;
 

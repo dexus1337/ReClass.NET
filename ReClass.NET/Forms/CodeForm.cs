@@ -19,7 +19,7 @@ namespace ReClassNET.Forms
 {
 	public partial class CodeForm : IconForm
 	{
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
     
 		public CodeForm(ICodeGenerator generator, IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger)
 		{
@@ -28,11 +28,6 @@ namespace ReClassNET.Forms
 			Contract.Requires(enums != null);
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
 
 			codeRichTextBox.SetInnerMargin(5, 5, 5, 5);
 
