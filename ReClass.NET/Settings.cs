@@ -14,7 +14,7 @@ namespace ReClassNET
 
 		public Settings()
 		{
-			_shortcutKeyPerNode = new Dictionary<Type, Keys>
+			_shortcutKeyPerNode = new Dictionary<Type, Keys> // MS
 								  {
 									  { typeof(Hex64Node), Keys.Control | Keys.Shift | Keys.D6 },
 									  { typeof(ClassInstanceNode), Keys.Control | Keys.Shift | Keys.C },
@@ -42,8 +42,12 @@ namespace ReClassNET
 		public bool RandomizeWindowTitle { get; set; } = false;
 
 		public DarkModeForms.DarkModeCS.DisplayMode DarkMode { get; set; } = DarkModeForms.DarkModeCS.DisplayMode.SystemDefault;
+
 		public bool ColorizeIcons { get; set; } = false;
+
 		public bool RoundedPanels { get; set; } = false;
+
+		public bool EnhancedCaret { get; set; } = false;
 
 		// Node Drawing Settings
 
