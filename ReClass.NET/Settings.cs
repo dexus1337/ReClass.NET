@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Text;
 using ReClassNET.Util;
 
@@ -15,6 +15,8 @@ namespace ReClassNET
 		public bool RunAsAdmin { get; set; } = false;
 
 		public bool RandomizeWindowTitle { get; set; } = false;
+
+		public DarkModeForms.DarkModeCS.DisplayMode DarkMode { get; set; } = DarkModeForms.DarkModeCS.DisplayMode.SystemDefault;
 
 		// Node Drawing Settings
 
