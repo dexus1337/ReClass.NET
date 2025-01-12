@@ -70,22 +70,12 @@ namespace ReClassNET.Forms
 			Text = title;
 		}
 
-		public static DarkModeForms.DarkModeCS darkMode = null;
-
 		public MainForm()
 		{
 			Contract.Ensures(pluginManager != null);
 			Contract.Ensures(currentProject != null);
 
 			InitializeComponent();
-
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-				Components = components != null ? components.Components:null,
-				//[Optional] Choose your preferred color mode here:
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
-
 			UpdateWindowTitle();
 
 			mainMenuStrip.Renderer = new CustomToolStripProfessionalRenderer(true, true);
