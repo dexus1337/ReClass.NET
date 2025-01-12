@@ -36,7 +36,7 @@ namespace ReClassNET.Forms
 		private CancellationTokenSource cts;
 
 		private string addressFilePath;
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public ScannerForm(RemoteProcess process)
 		{
@@ -45,11 +45,6 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
 
 			toolStripPanel.Renderer = new CustomToolStripProfessionalRenderer(true, false);
 			menuToolStrip.Renderer = new CustomToolStripProfessionalRenderer(false, false);

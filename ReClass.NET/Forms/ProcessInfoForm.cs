@@ -19,7 +19,7 @@ namespace ReClassNET.Forms
 
 		/// <summary>The context menu of the sections grid view.</summary>
 		public ContextMenuStrip GridContextMenu => contextMenuStrip;
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public ProcessInfoForm(IProcessReader process)
 		{
@@ -28,11 +28,6 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
 
 			tabControl.ImageList = new ImageList();
 			tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Category);

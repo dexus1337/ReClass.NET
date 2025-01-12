@@ -21,16 +21,11 @@ namespace ReClassNET.Forms
 		}
 
 		private readonly List<LogItem> items = new List<LogItem>();
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		public LogForm()
 		{
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
 
 			entriesDataGridView.AutoGenerateColumns = false;
 			entriesDataGridView.DataSource = items;

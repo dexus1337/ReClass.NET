@@ -30,19 +30,13 @@ namespace ReClassNET.Forms
 			}
 		}
 
-		public static DarkModeForms.DarkModeCS darkMode = null;
+		
 
 		internal PluginForm(PluginManager pluginManager)
 		{
 			Contract.Requires(pluginManager != null);
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
-			{
-                                Components = components != null ? components.Components:null,
-				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
-			};
-
 			// Plugins Tab
 
 			pluginsDataGridView.AutoGenerateColumns = false;
