@@ -193,6 +193,16 @@ namespace ReClassNET.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap B16x16_Button_AutoName {
+            get {
+                object obj = ResourceManager.GetObject("B16x16_Button_AutoName", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap B16x16_Button_Bits {
             get {
                 object obj = ResourceManager.GetObject("B16x16_Button_Bits", resourceCulture);

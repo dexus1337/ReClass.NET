@@ -185,6 +185,7 @@ namespace ReClassNET.Nodes
 			newNode.CopyFromNode(oldNode);
 
 			newNode.ParentNode = this;
+			newNode.PerformPostInitWork();
 
 			nodes[index] = newNode;
 

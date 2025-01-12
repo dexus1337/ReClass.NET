@@ -1,11 +1,36 @@
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
+using ReClassNET.Nodes;
 using ReClassNET.Util;
 
 namespace ReClassNET
 {
 	public class Settings
 	{
+		private readonly Dictionary<Type, Keys> _shortcutKeyPerNode;
+
+		public Settings()
+		{
+			_shortcutKeyPerNode = new Dictionary<Type, Keys>
+								  {
+									  { typeof(Hex64Node), Keys.Control | Keys.Shift | Keys.D6 },
+									  { typeof(ClassInstanceNode), Keys.Control | Keys.Shift | Keys.C },
+									  { typeof(FloatNode), Keys.Control | Keys.Shift | Keys.F },
+									  { typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
+									  { typeof(PointerNode), Keys.Control | Keys.Shift | Keys.P },
+									  { typeof(Vector2Node), Keys.Control | Keys.Shift | Keys.D2 },
+									  { typeof(Vector3Node), Keys.Control | Keys.Shift | Keys.D3 },
+									  { typeof(Vector4Node), Keys.Control | Keys.Shift | Keys.D4 },
+									  { typeof(VirtualMethodTableNode), Keys.Control | Keys.Shift | Keys.V },
+									  { typeof(BoolNode), Keys.Control | Keys.Shift | Keys.O },
+									  { typeof(EnumNode), Keys.Control | Keys.Shift | Keys.E },
+									  { typeof(Int32Node), Keys.Control | Keys.Shift | Keys.I }
+								  };
+		}
+		
 		// Application Settings
 
 		public string LastProcess { get; set; } = string.Empty;
@@ -17,6 +42,8 @@ namespace ReClassNET
 		public bool RandomizeWindowTitle { get; set; } = false;
 
 		public DarkModeForms.DarkModeCS.DisplayMode DarkMode { get; set; } = DarkModeForms.DarkModeCS.DisplayMode.SystemDefault;
+		public bool ColorizeIcons { get; set; } = false;
+		public bool RoundedPanels { get; set; } = false;
 
 		// Node Drawing Settings
 
@@ -78,6 +105,10 @@ namespace ReClassNET
 
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
+		public Keys GetShortcutKeyForNodeType(Type nodeType)
+		{
+			return !_shortcutKeyPerNode.TryGetValue(nodeType, out var shortcutKeys) ? Keys.None : shortcutKeys;
+		}
 		public Settings Clone() => MemberwiseClone() as Settings;
 	}
 }

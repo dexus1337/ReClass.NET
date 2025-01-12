@@ -21,9 +21,9 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this)
+			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
 			{
-        Components = components != null ? components.Components:null,
+                                Components = components != null ? components.Components:null,
 				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
 			};
 

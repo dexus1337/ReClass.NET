@@ -27,9 +27,9 @@ namespace ReClassNET.Forms
 			this.typeMapping = typeMapping;		
 
 			InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this)
+			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
 			{
-                Components = components != null ? components.Components:null,
+                                Components = components != null ? components.Components:null,
 				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
 			};
 
@@ -68,6 +68,50 @@ namespace ReClassNET.Forms
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
+			// MS
+			if (Program.Settings.DarkMode == DarkModeForms.DarkModeCS.DisplayMode.DarkMode)
+				Program.Settings.DarkMode = DarkModeForms.DarkModeCS.DisplayMode.ClearMode;
+			else
+				Program.Settings.DarkMode = DarkModeForms.DarkModeCS.DisplayMode.DarkMode;
+
+			if (Forms.MainForm.darkMode != null)
+				Forms.MainForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.AboutForm.darkMode != null)
+				Forms.AboutForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.ClassSelectionForm.darkMode != null)
+				Forms.ClassSelectionForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.CodeForm.darkMode != null)
+				Forms.CodeForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.EnumEditorForm.darkMode != null)
+				Forms.EnumEditorForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.EnumListForm.darkMode != null)
+				Forms.EnumListForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.EnumSelectionForm.darkMode != null)
+				Forms.EnumSelectionForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.FoundCodeForm.darkMode != null)
+				Forms.FoundCodeForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+//			Forms.IconForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.InputBytesForm.darkMode != null)
+				Forms.InputBytesForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.InputCorrelatorForm.darkMode != null)
+				Forms.InputCorrelatorForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+//			Forms.InvalidInputException.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.LogForm.darkMode != null)
+				Forms.LogForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.NamedAddressesForm.darkMode != null)
+				Forms.NamedAddressesForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.PluginForm.darkMode != null)
+				Forms.PluginForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.ProcessBrowserForm.darkMode != null)
+				Forms.ProcessBrowserForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.ProcessInfoForm.darkMode != null)
+				Forms.ProcessInfoForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+//			Forms.RtfFormatter.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.ScannerForm.darkMode != null)
+				Forms.ScannerForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+			if (Forms.SettingsForm.darkMode != null)
+				Forms.SettingsForm.darkMode.ApplyTheme(Program.Settings.DarkMode);
+
 			base.OnFormClosed(e);
 
 			GlobalWindowManager.RemoveWindow(this);

@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ReClassNET.UI;
-using DarkModeForms;
 
 namespace ReClassNET.Forms
 {
@@ -12,8 +11,8 @@ namespace ReClassNET.Forms
 
 		public AboutForm()
 		{
-		    InitializeComponent();
-			darkMode = new DarkModeForms.DarkModeCS(this)
+		  InitializeComponent();
+			darkMode = new DarkModeForms.DarkModeCS(this, Program.Settings.ColorizeIcons, Program.Settings.RoundedPanels)
 			{
 				Components = components != null ? components.Components:null,
 				ColorMode = Program.Settings.DarkMode // DarkModeCS.DisplayMode.SystemDefault
