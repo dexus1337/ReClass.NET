@@ -490,6 +490,28 @@ namespace ReClassNET.Forms
 			}
 		}
 
+		private void openDumpFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var path = ShowOpenDumpFileDialog();
+				if (path != null)
+				{
+					using var pb = new ProcessBrowserForm(Program.Settings.LastProcess);
+					if (pb.SelectedProcess != null)
+					{
+						AttachToProcess(pb.SelectedProcess);
+					}
+
+					OpenDumpFile(path);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
+			}
+		}
+
 		private void attachToProcessToolStripSplitButton_DropDownClosed(object sender, EventArgs e)
 		{
 			attachToProcessToolStripSplitButton.DropDownItems.Clear();

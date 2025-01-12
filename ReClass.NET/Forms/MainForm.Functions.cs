@@ -72,6 +72,13 @@ namespace ReClassNET.Forms
 			Program.Settings.LastProcess = Program.RemoteProcess.UnderlayingProcess.Name;
 		}
 
+		public void OpenDumpFile(String dumpFilePath)
+		{
+			Contract.Requires(dumpFilePath != null);
+
+			Program.RemoteProcess.OpenDumpFile(dumpFilePath);
+		}
+
 		/// <summary>Sets the current project.</summary>
 		/// <param name="newProject">The new project.</param>
 		public void SetProject(ReClassNetProject newProject)
@@ -207,6 +214,23 @@ namespace ReClassNET.Forms
 
 			return null;
 		}
+
+		public static string ShowOpenDumpFileDialog()
+		{
+			using var ofd = new OpenFileDialog
+			{
+				CheckFileExists = true,
+				Filter = $"Crash Dump Files |*.dmp;*.hdmp;*.mdmp;*.kdmp"
+			};
+
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				return ofd.FileName;
+			}
+
+			return null;
+		}
+
 		public static string ShowOpenCppFileDialog()
 		{
 			using var ofd = new OpenFileDialog();
