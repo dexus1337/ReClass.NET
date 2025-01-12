@@ -33,6 +33,24 @@ namespace ReClassNET.UI
 			nodeTypesWhichCanOverflowInToolbar = new HashSet<Type> { typeof(NIntNode), typeof(NUIntNode), typeof(BitFieldNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode) } ;
 		}
 
+		public static List<Type[]> GetNodeTypes()
+		{
+			return defaultNodeTypeGroupList;
+		}
+
+		public static List<BaseNode> GetNodes()
+		{
+			var nodes = (
+				from nodeTypeGroup in defaultNodeTypeGroupList
+				from nodeType in nodeTypeGroup
+				select BaseNode.CreateInstanceFromType(nodeType, false)).ToList();
+			foreach (var node in nodes)
+			{
+				node.Name = node.GetType().Name;
+			}
+			return nodes;
+		}
+
 		public static void AddPluginNodeGroup(Plugin plugin, IReadOnlyList<Type> nodeTypes)
 		{
 			Contract.Requires(plugin != null);

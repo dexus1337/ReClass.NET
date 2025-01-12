@@ -11,8 +11,10 @@ using ReClassNET.AddressParser;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
 using ReClassNET.Core;
+using ReClassNET.DataExchange.IDA;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Extensions;
+using ReClassNET.Logger;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 using ReClassNET.MemoryScanner.Comparer;
@@ -278,6 +280,40 @@ namespace ReClassNET.Forms
 				{
 					projectView.SelectedClass = selectedClassNode;
 				}
+			}
+		}
+
+		private void cloneClassMenuItem_Click(object sender, EventArgs e)
+		{
+			using var csf = new ClassSelectionForm(currentProject.Classes.OrderBy(c => c.Name));
+
+			if (csf.ShowDialog() == DialogResult.OK)
+			{
+				var selectedClassNode = csf.SelectedClass;
+				if (selectedClassNode != null)
+				{
+					var selectedNodes = selectedClassNode.Nodes;
+
+					var newClassNode = ClassNode.Create();
+					selectedNodes.ForEach(newClassNode.AddNode);
+					projectView.SelectedClass = newClassNode;
+				}
+			}
+		}
+
+		private void importClassMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var path = ShowOpenCppFileDialog();
+				if (path != null)
+				{
+					CppClassImporter.Load(path, new NullLogger());
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
 			}
 		}
 

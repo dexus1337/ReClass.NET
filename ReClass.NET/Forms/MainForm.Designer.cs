@@ -162,6 +162,8 @@ namespace ReClassNET.Forms
 			this.terminateProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.goToClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.cloneClassMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importClassMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cleanUnusedClassesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showEnumsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
@@ -1329,6 +1331,8 @@ namespace ReClassNET.Forms
 			// 
 			this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.goToClassToolStripMenuItem,
+            this.cloneClassMenuItem,
+            this.importClassMenuItem,
             this.cleanUnusedClassesToolStripMenuItem,
             this.showEnumsToolStripMenuItem,
             this.toolStripSeparator16,
@@ -1347,6 +1351,24 @@ namespace ReClassNET.Forms
 			this.goToClassToolStripMenuItem.Text = "Go to class...";
 			this.goToClassToolStripMenuItem.Click += new System.EventHandler(this.goToClassToolStripMenuItem_Click);
 			// 
+			// cloneClassMenuItem
+			//
+			this.cloneClassMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Class_Type;
+			this.cloneClassMenuItem.Name = "cloneClassMenuItem";
+			this.cloneClassMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+			this.cloneClassMenuItem.Size = new System.Drawing.Size(198, 22);
+			this.cloneClassMenuItem.Text = "Clone Class...";
+			this.cloneClassMenuItem.Click += new System.EventHandler(this.cloneClassMenuItem_Click);
+			//
+			// importClassMenuItem
+			//
+			this.importClassMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Class_Type;
+			this.importClassMenuItem.Name = "importClassMenuItem";
+			this.importClassMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+			this.importClassMenuItem.Size = new System.Drawing.Size(198, 22);
+			this.importClassMenuItem.Text = "Import Class...";
+			this.importClassMenuItem.Click += new System.EventHandler(this.importClassMenuItem_Click);
+			//
 			// cleanUnusedClassesToolStripMenuItem
 			// 
 			this.cleanUnusedClassesToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Chart_Delete;
@@ -1583,6 +1605,8 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem goToClassToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem cloneClassMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem importClassMenuItem;
 		private System.Windows.Forms.ContextMenuStrip projectClassContextMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem deleteClassToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
