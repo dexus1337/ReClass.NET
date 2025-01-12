@@ -315,6 +315,44 @@ namespace ReClassNET.Forms
 						var createdNodes = new List<BaseNode>();
 						containerPartitions.Container.ReplaceChildNode(selected.Node, node, ref createdNodes);
 
+						if (node is PointerNode ptrNode)
+						{
+							var vtable = selected.Process.ReadRemoteIntPtr(selected.Address);
+							vtable = selected.Process.ReadRemoteIntPtr(vtable);
+							var rtti = selected.Process.ReadRemoteRuntimeTypeInformation(vtable);
+							if (rtti != null)
+							{
+								var classInsNode = (ptrNode.InnerNode as ClassInstanceNode);
+								var className = rtti.Split(new[] { " : " }, StringSplitOptions.None)[0];
+								ptrNode.Name = "m_p" + className;
+
+								var existedClass = currentProject.Classes.Where(c => c.Name.IndexOf(className, StringComparison.Ordinal) >= 0).ToList();
+								if (existedClass.Count > 0)
+								{
+									var selectedClassNode = existedClass[0];
+									if (classInsNode.CanChangeInnerNodeTo(selectedClassNode))
+									{
+										if (!classInsNode.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(classInsNode.GetParentClass(), selectedClassNode))
+										{
+											var oldClassNode = classInsNode.InnerNode as ClassNode;
+											classInsNode.ChangeInnerNode(selectedClassNode);
+											currentProject.Remove(oldClassNode);
+										}
+									}
+								}
+								else
+								{
+									classInsNode.InnerNode.Name = className;
+
+									var classNode = classInsNode.InnerNode as ClassNode;
+									var vtableNode = new VirtualMethodTableNode();
+									vtableNode.Initialize();
+									classNode.ReplaceChildNode(classNode.Nodes[0], vtableNode, ref createdNodes);
+									vtableNode.Name = "VTable_" + className;
+								}
+							}
+						}
+
 						node.IsSelected = true;
 
 						var info = new MemoryViewControl.SelectedNodeInfo(node, selected.Process, selected.Memory, selected.Address, selected.Level);
