@@ -42,6 +42,8 @@ namespace ReClassNET.Util
 		/// <remarks>%temp%</remarks>
 		public static string TemporaryFolderPath => temporaryFolderPath.Value;
 
+
+		//redundant LocalApplicationData was removed in favor of ApplicationData (Roaming) path
 		private static readonly Lazy<string> settingsFolderPath = new Lazy<string>(() =>
 		{
 			string applicationData;
@@ -53,18 +55,7 @@ namespace ReClassNET.Util
 			{
 				applicationData = executableFolderPath.Value;
 			}
-
-			string localApplicationData;
-			try
-			{
-				localApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			}
-			catch (Exception)
-			{
-				localApplicationData = applicationData;
-			}
-
-			return Path.Combine(localApplicationData, Constants.ApplicationName);
+			return Path.Combine(applicationData, Constants.ApplicationName);
 		});
 
 		/// <summary>Gets the full pathname of the settings folder.</summary>

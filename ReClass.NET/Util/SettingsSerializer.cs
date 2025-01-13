@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace ReClassNET.Util
@@ -16,6 +18,8 @@ namespace ReClassNET.Util
 
 		public static Settings Load()
 		{
+			MigrateSettingsIfNeeded(); //due to path changes from local to roaming, added this auto migration
+
 			EnsureSettingsDirectoryAvailable();
 
 			var settings = new Settings();
@@ -36,6 +40,10 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(general, nameof(settings.StayOnTop), e => settings.StayOnTop = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RunAsAdmin), e => settings.RunAsAdmin = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RandomizeWindowTitle), e => settings.RandomizeWindowTitle = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.DarkMode), e => settings.DarkMode =
+						(DarkModeForms.DarkModeCS.DisplayMode)int.Parse(XElementSerializer.ToString(e)));
+					XElementSerializer.TryRead(general, nameof(settings.ColorizeIcons), e => settings.ColorizeIcons = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.RoundedPanels), e => settings.RoundedPanels = XElementSerializer.ToBool(e));
 				}
 				var display = root?.Element(XmlDisplayElement);
 				if (display != null)
@@ -107,7 +115,10 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.LastProcess), settings.LastProcess),
 						XElementSerializer.ToXml(nameof(settings.StayOnTop), settings.StayOnTop),
 						XElementSerializer.ToXml(nameof(settings.RunAsAdmin), settings.RunAsAdmin),
-						XElementSerializer.ToXml(nameof(settings.RandomizeWindowTitle), settings.RandomizeWindowTitle)
+						XElementSerializer.ToXml(nameof(settings.RandomizeWindowTitle), settings.RandomizeWindowTitle),
+						XElementSerializer.ToXml(nameof(settings.DarkMode), (int)settings.DarkMode),
+						XElementSerializer.ToXml(nameof(settings.ColorizeIcons), settings.ColorizeIcons),
+						XElementSerializer.ToXml(nameof(settings.RoundedPanels), settings.RoundedPanels)
 					),
 					new XElement(
 						XmlDisplayElement,
@@ -147,6 +158,65 @@ namespace ReClassNET.Util
 		}
 
 		#endregion
+
+		private static void MigrateSettingsIfNeeded()
+		{
+			try
+			{
+				// Get the old (Local) and new (Roaming) paths
+				string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+				string oldPath = Path.Combine(localAppData, Constants.ApplicationName);
+
+				// If old directory doesn't exist, no migration needed
+				if (!Directory.Exists(oldPath)) return;
+
+				// Check for files to migrate
+				string oldSettingsPath = Path.Combine(oldPath, Constants.SettingsFile);
+				string oldPresetsPath = Path.Combine(oldPath, "ColorPresets.xml");
+
+				// Ensure new directory exists
+				EnsureSettingsDirectoryAvailable();
+
+				// Migrate settings file if it exists
+				if (File.Exists(oldSettingsPath))
+				{
+					string newSettingsPath = Path.Combine(PathUtil.SettingsFolderPath, Constants.SettingsFile);
+					if (!File.Exists(newSettingsPath))
+					{
+						File.Copy(oldSettingsPath, newSettingsPath, false);
+					}
+				}
+
+				// Migrate color presets if they exist
+				if (File.Exists(oldPresetsPath))
+				{
+					string newPresetsPath = Path.Combine(PathUtil.SettingsFolderPath, "ColorPresets.xml");
+					if (!File.Exists(newPresetsPath))
+					{
+						File.Copy(oldPresetsPath, newPresetsPath, false);
+					}
+				}
+
+				// Optionally delete old files after successful migration
+				try
+				{
+					if (File.Exists(oldSettingsPath)) File.Delete(oldSettingsPath);
+					if (File.Exists(oldPresetsPath)) File.Delete(oldPresetsPath);
+					if (Directory.Exists(oldPath) && !Directory.EnumerateFileSystemEntries(oldPath).Any())
+					{
+						Directory.Delete(oldPath);
+					}
+				}
+				catch
+				{
+					// Ignore deletion errors
+				}
+			}
+			catch
+			{
+				// Ignore migration errors - worst case, user starts with fresh settings
+			}
+		}
 
 		private static void EnsureSettingsDirectoryAvailable()
 		{
