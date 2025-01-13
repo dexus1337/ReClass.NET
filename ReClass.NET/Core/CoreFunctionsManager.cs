@@ -71,6 +71,11 @@ namespace ReClassNET.Core
 
 		#region Plugin Functions
 
+		public int ConnectServer(string ip, short port)
+		{
+			return currentFunctions.ConnectServer(ip, port);
+		}
+
 		public void EnumerateProcesses(Action<ProcessInfo> callbackProcess)
 		{
 			var c = callbackProcess == null ? null : (EnumerateProcessCallback)delegate (ref EnumerateProcessData data)

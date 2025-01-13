@@ -2,8 +2,9 @@
 #include <unordered_map>
 
 #include "NativeCore.hpp"
+#include "ServerRemoteTool.h"
 
-RC_Pointer RC_CallConv OpenRemoteProcess(RC_Pointer id, ProcessAccess desiredAccess)
+RC_Pointer OpenRemoteProcessWindows(RC_Pointer id, ProcessAccess desiredAccess)
 {
 	if (g_IsDumpAnalysis)
 	{
@@ -40,4 +41,10 @@ RC_Pointer RC_CallConv OpenRemoteProcess(RC_Pointer id, ProcessAccess desiredAcc
 	}
 
 	return handle;
+}
+
+RC_Pointer RC_CallConv OpenRemoteProcess(RC_Pointer id, ProcessAccess desiredAccess)
+{
+	if (ServerManager::getInstance()->IsConnected()) return OpenRemoteProcessServer(id);
+	else return OpenRemoteProcessWindows(id, desiredAccess);
 }

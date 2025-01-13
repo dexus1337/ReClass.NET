@@ -64,6 +64,21 @@
     <ClCompile Include="OpenDumpFile.cpp">
       <Filter>Functions</Filter>
     </ClCompile>
+    <ClCompile Include="WindowsSocketWrapper.cpp">
+      <Filter>Functions\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\SocketWrapper.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerRemoteTool.cpp">
+      <Filter>Functions\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerManager.cpp">
+      <Filter>Functions\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -80,6 +95,9 @@
     </Filter>
     <Filter Include="Shared">
       <UniqueIdentifier>{faf06b55-02ad-4707-a65d-37e1c0d13640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Functions\Networking">
+      <UniqueIdentifier>{a6132f88-9963-44aa-880f-f93f8367980c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +141,30 @@
     </ClInclude>
     <ClInclude Include="..\Dependencies\distorm\src\x86defs.h">
       <Filter>Dependencies\distorm</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsSocketWrapper.h">
+      <Filter>Functions\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\SocketWrapper.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\API.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\PackDefs.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Packet.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerRemoteTool.h">
+      <Filter>Functions\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\IProcess.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Shared</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,6 +13,8 @@ namespace ReClassNET.Forms
 	{
 		private const string NoPreviousProcess = "No previous process";
 
+		public NetworkingForm networkingForm;
+
 		private static readonly string[] commonProcesses = 
 		{
 			"[system process]", "system", "svchost.exe", "services.exe", "wininit.exe",
@@ -26,11 +28,11 @@ namespace ReClassNET.Forms
 
 		/// <summary>Gets if symbols should get loaded.</summary>
 		public bool LoadSymbols => loadSymbolsCheckBox.Checked;
-		
 
 		public ProcessBrowserForm(string previousProcess)
 		{
 			InitializeComponent();
+
 			processDataGridView.AutoGenerateColumns = false;
 
 			// TODO: Workaround, Mono can't display a DataGridViewImageColumn.
@@ -134,6 +136,17 @@ namespace ReClassNET.Forms
 				filter = $"name like '%{filter}%' or path like '%{filter}%' or CONVERT(id, System.String) like '%{filter}%'";
 			}
 			((DataTable)processDataGridView.DataSource).DefaultView.RowFilter = filter;
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			networkingForm = new NetworkingForm();
+			networkingForm.ShowDialog();
+
+			if (networkingForm.mConnected == true)
+			{
+				RefreshProcessList();
+			}
 		}
 	}
 }

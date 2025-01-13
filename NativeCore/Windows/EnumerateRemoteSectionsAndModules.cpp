@@ -6,6 +6,7 @@
 #include <functional>
 
 #include "NativeCore.hpp"
+#include "ServerRemoteTool.h"
 
 PPEB GetRemotePeb(const HANDLE process)
 {
@@ -125,7 +126,7 @@ bool EnumerateRemoteModulesWinapi(const RC_Pointer process, const InternalEnumer
 	return true;
 }
 
-void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer process, EnumerateRemoteSectionsCallback callbackSection, EnumerateRemoteModulesCallback callbackModule)
+void EnumerateRemoteSectionsAndModulesWindows(RC_Pointer process, EnumerateRemoteSectionsCallback callbackSection, EnumerateRemoteModulesCallback callbackModule)
 {
 	if (g_IsDumpAnalysis)
 	{
@@ -258,4 +259,15 @@ void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer process, Enumerate
 			callbackSection(&section);
 		}
 	}
+}
+
+void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer process, EnumerateRemoteSectionsCallback callbackSection, EnumerateRemoteModulesCallback callbackModule)
+{
+	if (callbackSection == nullptr && callbackModule == nullptr)
+	{
+		return;
+	}
+
+	if(ServerManager::getInstance()->IsConnected()) EnumerateRemoteSectionsAndModulesServer(process, callbackSection, callbackModule);
+	else EnumerateRemoteSectionsAndModulesWindows(process, callbackSection, callbackModule);
 }

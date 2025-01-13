@@ -40,6 +40,7 @@ namespace ReClassNET.Forms
 			this.attachToProcessButton = new System.Windows.Forms.Button();
 			this.loadSymbolsCheckBox = new System.Windows.Forms.CheckBox();
 			this.filterGroupBox = new System.Windows.Forms.GroupBox();
+			this.networkingButton = new System.Windows.Forms.Button();
 			this.previousProcessLinkLabel = new System.Windows.Forms.LinkLabel();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
@@ -56,15 +57,15 @@ namespace ReClassNET.Forms
 			this.processDataGridView.AllowUserToDeleteRows = false;
 			this.processDataGridView.AllowUserToResizeColumns = false;
 			this.processDataGridView.AllowUserToResizeRows = false;
-			this.processDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.processDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.processDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
 			this.processDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.processDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iconColumn,
-            this.processNameColumn,
-            this.pidColumn,
-            this.pathColumn});
+			this.iconColumn,
+			this.processNameColumn,
+			this.pidColumn,
+			this.pathColumn});
 			this.processDataGridView.Location = new System.Drawing.Point(12, 199);
 			this.processDataGridView.MultiSelect = false;
 			this.processDataGridView.Name = "processDataGridView";
@@ -141,8 +142,8 @@ namespace ReClassNET.Forms
 			// 
 			// attachToProcessButton
 			// 
-			this.attachToProcessButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.attachToProcessButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.attachToProcessButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.attachToProcessButton.Image = global::ReClassNET.Properties.Resources.B16x16_Accept;
 			this.attachToProcessButton.Location = new System.Drawing.Point(12, 519);
@@ -167,8 +168,9 @@ namespace ReClassNET.Forms
 			// 
 			// filterGroupBox
 			// 
-			this.filterGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.filterGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.filterGroupBox.Controls.Add(this.networkingButton);
 			this.filterGroupBox.Controls.Add(this.previousProcessLinkLabel);
 			this.filterGroupBox.Controls.Add(this.label2);
 			this.filterGroupBox.Controls.Add(this.label1);
@@ -181,6 +183,16 @@ namespace ReClassNET.Forms
 			this.filterGroupBox.TabIndex = 5;
 			this.filterGroupBox.TabStop = false;
 			this.filterGroupBox.Text = "Filter";
+			// 
+			// networkingButton
+			// 
+			this.networkingButton.Location = new System.Drawing.Point(10, 127);
+			this.networkingButton.Name = "networkingButton";
+			this.networkingButton.Size = new System.Drawing.Size(157, 23);
+			this.networkingButton.TabIndex = 4;
+			this.networkingButton.Text = "Networking";
+			this.networkingButton.UseVisualStyleBackColor = true;
+			this.networkingButton.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// previousProcessLinkLabel
 			// 
@@ -274,5 +286,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox filterTextBox;
 		private BannerBox bannerBox;
+		private System.Windows.Forms.Button networkingButton;
 	}
 }

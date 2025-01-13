@@ -179,6 +179,7 @@
     <ClCompile Include="..\Dependencies\distorm\src\prefix.c" />
     <ClCompile Include="..\Dependencies\distorm\src\textdefs.c" />
     <ClCompile Include="..\Shared\DistormHelper.cpp" />
+    <ClCompile Include="..\Shared\SocketWrapper.cpp" />
     <ClCompile Include="CloseRemoteProcess.cpp" />
     <ClCompile Include="ControlRemoteProcess.cpp" />
     <ClCompile Include="Debugger.cpp" />
@@ -190,6 +191,10 @@
     <ClCompile Include="OpenDumpFile.cpp" />
     <ClCompile Include="OpenRemoteProcess.cpp" />
     <ClCompile Include="ReadRemoteMemory.cpp" />
+    <ClCompile Include="ServerManager.cpp" />
+    <ClCompile Include="ServerRemoteTool.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WindowsSocketWrapper.cpp" />
     <ClCompile Include="WriteRemoteMemory.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,9 +213,17 @@
     <ClInclude Include="..\Dependencies\distorm\src\wstring.h" />
     <ClInclude Include="..\Dependencies\distorm\src\x86defs.h" />
     <ClInclude Include="..\ReClassNET_Plugin.hpp" />
+    <ClInclude Include="..\Shared\API.h" />
     <ClInclude Include="..\Shared\DistormHelper.hpp" />
+    <ClInclude Include="..\Shared\IProcess.h" />
     <ClInclude Include="..\Shared\Keys.hpp" />
+    <ClInclude Include="..\Shared\PackDefs.h" />
+    <ClInclude Include="..\Shared\Packet.h" />
+    <ClInclude Include="..\Shared\SocketWrapper.h" />
     <ClInclude Include="NativeCore.hpp" />
+    <ClInclude Include="ServerRemoteTool.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="WindowsSocketWrapper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

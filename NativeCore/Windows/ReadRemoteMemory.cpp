@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "NativeCore.hpp"
+#include "ServerRemoteTool.h"
 
 static std::string Format(const char* format, ...)
 {
@@ -140,21 +141,27 @@ static bool GetData(PVOID pStartAddress, SIZE_T length, PBYTE bytes)
 	return true;
 }
 
+int ReadMemoryWindows(RC_Pointer handle, RC_Pointer address, RC_Pointer buffer, int size)
+{
+	SIZE_T numberOfBytesRead = 0;
+	if (!ReadProcessMemory(handle, address, buffer, size, &numberOfBytesRead))
+		return -1;
+
+	return numberOfBytesRead;
+}
+
 bool RC_CallConv ReadRemoteMemory(RC_Pointer handle, RC_Pointer address, RC_Pointer buffer, int offset, int size)
 {
+	buffer = reinterpret_cast<RC_Pointer>(reinterpret_cast<uintptr_t>(buffer) + offset);
 	if (g_IsDumpAnalysis)
 	{
-		buffer = reinterpret_cast<RC_Pointer>(reinterpret_cast<uintptr_t>(buffer) + offset);
 		return GetData(address, size, (PBYTE)buffer);
 	}
 
-	buffer = reinterpret_cast<RC_Pointer>(reinterpret_cast<uintptr_t>(buffer) + offset);
+	int numberOfBytesRead;
+	if (ServerManager::getInstance()->PartiallyConnected()) numberOfBytesRead = ReadMemoryServer(handle, address, buffer, size);
+	else numberOfBytesRead = ReadMemoryWindows(handle, address, buffer, size);
 
-	SIZE_T numberOfBytesRead = 0;
-	if (ReadProcessMemory(handle, address, buffer, size, &numberOfBytesRead) && (size == numberOfBytesRead))
-	{
-		return true;
-	}
-
-	return false;
+	return size == numberOfBytesRead;
 }
+

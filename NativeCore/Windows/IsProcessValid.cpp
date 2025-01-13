@@ -1,8 +1,9 @@
 #include <windows.h>
 
 #include "NativeCore.hpp"
+#include "ServerRemoteTool.h"
 
-bool RC_CallConv IsProcessValid(RC_Pointer handle)
+bool IsProcessValidWindows(RC_Pointer handle)
 {
 	if (g_IsDumpAnalysis)
 	{
@@ -21,4 +22,10 @@ bool RC_CallConv IsProcessValid(RC_Pointer handle)
 	}
 
 	return retn == WAIT_TIMEOUT;
+}
+
+bool RC_CallConv IsProcessValid(RC_Pointer handle)
+{
+	if(!ServerManager::getInstance()->IsConnected()) return IsProcessValidWindows(handle);
+	return true; // TODO
 }

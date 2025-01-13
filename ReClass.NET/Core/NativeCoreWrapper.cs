@@ -10,6 +10,8 @@ namespace ReClassNET.Core
 	{
 		#region Native Delegates
 
+		private delegate int ConnectServerDelegate(string ip, short port);
+
 		private delegate void EnumerateProcessesDelegate([MarshalAs(UnmanagedType.FunctionPtr)] EnumerateProcessCallback callbackProcess);
 
 		private delegate void EnumerateRemoteSectionsAndModulesDelegate(IntPtr process, [MarshalAs(UnmanagedType.FunctionPtr)] EnumerateRemoteSectionCallback callbackSection, [MarshalAs(UnmanagedType.FunctionPtr)] EnumerateRemoteModuleCallback callbackModule);
@@ -41,6 +43,8 @@ namespace ReClassNET.Core
 
 		[return: MarshalAs(UnmanagedType.I1)]
 		private delegate bool SetHardwareBreakpointDelegate(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, [param: MarshalAs(UnmanagedType.I1)] bool set);
+
+		private readonly ConnectServerDelegate connectServerDelegate;
 
 		[return: MarshalAs(UnmanagedType.I1)]
 		private delegate bool OpenDumpFileDelegate(IntPtr dumpFilePath);
@@ -82,6 +86,7 @@ namespace ReClassNET.Core
 			awaitDebugEventDelegate = GetFunctionDelegate<AwaitDebugEventDelegate>(handle, "AwaitDebugEvent");
 			handleDebugEventDelegate = GetFunctionDelegate<HandleDebugEventDelegate>(handle, "HandleDebugEvent");
 			setHardwareBreakpointDelegate = GetFunctionDelegate<SetHardwareBreakpointDelegate>(handle, "SetHardwareBreakpoint");
+			connectServerDelegate = GetFunctionDelegate<ConnectServerDelegate>(handle, "ConnectServer");
 			openDumpFileDelegate = GetFunctionDelegate<OpenDumpFileDelegate>(handle, "OpenDumpFile");
 		}
 
@@ -93,6 +98,11 @@ namespace ReClassNET.Core
 				throw new Exception($"Function '{function}' not found.");
 			}
 			return Marshal.GetDelegateForFunctionPointer<TDelegate>(address);
+		}
+
+		public int ConnectServer(string ip, short port)
+		{
+			return connectServerDelegate(ip, port);
 		}
 
 		public void EnumerateProcesses(EnumerateProcessCallback callbackProcess)

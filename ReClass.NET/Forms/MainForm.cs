@@ -482,7 +482,7 @@ namespace ReClassNET.Forms
 				{
 					AttachToProcess(pb.SelectedProcess);
 
-					if (pb.LoadSymbols)
+					if (pb.LoadSymbols && !pb.networkingForm.mConnected) //TODO, Load Server Symbols
 					{
 						LoadAllSymbolsForCurrentProcess();
 					}
