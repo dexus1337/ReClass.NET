@@ -437,9 +437,16 @@ namespace ReClassNET.CodeGenerator
 			if (simpleType != null)
 			{
 				//$"{type} {node.Name}; //0x{node.Offset.ToInt32():X04} {node.Comment}".Trim();
-				writer.Write(simpleType);
-				writer.Write(" ");
-				writer.Write(node.Name);
+				if (node.IsCustomType)
+				{
+					writer.Write(node.Name.Substring(1));
+				}
+				else
+				{
+					writer.Write(simpleType);
+					writer.Write(" ");
+					writer.Write(node.Name);
+				}
 				writer.Write("; //0x");
 				writer.Write($"{node.Offset:X04}");
 				if (!string.IsNullOrEmpty(node.Comment))
@@ -451,7 +458,14 @@ namespace ReClassNET.CodeGenerator
 			}
 			else if (node is BaseWrapperNode)
 			{
-				writer.Write(ResolveWrappedType(node, false, logger));
+				if (node.IsCustomType)
+				{
+					writer.Write(node.Name.Substring(1));
+				}
+				else
+				{
+					writer.Write(ResolveWrappedType(node, false, logger));
+				}					
 				writer.Write("; //0x");
 				writer.Write($"{node.Offset:X04}");
 				if (!string.IsNullOrEmpty(node.Comment))

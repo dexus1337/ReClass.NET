@@ -40,7 +40,10 @@ namespace ReClassNET.Nodes
 			x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;
 			if (!IsWrapped)
 			{
+				int xx = x;
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name) + context.Font.Width;
+				if (IsCustomType)
+					AddText(context, xx, y, context.Settings.IndexColor, HotSpot.NoneId, GetCustomType());
 			}
 			x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NoneId, "=") + context.Font.Width;
 			x = AddText(context, x, y, context.Settings.ValueColor, 0, value) + context.Font.Width;

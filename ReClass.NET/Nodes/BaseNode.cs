@@ -551,6 +551,25 @@ namespace ReClassNET.Nodes
 				AddIcon(context, 0, y, Properties.Resources.B16x16_Error, HotSpot.NoneId, HotSpotType.None);
 			}
 		}
+
+		/// <summary></summary>
+		/// <returns></returns>
+		public bool IsCustomType { get => (Name.Length > 0 && Name[0] == '#'); }
+
+		/// <summary></summary>
+		/// <returns></returns>
+		public string GetCustomType()
+		{
+			string name = Name;
+			int len;
+			if (name.IndexOf('*') != -1)
+				len = name.LastIndexOf('*') + 1;
+			else
+				len = name.LastIndexOf(' ');
+			if (len == -1)
+				return Name;
+			return name.Substring(0, len);
+		}
 	}
 
 	[ContractClassFor(typeof(BaseNode))]

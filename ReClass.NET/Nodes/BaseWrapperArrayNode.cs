@@ -48,7 +48,10 @@ namespace ReClassNET.Nodes
 			x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;
 			if (!IsWrapped)
 			{
+				int xx = x;
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name);
+				if (IsCustomType)
+					AddText(context, xx, y, context.Settings.IndexColor, HotSpot.NoneId, GetCustomType());
 			}
 			x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "[");
 			x = AddText(context, x, y, context.Settings.IndexColor, IsReadOnly ? HotSpot.NoneId : 0, Count.ToString());
