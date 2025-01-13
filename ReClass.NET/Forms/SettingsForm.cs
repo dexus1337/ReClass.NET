@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using DarkModeForms;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -15,7 +20,9 @@ namespace ReClassNET.Forms
 	{
 		private readonly Settings settings;
 		private readonly CppTypeMapping typeMapping;
-		  
+		private List<ColorPreset> presets;
+		private bool isLoadingPreset;
+
 
 		public TabControl SettingsTabControl => settingsTabControl;
 
@@ -53,6 +60,295 @@ namespace ReClassNET.Forms
 				NativeMethodsWindows.SetButtonShield(createAssociationButton, true);
 				NativeMethodsWindows.SetButtonShield(removeAssociationButton, true);
 			}
+			LoadPresets();
+
+			// Wire up events
+			savePresetButton.Click += savePresetButton_Click;
+			loadPresetButton.Click += loadPresetButton_Click;
+			deletePresetButton.Click += deletePresetButton_Click;
+			presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
+		}
+
+		private void LoadPresets()
+		{
+			try
+			{
+				presets = ColorPresetSerializer.LoadPresets();
+			}
+			catch (Exception)
+			{
+				presets = new List<ColorPreset>();
+			}
+
+			presetComboBox.Items.Clear();
+			presetComboBox.Items.Add("Default Light");
+			presetComboBox.Items.Add("Default Dark");
+			if (presets != null)  // Add null check
+			{
+				foreach (var preset in presets)
+				{
+					presetComboBox.Items.Add(preset.Name);
+				}
+			}
+
+			presetComboBox.SelectedIndex = 0;
+			RefreshColorBindings();
+			deletePresetButton.Enabled = false; // Default presets can't be deleted
+
+			// Update buttons state
+			UpdatePresetsButtonsState();
+		}
+
+		private void UpdatePresetsButtonsState()
+		{
+			bool hasCustomPresets = presetComboBox.Items.Count > 2;
+			deletePresetButton.Enabled = presetComboBox.SelectedIndex > 1;
+			savePresetButton.Enabled = true; // Save should always be available
+		}
+
+		private void savePresetButton_Click(object sender, EventArgs e)
+		{
+			using var nameForm = new InputForm("Save Color Preset", "Enter preset name:");
+			if (nameForm.ShowDialog() == DialogResult.OK)
+			{
+				var name = nameForm.Value;
+				if (string.IsNullOrEmpty(name)) return;
+
+				var preset = ColorPreset.CreateFrom(settings, name);
+
+				var existingIndex = presets.FindIndex(p => p.Name == name);
+				if (existingIndex != -1)
+				{
+					if (MessageBox.Show($"Preset '{name}' already exists. Overwrite?",
+							"Confirm Overwrite", MessageBoxButtons.YesNo) != DialogResult.Yes)
+					{
+						return;
+					}
+					presets[existingIndex] = preset;
+				}
+				else
+				{
+					presets.Add(preset);
+					presetComboBox.Items.Add(name);
+				}
+
+				ColorPresetSerializer.SavePresets(presets);
+			}
+		}
+
+		private void loadPresetButton_Click(object sender, EventArgs e)
+		{
+			using (OpenFileDialog openFileDialog = new OpenFileDialog())
+			{
+				openFileDialog.Filter = "Color Preset files (*.xml)|*.xml|All files (*.*)|*.*";
+				openFileDialog.FilterIndex = 1;
+
+				if (openFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					try
+					{
+						// Load the preset file
+						var loadedPresets = ColorPresetSerializer.LoadPresetsFromFile(openFileDialog.FileName);
+						bool presetsAdded = false;
+						int addedCount = 0;
+						int replacedCount = 0;
+						int skippedCount = 0;
+
+						// Add the loaded presets to existing presets, checking for duplicates
+						foreach (var preset in loadedPresets)
+						{
+							// Check if a preset with this name already exists
+							int existingIndex = presets.FindIndex(p => p.Name.Equals(preset.Name, StringComparison.OrdinalIgnoreCase));
+							if (existingIndex != -1)
+							{
+								var result = MessageBox.Show(
+									$"A preset named '{preset.Name}' already exists. Do you want to replace it?",
+									"Preset Already Exists",
+									MessageBoxButtons.YesNoCancel,
+									MessageBoxIcon.Question);
+
+								if (result == DialogResult.Cancel)
+									return;
+								else if (result == DialogResult.Yes)
+								{
+									presets[existingIndex] = preset;
+									presetsAdded = true;
+									replacedCount++;
+									// Update the combo box item
+									int comboIndex = existingIndex + 2; // Adjust for default presets
+									presetComboBox.Items[comboIndex] = preset.Name;
+								}
+								else
+								{
+									skippedCount++;
+								}
+							}
+							else
+							{
+								// Add new preset
+								presets.Add(preset);
+								presetComboBox.Items.Add(preset.Name);
+								presetsAdded = true;
+								addedCount++;
+							}
+						}
+
+						if (presetsAdded)
+						{
+							// Save the updated presets list
+							ColorPresetSerializer.SavePresets(presets);
+
+							// Select the first imported preset if it was added
+							if (loadedPresets.Count > 0)
+							{
+								int indexToSelect = presetComboBox.Items.IndexOf(loadedPresets[0].Name);
+								if (indexToSelect != -1)
+									presetComboBox.SelectedIndex = indexToSelect;
+							}
+
+							// Show summary message
+							var summary = new System.Text.StringBuilder();
+							summary.AppendLine("Import complete:");
+							if (addedCount > 0)
+								summary.AppendLine($"- {addedCount} new preset{(addedCount != 1 ? "s" : "")} added");
+							if (replacedCount > 0)
+								summary.AppendLine($"- {replacedCount} preset{(replacedCount != 1 ? "s" : "")} replaced");
+							if (skippedCount > 0)
+								summary.AppendLine($"- {skippedCount} preset{(skippedCount != 1 ? "s" : "")} skipped");
+							summary.AppendLine("\nAll changes have been auto-saved.");
+
+							MessageBox.Show(summary.ToString(), "Import Complete",
+								MessageBoxButtons.OK, MessageBoxIcon.Information);
+						}
+						else if (skippedCount > 0)
+						{
+							MessageBox.Show($"All {skippedCount} preset{(skippedCount != 1 ? "s were" : " was")} skipped.\nNo changes were made.",
+								"Import Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						}
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show("Error loading preset file: " + ex.Message, "Error",
+							MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				}
+			}
+		}
+
+
+		private void deletePresetButton_Click(object sender, EventArgs e)
+		{
+			if (presetComboBox.SelectedIndex <= 1) return;
+
+			var presetName = presetComboBox.SelectedItem.ToString();
+			if (MessageBox.Show(
+				$"Are you sure you want to delete the preset '{presetName}'?",
+				"Confirm Delete",
+				MessageBoxButtons.YesNo,
+				MessageBoxIcon.Question) == DialogResult.Yes)
+			{
+				int index = presetComboBox.SelectedIndex;
+				presets.RemoveAt(index - 2);
+				presetComboBox.Items.RemoveAt(index);
+
+				try
+				{
+					ColorPresetSerializer.SavePresets(presets);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(
+						$"Failed to save presets after deletion: {ex.Message}",
+						"Save Error",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Warning
+					);
+				}
+
+				// Select appropriate index after deletion
+				presetComboBox.SelectedIndex = Math.Min(index - 1, presetComboBox.Items.Count - 1);
+
+				// Update buttons state
+				UpdatePresetsButtonsState();
+			}
+		}
+
+		private void ApplyDefaultLightPreset()
+		{
+			settings.BackgroundColor = Color.FromArgb(255, 255, 255);
+			settings.SelectedColor = Color.FromArgb(240, 240, 240);
+			settings.HiddenColor = Color.FromArgb(240, 240, 240);
+			settings.OffsetColor = Color.FromArgb(255, 0, 0);
+			settings.AddressColor = Color.FromArgb(0, 200, 0);
+			settings.HexColor = Color.FromArgb(0, 0, 0);
+			settings.TypeColor = Color.FromArgb(0, 0, 255);
+			settings.NameColor = Color.FromArgb(32, 32, 128);
+			settings.ValueColor = Color.FromArgb(255, 128, 0);
+			settings.IndexColor = Color.FromArgb(32, 200, 200);
+			settings.CommentColor = Color.FromArgb(0, 200, 0);
+			settings.TextColor = Color.FromArgb(0, 0, 255);
+			settings.VTableColor = Color.FromArgb(0, 255, 0);
+			settings.PluginColor = Color.FromArgb(255, 0, 255);
+		}
+
+		private void ApplyDefaultDarkPreset()
+		{
+			settings.BackgroundColor = Color.FromArgb(0, 0, 0);
+			settings.SelectedColor = Color.FromArgb(43, 43, 43);
+			settings.HiddenColor = Color.FromArgb(43, 43, 43);
+			settings.OffsetColor = Color.FromArgb(255, 0, 0);
+			settings.AddressColor = Color.FromArgb(0, 200, 0);
+			settings.HexColor = Color.FromArgb(255, 255, 255);
+			settings.TypeColor = Color.FromArgb(5, 245, 255);
+			settings.NameColor = Color.FromArgb(240, 240, 240);
+			settings.ValueColor = Color.FromArgb(255, 128, 0);
+			settings.IndexColor = Color.FromArgb(32, 200, 200);
+			settings.CommentColor = Color.FromArgb(0, 200, 0);
+			settings.TextColor = Color.FromArgb(128, 128, 128);
+			settings.VTableColor = Color.FromArgb(0, 255, 0);
+
+		}
+
+		private void RefreshColorBindings()
+		{
+			foreach (Control control in nodeColorGroupBox.Controls)
+			{
+				if (control is ColorBox colorBox)
+				{
+					foreach (Binding binding in colorBox.DataBindings)
+					{
+						binding.ReadValue();
+					}
+				}
+			}
+			backgroundColorBox.DataBindings[nameof(ColorBox.Color)].ReadValue();
+		}
+
+		private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (presetComboBox.SelectedIndex < 0) return;
+
+			isLoadingPreset = true;
+
+			if (presetComboBox.SelectedIndex == 0) // Default Light
+			{
+				ApplyDefaultLightPreset();
+				deletePresetButton.Enabled = false;
+			}
+			else if (presetComboBox.SelectedIndex == 1) // Default Dark
+			{
+				ApplyDefaultDarkPreset();
+				deletePresetButton.Enabled = false;
+			}
+			else
+			{
+				var preset = presets[presetComboBox.SelectedIndex - 2];
+				preset.ApplyTo(settings);
+				deletePresetButton.Enabled = true;
+			}
+
+			RefreshColorBindings();
+			isLoadingPreset = false;
 		}
 
 		protected override void OnLoad(EventArgs e)
@@ -65,16 +361,6 @@ namespace ReClassNET.Forms
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
 			base.OnFormClosed(e);
-
-			// Update all open forms with current settings
-			foreach (Form form in Application.OpenForms)
-			{
-				if (form is DarkModeForm darkModeForm)
-				{
-					darkModeForm.UpdateDarkMode();
-				}
-			}
-
 			GlobalWindowManager.RemoveWindow(this);
 		}
 
@@ -98,6 +384,17 @@ namespace ReClassNET.Forms
 			control.DataBindings.Add(propertyName, dataSource, dataMember, true, DataSourceUpdateMode.OnPropertyChanged);
 		}
 
+		private void UpdateDarkMode()
+		{
+			foreach (Form form in Application.OpenForms)
+			{
+				if (form is DarkModeForm darkModeForm)
+				{
+					darkModeForm.UpdateDarkMode();
+				}
+			}
+		}
+
 		private void SetGeneralBindings()
 		{
 			SetBinding(stayOnTopCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.StayOnTop));
@@ -117,6 +414,30 @@ namespace ReClassNET.Forms
 			SetBinding(showPluginInfoCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentPluginInfo));
 			SetBinding(runAsAdminCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RunAsAdmin));
 			SetBinding(randomizeWindowTitleCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RandomizeWindowTitle));
+			SetBinding(colorizeIconsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ColorizeIcons));
+			SetBinding(roundedPanelsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RoundedPanels));
+
+			colorizeIconsCheckBox.CheckedChanged += (_, _2) =>
+			{
+				foreach (Form form in Application.OpenForms)
+				{
+					if (form is DarkModeForm darkModeForm)
+					{
+						darkModeForm.UpdateDarkMode();
+					}
+				}
+			};
+
+			roundedPanelsCheckBox.CheckedChanged += (_, _2) =>
+			{
+				foreach (Form form in Application.OpenForms)
+				{
+					if (form is DarkModeForm darkModeForm)
+					{
+						darkModeForm.UpdateDarkMode();
+					}
+				}
+			};
 		}
 
 		private void SetColorBindings()
@@ -136,6 +457,14 @@ namespace ReClassNET.Forms
 			SetBinding(nodeCommentColorBox, nameof(ColorBox.Color), settings, nameof(Settings.CommentColor));
 			SetBinding(nodeTextColorBox, nameof(ColorBox.Color), settings, nameof(Settings.TextColor));
 			SetBinding(nodePluginColorBox, nameof(ColorBox.Color), settings, nameof(Settings.PluginColor));
+
+
+			themeComboBox.SelectedIndexChanged += (s, e) =>
+			{
+				settings.DarkMode = (DarkModeForms.DarkModeCS.DisplayMode)themeComboBox.SelectedIndex;
+				UpdateDarkMode(); // Update the theme immediately
+			};
+			themeComboBox.SelectedIndex = (int)settings.DarkMode; // Set initial value
 		}
 
 		private void SetTypeDefinitionBindings()
@@ -163,6 +492,11 @@ namespace ReClassNET.Forms
 			SetBinding(utf16TextTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeUtf16Text));
 			SetBinding(utf32TextTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeUtf32Text));
 			SetBinding(functionPtrTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeFunctionPtr));
+		}
+
+		private void SettingsForm_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
