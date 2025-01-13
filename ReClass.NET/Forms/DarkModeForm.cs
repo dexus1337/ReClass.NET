@@ -11,7 +11,10 @@ namespace DarkModeForms
 
 		public DarkModeForm()
 		{
-			InitializeDarkMode();
+			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+			{
+				InitializeDarkMode();
+			}
 		}
 
 		protected virtual void InitializeDarkMode()
@@ -39,9 +42,19 @@ namespace DarkModeForms
 			}
 		}
 
+		protected override void OnHandleCreated(EventArgs e)
+		{
+			base.OnHandleCreated(e);
+
+			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+			{
+				InitializeDarkMode();
+			}
+		}
+
 		public void UpdateDarkMode()
 		{
-			if (darkMode != null)
+			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime) && darkMode != null)
 			{
 				darkMode.ApplyTheme(Program.Settings.DarkMode);
 			}
@@ -50,12 +63,6 @@ namespace DarkModeForms
 		public DarkModeCS GetDarkMode()
 		{
 			return darkMode;
-		}
-
-		protected override void OnHandleCreated(EventArgs e)
-		{
-			base.OnHandleCreated(e);
-			InitializeDarkMode();
 		}
 	}
 }

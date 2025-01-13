@@ -66,13 +66,7 @@ namespace ReClassNET.Forms
 		{
 			base.OnFormClosed(e);
 
-			// Toggle dark mode setting // MS
-			if (Program.Settings.DarkMode == DarkModeForms.DarkModeCS.DisplayMode.DarkMode)
-				Program.Settings.DarkMode = DarkModeForms.DarkModeCS.DisplayMode.ClearMode;
-			else
-				Program.Settings.DarkMode = DarkModeForms.DarkModeCS.DisplayMode.DarkMode;
-
-			// Update all open forms
+			// Update all open forms with current settings
 			foreach (Form form in Application.OpenForms)
 			{
 				if (form is DarkModeForm darkModeForm)
