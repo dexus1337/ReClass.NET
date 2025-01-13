@@ -61,7 +61,10 @@ namespace ReClassNET.Nodes
 			x = AddIcon(context, x, y, context.IconProvider.RightArrow, 3, HotSpotType.Click) + context.Font.Width;
 
 			x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<Size={MemorySize}>") + context.Font.Width;
-			x = AddIcon(context, x + 2, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
+			if (ShowWrappedTypeChangerIcon)
+			{
+				x = AddIcon(context, x + 2, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
+			}
 
 			x += context.Font.Width;
 			x = AddComment(context, x, y);

@@ -1,4 +1,4 @@
-﻿namespace ReClassNET.DataExchange.ReClass
+namespace ReClassNET.DataExchange.ReClass
 {
 	public partial class ReClassNetFile
 	{
@@ -39,5 +39,9 @@
 		public const string XmlFlagsAttribute = "flags";
 		public const string XmlItemElement = "item";
 		public const string XmlValueAttribute = "value";
+		public const string XmlInnerTypeAttribute = "inner_type";
+		public const string XmlBitStartAttribute = "bit_start";
+		public const string XmlBitCountAttribute = "bit_count";
+		public const string XmlBitCapAttribute = "bit_cap";
 	}
 }

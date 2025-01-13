@@ -21,6 +21,9 @@ namespace ReClassNET.Native
 		[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
 		private static extern IntPtr LoadLibrary(string lpFileName);
 
+		[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+		public static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hFile, int flags);
+
 		[DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true)]
 		private static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
 

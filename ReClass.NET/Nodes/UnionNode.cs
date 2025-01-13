@@ -28,7 +28,7 @@ namespace ReClassNET.Nodes
 					return false;
 			}
 
-			return true;
+			return bChildNodeChangeAllowed;
 		}
 
 		public override void Initialize()

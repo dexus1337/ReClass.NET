@@ -1,4 +1,4 @@
-﻿namespace ReClassNET.Nodes
+namespace ReClassNET.Nodes
 {
 	public abstract class BaseClassWrapperNode : BaseWrapperNode
 	{
@@ -6,7 +6,7 @@
 		{
 			var node = ClassNode.Create();
 			node.Initialize();
-
+			LevelsOpen.DefaultValue = true;
 			ChangeInnerNode(node);
 		}
 

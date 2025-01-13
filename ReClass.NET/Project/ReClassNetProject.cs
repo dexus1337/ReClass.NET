@@ -88,12 +88,24 @@ namespace ReClassNET.Project
 
 			return classes.Any(c => c.Uuid.Equals(uuid));
 		}
+		public bool ContainsClass(string name)
+		{
+			Contract.Requires(name != null);
+
+			return classes.Any(c => c.Name == name);
+		}
 
 		public ClassNode GetClassByUuid(Guid uuid)
 		{
 			Contract.Requires(uuid != null);
 
 			return classes.First(c => c.Uuid.Equals(uuid));
+		}
+		public ClassNode GetClassByName(string name)
+		{
+			Contract.Requires(name != null);
+
+			return classes.First(c => c.Name == name);
 		}
 
 		private void NodesChanged_Handler(BaseNode sender)

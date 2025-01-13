@@ -113,6 +113,9 @@
     <ApplicationIcon>Resources\Icon\ReClassNet.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClangSharp, Version=16.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\ClangSharp.16.0.0\lib\netstandard2.0\ClangSharp.dll</HintPath>
@@ -351,6 +354,7 @@
     <Compile Include="Nodes\NIntNode.cs" />
     <Compile Include="Nodes\PointerNode.cs" />
     <Compile Include="Nodes\NUIntNode.cs" />
+    <Compile Include="Nodes\SingleBitNode.cs" />
     <Compile Include="Nodes\UnionNode.cs" />
     <Compile Include="Project\CppTypeMapping.cs" />
     <Compile Include="Project\EnumDescription.cs" />
@@ -670,6 +674,7 @@
     </EmbeddedResource>
     <Compile Include="Debugger\RemoteDebugger.Handler.cs" />
     <None Include="packages.config" />
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

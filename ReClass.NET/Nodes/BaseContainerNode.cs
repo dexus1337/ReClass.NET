@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
+using System.Linq;
 using SD.Tools.Algorithmia.Commands;
 using SD.Tools.Algorithmia.GeneralDataStructures;
 
@@ -12,6 +13,7 @@ namespace ReClassNET.Nodes
 		//private readonly List<BaseNode> nodes = new List<BaseNode>();
 		private readonly CommandifiedList<BaseNode> nodes = new CommandifiedList<BaseNode>();
 
+                public bool bChildNodeChangeAllowed = true;
 		private int updateCount;
 
 		/// <summary>The child nodes of the container.</summary>
@@ -68,7 +70,11 @@ namespace ReClassNET.Nodes
 
 			return nodes.FindIndex(n => n == node);
 		}
-
+		public void ClearNodes()
+		{
+			nodes.Clear();
+			OnNodesUpdated();
+		}
 		/// <summary>
 		/// Checks if the node exists in the container.
 		/// </summary>
@@ -239,7 +245,7 @@ namespace ReClassNET.Nodes
 
 		/// <summary>Adds the specific amount of bytes at the end of the node.</summary>
 		/// <param name="size">The number of bytes to insert.</param>
-		public void AddBytes(int size)
+		public virtual void AddBytes(int size)
 		{
 			List<BaseNode> dummy = null;
 			InsertBytes(nodes.Count, size, ref dummy);
@@ -262,7 +268,7 @@ namespace ReClassNET.Nodes
 				throw new ArgumentOutOfRangeException($"The index {index} is not in the range [0, {nodes.Count}].");
 			}
 
-			if (size == 0)
+			if (size <= 0)
 			{
 				return;
 			}
@@ -322,7 +328,16 @@ namespace ReClassNET.Nodes
 
 			OnNodesUpdated();
 		}
+		public void AddNodeUnchecked(BaseNode node)
+		{
+			Contract.Requires(node != null);
 
+			node.ParentNode = this;
+
+			nodes.Add(node);
+
+			OnNodesUpdated();
+		}
 		/// <summary>
 		/// Inserts the node infront of the <paramref name="position"/> node.
 		/// </summary>
@@ -362,9 +377,17 @@ namespace ReClassNET.Nodes
 			return result;
 		}
 
+		public BaseNode GetNodeByOffset(int offset)
+		{
+			return nodes.Where(x => x.Offset == offset).FirstOrDefault();
+		}
+		public IEnumerable<BaseNode> GetNodesByOffset(int offset)
+		{
+			return nodes.Where(x => x.Offset == offset);
+		}
 		/// <summary>Called by a child if it has changed.</summary>
 		/// <param name="child">The child.</param>
-		protected internal virtual void ChildHasChanged(BaseNode child)
+		public virtual void ChildHasChanged(BaseNode child)
 		{
 			// TODO Add BaseNode.GetParentContainer
 		}

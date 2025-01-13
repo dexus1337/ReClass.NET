@@ -40,6 +40,7 @@ namespace ReClassNET.DataExchange.ReClass
 		{
 			typeof(BoolNode),
 			typeof(BitFieldNode),
+			typeof(SingleBitNode),
 			typeof(EnumNode),
 			typeof(ClassInstanceNode),
 			typeof(DoubleNode),

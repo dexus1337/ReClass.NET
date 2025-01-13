@@ -53,6 +53,11 @@ namespace ReClassNET.Core
 
 			functionsRegistry.Add(provider, functions);
 		}
+		public void UnregisterFunctions(string provider)
+		{
+			Contract.Requires(provider != null);
+			functionsRegistry.Remove(provider);
+		}
 
 		public void SetActiveFunctionsProvider(string provider)
 		{

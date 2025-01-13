@@ -306,15 +306,7 @@ namespace ReClassNET.Controls
 					}
 					else if (hotSpot.Type == HotSpotType.ChangeClassType || hotSpot.Type == HotSpotType.ChangeWrappedType || hotSpot.Type == HotSpotType.ChangeEnumType)
 					{
-						var handler = hotSpot.Type switch
-						{
-							HotSpotType.ChangeClassType => ChangeClassTypeClick,
-							HotSpotType.ChangeWrappedType => ChangeWrappedTypeClick,
-							HotSpotType.ChangeEnumType => ChangeEnumTypeClick
-						};
-
-						handler?.Invoke(this, new NodeClickEventArgs(hitObject, hotSpot.Address, hotSpot.Memory, e.Button, e.Location));
-
+						InvokeTypeChangeEvent(hotSpot.Type, new NodeClickEventArgs(hitObject, hotSpot.Address, hotSpot.Memory, e.Button, e.Location));
 						break;
 					}
 				}
@@ -327,7 +319,17 @@ namespace ReClassNET.Controls
 
 			base.OnMouseClick(e);
 		}
+		public void InvokeTypeChangeEvent(HotSpotType tp, NodeClickEventArgs e)
+		{
+			var handler = tp switch
+			{
+				HotSpotType.ChangeClassType => ChangeClassTypeClick,
+				HotSpotType.ChangeWrappedType => ChangeWrappedTypeClick,
+				HotSpotType.ChangeEnumType => ChangeEnumTypeClick
+			};
 
+			handler?.Invoke(this, e);
+		}
 		protected override void OnMouseDoubleClick(MouseEventArgs e)
 		{
 			Contract.Requires(e != null);

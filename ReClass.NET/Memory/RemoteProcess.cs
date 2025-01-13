@@ -58,6 +58,8 @@ namespace ReClassNET.Memory
 
 		public EndianBitConverter BitConverter { get; set; } = EndianBitConverter.System;
 
+		public IntPtr Handle => handle;
+
 		/// <summary>Gets a copy of the current modules list. This list may change if the remote process (un)loads a module.</summary>
 		public IEnumerable<Module> Modules
 		{

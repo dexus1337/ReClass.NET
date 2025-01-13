@@ -479,6 +479,41 @@ namespace ReClassNET.CodeGenerator
 				writer.Indent--;
 				writer.WriteLine("};");
 			}
+			else if (node is BitFieldNode bitFieldNode)
+			{
+				WriteNodes(writer, bitFieldNode.Nodes, logger);
+				int doneBits = 0;
+				foreach (var snode in bitFieldNode.Nodes)
+				{
+					if (snode is SingleBitNode singleBitNode)
+					{
+						doneBits += singleBitNode.BitCount;
+						if (doneBits > bitFieldNode.Bits)
+							break;
+					
+						simpleType = GetTypeDefinition(bitFieldNode.InnerNode, logger);
+						simpleType = simpleType == null ? "bool" : simpleType;
+						writer.Write(simpleType);
+						writer.Write(" ");
+						writer.Write(singleBitNode.Name);
+						writer.Write($":{singleBitNode.BitCount}");
+						writer.Write("; //0x");
+						writer.Write($"{node.Offset+singleBitNode.Offset:X04}, bit#:{doneBits - singleBitNode.BitCount}");
+						if (!string.IsNullOrEmpty(singleBitNode.Comment))
+						{
+							writer.Write(" ");
+							writer.Write(singleBitNode.Comment);
+						}
+						writer.WriteLine();
+					}
+					else
+						logger.Log(LogLevel.Error, $"Skipping node with unhandled type: {snode.GetType()}");
+				}
+			}
+			else if (node is SingleBitNode singleBitNode)
+			{
+				
+			}
 			else
 			{
 				logger.Log(LogLevel.Error, $"Skipping node with unhandled type: {node.GetType()}");
@@ -527,12 +562,12 @@ namespace ReClassNET.CodeGenerator
 					pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
 					return pointerNode;
 				}
-				case BitFieldNode bitFieldNode:
-				{
-					var underlayingNode = bitFieldNode.GetUnderlayingNode();
-					underlayingNode.CopyFromNode(node);
-					return underlayingNode;
-				}
+				//case BitFieldNode bitFieldNode:
+				//{
+				//	var underlayingNode = bitFieldNode.GetUnderlayingNode();
+				//	underlayingNode.CopyFromNode(node);
+				//	return underlayingNode;
+				//}
 				case BaseHexNode hexNode:
 				{
 					var arrayNode = new ArrayNode { Count = hexNode.MemorySize };

@@ -1,7 +1,7 @@
-﻿using Microsoft.SqlServer.MessageBox;
+using Microsoft.SqlServer.MessageBox;
 using System;
 using System.Diagnostics.Contracts;
-
+using System.Diagnostics;
 namespace ReClassNET.Logger
 {
 	public abstract class BaseLogger : ILogger
@@ -17,6 +17,11 @@ namespace ReClassNET.Logger
 
 		public void Log(LogLevel level, string message)
 		{
+			if (level == LogLevel.Error)
+			{
+				var caller = new StackTrace().GetFrame(1).GetMethod();
+				message = $"{message} | {caller.DeclaringType.FullName}.{caller.Name}";
+			}
 			Log(level, message, null);
 		}
 

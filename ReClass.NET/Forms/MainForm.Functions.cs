@@ -389,6 +389,9 @@ namespace ReClassNET.Forms
 						CommandQueueManagerSingleton.GetInstance().BeginUndoablePeriod(cmd);
 						var node = BaseNode.CreateInstanceFromType(type, innerType == null);
 
+						if (containerPartitions.Container is BitFieldNode && !containerPartitions.Container.CanHandleChildNode(node))
+							break;
+
 						var createdNodes = new List<BaseNode>();
 						containerPartitions.Container.ReplaceChildNode(selected.Node, node, ref createdNodes);
 
@@ -678,7 +681,7 @@ namespace ReClassNET.Forms
 			ClearSelection();
 		}
 
-		private bool IsCycleFree(ClassNode parent, ClassNode node)
+		public bool IsCycleFree(ClassNode parent, ClassNode node)
 		{
 			if (ClassUtil.IsCyclicIfClassIsAccessibleFromParent(parent, node, CurrentProject.Classes))
 			{

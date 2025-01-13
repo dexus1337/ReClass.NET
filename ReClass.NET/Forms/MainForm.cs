@@ -35,7 +35,7 @@ namespace ReClassNET.Forms
 
 		private ReClassNetProject currentProject;
 		public ReClassNetProject CurrentProject => currentProject;
-
+		public MemoryViewControl MemoryViewControl => memoryViewControl;
 		private ClassNode currentClassNode;
 
 		private readonly MemoryBuffer memoryViewBuffer = new MemoryBuffer();
@@ -47,7 +47,7 @@ namespace ReClassNET.Forms
 		public ProjectView ProjectView => projectView;
 
 		public MenuStrip MainMenu => mainMenuStrip;
-
+		public static string PluginsFolder => PluginManager.PluginsPath;
 		public ClassNode CurrentClassNode
 		{
 			get => currentClassNode;
@@ -109,7 +109,7 @@ namespace ReClassNET.Forms
 
 			GlobalWindowManager.AddWindow(this);
 
-			pluginManager.LoadAllPlugins(Path.Combine(Application.StartupPath, Constants.PluginsFolder), Program.Logger);
+			pluginManager.LoadAllPlugins(PluginManager.PluginsPath, Program.Logger);
 
 			toolStrip.Items.AddRange(NodeTypesBuilder.CreateToolStripButtons(ReplaceSelectedNodesWithType).ToArray());
 			changeTypeToolStripMenuItem.DropDownItems.AddRange(NodeTypesBuilder.CreateToolStripMenuItems(ReplaceSelectedNodesWithType, false).ToArray());
@@ -897,14 +897,24 @@ namespace ReClassNET.Forms
 			var parentContainer = node?.GetParentContainer();
 			var nodeIsClass = node is ClassNode;
 			var isContainerNode = node is BaseContainerNode;
+			var isBitsContainer = node?.ParentNode?.GetType() == typeof(BitFieldNode);
 
 			addBytesToolStripDropDownButton.Enabled = parentContainer != null || isContainerNode;
 			insertBytesToolStripDropDownButton.Enabled = selectedNodes.Count == 1 && parentContainer != null && !isContainerNode;
 			initClassToolStripMenuItem.Enabled = nodeIsClass;
 			initClassFromRTTIToolStripBarMenuItem.Enabled = nodeIsClass;
 
-			var enabled = selectedNodes.Count > 0 && !nodeIsClass;
-			toolStrip.Items.OfType<TypeToolStripButton>().ForEach(b => b.Enabled = enabled);
+			var enabled = selectedNodes.Count > 0 && !nodeIsClass && !isBitsContainer;
+			Type sbt = typeof(SingleBitNode);
+			toolStrip.Items.OfType<TypeToolStripButton>().ForEach(b =>
+			{
+				if (b.Value == sbt)
+					b.Enabled = isBitsContainer;
+				else
+					b.Enabled = enabled;
+
+			}
+			);
 		}
 
 		private void memoryViewControl_ChangeClassTypeClick(object sender, NodeClickEventArgs e)
