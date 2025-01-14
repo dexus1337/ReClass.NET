@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -107,6 +108,20 @@ namespace ReClassNET.Forms
 		{
 			base.OnLoad(e);
 
+			if (Properties.Settings.Default.FormWidth == 0)
+			{
+				Properties.Settings.Default.FormWidth = this.Width;
+				Properties.Settings.Default.FormHeight = this.Height;
+				Properties.Settings.Default.FormLocationX = this.Location.X;
+				Properties.Settings.Default.FormLocationY = this.Location.Y;
+				Properties.Settings.Default.Save();
+			}
+			else
+			{
+				this.Location = new Point(Properties.Settings.Default.FormLocationX, Properties.Settings.Default.FormLocationY);
+				this.Size = new Size(Properties.Settings.Default.FormWidth, Properties.Settings.Default.FormHeight);
+			}
+
 			GlobalWindowManager.AddWindow(this);
 
 			pluginManager.LoadAllPlugins(PluginManager.PluginsPath, Program.Logger);
@@ -147,6 +162,15 @@ namespace ReClassNET.Forms
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
+			if (WindowState == FormWindowState.Normal)
+			{
+				Properties.Settings.Default.FormLocationX = this.Location.X;
+				Properties.Settings.Default.FormLocationY = this.Location.Y;
+				Properties.Settings.Default.FormWidth = this.Size.Width;
+				Properties.Settings.Default.FormHeight = this.Size.Height;
+				Properties.Settings.Default.Save();
+			}
+			base.OnFormClosed(e);
 			pluginManager.UnloadAllPlugins();
 
 			GlobalWindowManager.RemoveWindow(this);
