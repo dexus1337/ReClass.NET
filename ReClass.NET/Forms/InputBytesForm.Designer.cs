@@ -1,4 +1,4 @@
-﻿namespace ReClassNET.Forms
+namespace ReClassNET.Forms
 {
 	partial class InputBytesForm
 	{

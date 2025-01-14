@@ -127,6 +127,7 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.TextColor), e => preset.TextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.VTableColor), e => preset.VTableColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.PluginColor), e => preset.PluginColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.ClassColor), e => preset.ClassColor = XElementSerializer.ToColor(e));
 
 					if (!string.IsNullOrWhiteSpace(preset.Name))
 					{

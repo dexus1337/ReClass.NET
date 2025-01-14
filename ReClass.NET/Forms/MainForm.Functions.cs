@@ -22,11 +22,14 @@ namespace ReClassNET.Forms
 {
 	public partial class MainForm
 	{
-		public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses)
+		public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses, bool csharp = false)
 		{
 			Contract.Requires(partialClasses != null);
 
-			ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping));
+			if (csharp)
+				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CSharpCodeGenerator());
+			else
+				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping));
 		}
 
 		public void ShowCodeGeneratorForm(ICodeGenerator generator)
@@ -159,7 +162,10 @@ namespace ReClassNET.Forms
 			var node = memoryViewControl.GetSelectedNodes().Select(h => h.Node).FirstOrDefault();
 			if (node == null)
 			{
-				return;
+				node = CurrentClassNode;
+
+				if (node == null)
+					return;
 			}
 
 			(node as BaseContainerNode ?? node.GetParentContainer())?.AddBytes(bytes);

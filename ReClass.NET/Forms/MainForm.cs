@@ -114,12 +114,15 @@ namespace ReClassNET.Forms
 				Properties.Settings.Default.FormHeight = this.Height;
 				Properties.Settings.Default.FormLocationX = this.Location.X;
 				Properties.Settings.Default.FormLocationY = this.Location.Y;
+				Properties.Settings.Default.Maximized = (WindowState == FormWindowState.Maximized);
 				Properties.Settings.Default.Save();
 			}
 			else
 			{
 				this.Location = new Point(Properties.Settings.Default.FormLocationX, Properties.Settings.Default.FormLocationY);
 				this.Size = new Size(Properties.Settings.Default.FormWidth, Properties.Settings.Default.FormHeight);
+				if (Properties.Settings.Default.Maximized)
+					WindowState = FormWindowState.Maximized;
 			}
 
 			GlobalWindowManager.AddWindow(this);
@@ -162,15 +165,20 @@ namespace ReClassNET.Forms
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
-			if (WindowState == FormWindowState.Normal)
+			if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
 			{
 				Properties.Settings.Default.FormLocationX = this.Location.X;
 				Properties.Settings.Default.FormLocationY = this.Location.Y;
+			}
+			if (WindowState == FormWindowState.Normal)
+			{
 				Properties.Settings.Default.FormWidth = this.Size.Width;
 				Properties.Settings.Default.FormHeight = this.Size.Height;
-				Properties.Settings.Default.Save();
 			}
-			base.OnFormClosed(e);
+			Properties.Settings.Default.Maximized = (WindowState == FormWindowState.Maximized);
+
+			Properties.Settings.Default.Save();
+
 			pluginManager.UnloadAllPlugins();
 
 			GlobalWindowManager.RemoveWindow(this);
@@ -821,6 +829,14 @@ namespace ReClassNET.Forms
 			}
 		}
 
+		private void showCodeOfClassSharpToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (memoryViewControl.GetSelectedNodes().FirstOrDefault()?.Node is ClassNode node)
+			{
+				ShowPartialCodeGeneratorForm(new[] { node }, true);
+			}
+		}
+
 		private void shrinkClassToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var node = memoryViewControl.GetSelectedNodes().Select(s => s.Node).FirstOrDefault();
@@ -981,6 +997,16 @@ namespace ReClassNET.Forms
 						{
 							refNode.ChangeInnerNode(selectedClassNode);
 						}
+						else if (refNode is PointerNode pn)
+						{
+							if (pn.InnerNode is ClassInstanceNode cn)
+							{
+								if (!cn.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(cn.GetParentClass(), selectedClassNode))
+								{
+									cn.ChangeInnerNode(selectedClassNode);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1044,6 +1070,17 @@ namespace ReClassNET.Forms
 			}
 
 			ShowPartialCodeGeneratorForm(new[] { classNode });
+		}
+
+		private void showCodeOfClassToolStripMenuItem3_Click(object sender, EventArgs e)
+		{
+			var classNode = projectView.SelectedClass;
+			if (classNode == null)
+			{
+				return;
+			}
+
+			ShowPartialCodeGeneratorForm(new[] { classNode }, true);
 		}
 
 		private void enableHierarchyViewToolStripMenuItem_Click(object sender, EventArgs e)

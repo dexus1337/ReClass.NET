@@ -40,7 +40,7 @@ namespace ReClassNET.Nodes
 			{
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name) + context.Font.Width;
 			}
-			x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<{InnerNode.Name}>") + context.Font.Width;
+			x = AddText(context, x, y, context.Settings.ClassColor, HotSpot.NoneId, $"<{InnerNode.Name}>") + context.Font.Width; // ValueColor
 			if (ShowWrappedTypeChangerIcon)
 				x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
 

@@ -7,7 +7,7 @@ namespace ReClassNET.Forms
 		/// <summary>
 		/// Erforderliche Designervariable.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+    private System.ComponentModel.IContainer components = null;
 
 		/// <summary>
 		/// Verwendete Ressourcen bereinigen.
@@ -41,6 +41,7 @@ namespace ReClassNET.Forms
 			this.removeUnusedClassesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
 			this.showCodeOfClassToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.showCodeOfClassToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.projectClassesContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.enableHierarchyViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.autoExpandHierarchyViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,6 +100,7 @@ namespace ReClassNET.Forms
 			this.copyAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.showCodeOfClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showCodeOfClassSharpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.shrinkClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
 			this.attachToProcessToolStripSplitButton = new System.Windows.Forms.ToolStripSplitButton();
@@ -234,7 +236,8 @@ namespace ReClassNET.Forms
             this.toolStripSeparator19,
             this.removeUnusedClassesToolStripMenuItem,
             this.toolStripSeparator20,
-            this.showCodeOfClassToolStripMenuItem2});
+			this.showCodeOfClassToolStripMenuItem2,
+			this.showCodeOfClassToolStripMenuItem3});
 			this.projectClassContextMenuStrip.Name = "contextMenuStrip";
 			this.projectClassContextMenuStrip.Size = new System.Drawing.Size(206, 82);
 			// 
@@ -271,6 +274,16 @@ namespace ReClassNET.Forms
 			this.showCodeOfClassToolStripMenuItem2.Size = new System.Drawing.Size(205, 22);
 			this.showCodeOfClassToolStripMenuItem2.Text = "Show C++ Code of Class";
 			this.showCodeOfClassToolStripMenuItem2.Click += new System.EventHandler(this.showCodeOfClassToolStripMenuItem2_Click);
+
+			// 
+			// showCodeOfClassToolStripMenuItem3
+			// 
+			this.showCodeOfClassToolStripMenuItem3.Image = global::ReClassNET.Properties.Resources.B16x16_Page_Code_Cpp;
+			this.showCodeOfClassToolStripMenuItem3.Name = "showCodeOfClassToolStripMenuItem3";
+			this.showCodeOfClassToolStripMenuItem3.Size = new System.Drawing.Size(205, 22);
+			this.showCodeOfClassToolStripMenuItem3.Text = "Show C# Code of Class";
+			this.showCodeOfClassToolStripMenuItem3.Click += new System.EventHandler(this.showCodeOfClassToolStripMenuItem3_Click);
+
 			// 
 			// projectClassesContextMenuStrip
 			// 
@@ -410,7 +423,8 @@ namespace ReClassNET.Forms
             this.copyAddressToolStripMenuItem,
             this.toolStripSeparator11,
             this.showCodeOfClassToolStripMenuItem,
-            this.shrinkClassToolStripMenuItem});
+			this.showCodeOfClassSharpToolStripMenuItem,
+			this.shrinkClassToolStripMenuItem});
 			this.selectedNodeContextMenuStrip.Name = "selectedNodeContextMenuStrip";
 			this.selectedNodeContextMenuStrip.Size = new System.Drawing.Size(270, 432);
 			this.selectedNodeContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.selectedNodeContextMenuStrip_Opening);
@@ -773,6 +787,15 @@ namespace ReClassNET.Forms
 			this.showCodeOfClassToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
 			this.showCodeOfClassToolStripMenuItem.Text = "Show C++ Code of Class";
 			this.showCodeOfClassToolStripMenuItem.Click += new System.EventHandler(this.showCodeOfClassToolStripMenuItem_Click);
+			// 
+			// showCodeOfClassSharpToolStripMenuItem
+			// 
+			this.showCodeOfClassSharpToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Page_Code_Cpp;
+			this.showCodeOfClassSharpToolStripMenuItem.Name = "showCodeOfClassSharpToolStripMenuItem";
+			this.showCodeOfClassSharpToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+			this.showCodeOfClassSharpToolStripMenuItem.Text = "Show C# Code of Class";
+			this.showCodeOfClassSharpToolStripMenuItem.Click += new System.EventHandler(this.showCodeOfClassSharpToolStripMenuItem_Click);
+
 			// 
 			// shrinkClassToolStripMenuItem
 			// 
@@ -1495,10 +1518,7 @@ namespace ReClassNET.Forms
 			this.mainMenuStrip.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
-
 		}
-
-
 		#endregion
 
 		private MemoryViewControl memoryViewControl;
@@ -1612,6 +1632,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem copyAddressToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
 		private System.Windows.Forms.ToolStripMenuItem showCodeOfClassToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showCodeOfClassSharpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem shrinkClassToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
@@ -1624,6 +1645,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem removeUnusedClassesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
 		private System.Windows.Forms.ToolStripMenuItem showCodeOfClassToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem showCodeOfClassToolStripMenuItem3;
 		private System.Windows.Forms.ContextMenuStrip projectClassesContextMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem enableHierarchyViewToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem autoExpandHierarchyViewToolStripMenuItem;

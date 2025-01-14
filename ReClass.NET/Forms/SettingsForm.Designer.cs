@@ -32,6 +32,7 @@ namespace ReClassNET.Forms
 		{
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.generalSettingsTabPage = new System.Windows.Forms.TabPage();
+            this.randomizeWindowTitleCheckBox = new System.Windows.Forms.CheckBox();
             this.fileAssociationGroupBox = new System.Windows.Forms.GroupBox();
             this.removeAssociationButton = new System.Windows.Forms.Button();
             this.createAssociationButton = new System.Windows.Forms.Button();
@@ -44,9 +45,8 @@ namespace ReClassNET.Forms
             this.showPointerCheckBox = new System.Windows.Forms.CheckBox();
             this.showIntegerCheckBox = new System.Windows.Forms.CheckBox();
             this.showFloatCheckBox = new System.Windows.Forms.CheckBox();
-            this.displayGroupBox = new System.Windows.Forms.GroupBox();
-            this.randomizeWindowTitleCheckBox = new System.Windows.Forms.CheckBox();
             this.runAsAdminCheckBox = new System.Windows.Forms.CheckBox();
+            this.displayGroupBox = new System.Windows.Forms.GroupBox();
             this.colorizeIconsCheckBox = new System.Windows.Forms.CheckBox();
             this.roundedPanelsCheckBox = new System.Windows.Forms.CheckBox();
             this.enhancedCaretCheckBox = new System.Windows.Forms.CheckBox();
@@ -64,6 +64,7 @@ namespace ReClassNET.Forms
             this.nodePluginLabel = new System.Windows.Forms.Label();
             this.nodeHexValueColorBox = new ReClassNET.Controls.ColorBox();
             this.nodePluginColorBox = new ReClassNET.Controls.ColorBox();
+            this.nodeClassColorBox = new ReClassNET.Controls.ColorBox();
             this.nodeHexValueLabel = new System.Windows.Forms.Label();
             this.nodeVTableLabel = new System.Windows.Forms.Label();
             this.nodeOffsetColorBox = new ReClassNET.Controls.ColorBox();
@@ -85,6 +86,7 @@ namespace ReClassNET.Forms
             this.nodeValueColorBox = new ReClassNET.Controls.ColorBox();
             this.nodeTypeLabel = new System.Windows.Forms.Label();
             this.nodeNameLabel = new System.Windows.Forms.Label();
+            this.nodeClassLabel = new System.Windows.Forms.Label();
             this.nodeNameColorBox = new ReClassNET.Controls.ColorBox();
             this.backgroundLabel = new System.Windows.Forms.Label();
             this.backgroundColorBox = new ReClassNET.Controls.ColorBox();
@@ -164,7 +166,7 @@ namespace ReClassNET.Forms
             this.settingsTabControl.Location = new System.Drawing.Point(12, 60);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(562, 409);
+            this.settingsTabControl.Size = new System.Drawing.Size(562, 374);
             this.settingsTabControl.TabIndex = 1;
             // 
             // generalSettingsTabPage
@@ -178,17 +180,27 @@ namespace ReClassNET.Forms
             this.generalSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.generalSettingsTabPage.Name = "generalSettingsTabPage";
             this.generalSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 383);
+            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 348);
             this.generalSettingsTabPage.TabIndex = 0;
             this.generalSettingsTabPage.Text = "General";
             this.generalSettingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // randomizeWindowTitleCheckBox
+            // 
+            this.randomizeWindowTitleCheckBox.AutoSize = true;
+            this.randomizeWindowTitleCheckBox.Location = new System.Drawing.Point(405, 6);
+            this.randomizeWindowTitleCheckBox.Name = "randomizeWindowTitleCheckBox";
+            this.randomizeWindowTitleCheckBox.Size = new System.Drawing.Size(137, 17);
+            this.randomizeWindowTitleCheckBox.TabIndex = 5;
+            this.randomizeWindowTitleCheckBox.Text = "Randomize window title";
+            this.randomizeWindowTitleCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileAssociationGroupBox
             // 
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.createAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
-            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 292);
+            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 255);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
             this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 85);
             this.fileAssociationGroupBox.TabIndex = 4;
@@ -312,6 +324,16 @@ namespace ReClassNET.Forms
             this.showFloatCheckBox.Text = "Show Float Values";
             this.showFloatCheckBox.UseVisualStyleBackColor = true;
             // 
+            // runAsAdminCheckBox
+            // 
+            this.runAsAdminCheckBox.AutoSize = true;
+            this.runAsAdminCheckBox.Location = new System.Drawing.Point(199, 6);
+            this.runAsAdminCheckBox.Name = "runAsAdminCheckBox";
+            this.runAsAdminCheckBox.Size = new System.Drawing.Size(200, 17);
+            this.runAsAdminCheckBox.TabIndex = 4;
+            this.runAsAdminCheckBox.Text = "Run as administrator (requires restart)";
+            this.runAsAdminCheckBox.UseVisualStyleBackColor = true;
+            // 
             // displayGroupBox
             // 
             this.displayGroupBox.Controls.Add(this.colorizeIconsCheckBox);
@@ -327,26 +349,6 @@ namespace ReClassNET.Forms
             this.displayGroupBox.TabIndex = 2;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
-            // 
-            // randomizeWindowTitleCheckBox
-            // 
-            this.randomizeWindowTitleCheckBox.AutoSize = true;
-            this.randomizeWindowTitleCheckBox.Location = new System.Drawing.Point(405, 6);
-            this.randomizeWindowTitleCheckBox.Name = "randomizeWindowTitleCheckBox";
-            this.randomizeWindowTitleCheckBox.Size = new System.Drawing.Size(137, 17);
-            this.randomizeWindowTitleCheckBox.TabIndex = 5;
-            this.randomizeWindowTitleCheckBox.Text = "Randomize window title";
-            this.randomizeWindowTitleCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // runAsAdminCheckBox
-            // 
-            this.runAsAdminCheckBox.AutoSize = true;
-            this.runAsAdminCheckBox.Location = new System.Drawing.Point(199, 6);
-            this.runAsAdminCheckBox.Name = "runAsAdminCheckBox";
-            this.runAsAdminCheckBox.Size = new System.Drawing.Size(200, 17);
-            this.runAsAdminCheckBox.TabIndex = 4;
-            this.runAsAdminCheckBox.Text = "Run as administrator (requires restart)";
-            this.runAsAdminCheckBox.UseVisualStyleBackColor = true;
             // 
             // colorizeIconsCheckBox
             // 
@@ -438,7 +440,7 @@ namespace ReClassNET.Forms
             this.colorsSettingTabPage.Location = new System.Drawing.Point(4, 22);
             this.colorsSettingTabPage.Name = "colorsSettingTabPage";
             this.colorsSettingTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 383);
+            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 348);
             this.colorsSettingTabPage.TabIndex = 1;
             this.colorsSettingTabPage.Text = "Colors";
             this.colorsSettingTabPage.UseVisualStyleBackColor = true;
@@ -447,7 +449,7 @@ namespace ReClassNET.Forms
             // 
             this.themeSettingsGroupBox.Controls.Add(this.themeComboBox);
             this.themeSettingsGroupBox.Controls.Add(this.themeLabel);
-            this.themeSettingsGroupBox.Location = new System.Drawing.Point(9, 274);
+            this.themeSettingsGroupBox.Location = new System.Drawing.Point(9, 246);
             this.themeSettingsGroupBox.Name = "themeSettingsGroupBox";
             this.themeSettingsGroupBox.Size = new System.Drawing.Size(539, 45);
             this.themeSettingsGroupBox.TabIndex = 29;
@@ -482,6 +484,7 @@ namespace ReClassNET.Forms
             this.nodeColorGroupBox.Controls.Add(this.nodePluginLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeHexValueColorBox);
             this.nodeColorGroupBox.Controls.Add(this.nodePluginColorBox);
+            this.nodeColorGroupBox.Controls.Add(this.nodeClassColorBox);
             this.nodeColorGroupBox.Controls.Add(this.nodeHexValueLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeVTableLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeOffsetColorBox);
@@ -503,10 +506,11 @@ namespace ReClassNET.Forms
             this.nodeColorGroupBox.Controls.Add(this.nodeValueColorBox);
             this.nodeColorGroupBox.Controls.Add(this.nodeTypeLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeNameLabel);
+            this.nodeColorGroupBox.Controls.Add(this.nodeClassLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeNameColorBox);
-            this.nodeColorGroupBox.Location = new System.Drawing.Point(9, 43);
+            this.nodeColorGroupBox.Location = new System.Drawing.Point(9, 42);
             this.nodeColorGroupBox.Name = "nodeColorGroupBox";
-            this.nodeColorGroupBox.Size = new System.Drawing.Size(539, 225);
+            this.nodeColorGroupBox.Size = new System.Drawing.Size(539, 200);
             this.nodeColorGroupBox.TabIndex = 28;
             this.nodeColorGroupBox.TabStop = false;
             this.nodeColorGroupBox.Text = "Node Colors";
@@ -514,7 +518,7 @@ namespace ReClassNET.Forms
             // nodeValueLabel
             // 
             this.nodeValueLabel.AutoSize = true;
-            this.nodeValueLabel.Location = new System.Drawing.Point(9, 198);
+            this.nodeValueLabel.Location = new System.Drawing.Point(9, 177);
             this.nodeValueLabel.Name = "nodeValueLabel";
             this.nodeValueLabel.Size = new System.Drawing.Size(64, 13);
             this.nodeValueLabel.TabIndex = 17;
@@ -523,7 +527,7 @@ namespace ReClassNET.Forms
             // nodePluginLabel
             // 
             this.nodePluginLabel.AutoSize = true;
-            this.nodePluginLabel.Location = new System.Drawing.Point(286, 172);
+            this.nodePluginLabel.Location = new System.Drawing.Point(286, 151);
             this.nodePluginLabel.Name = "nodePluginLabel";
             this.nodePluginLabel.Size = new System.Drawing.Size(87, 13);
             this.nodePluginLabel.TabIndex = 27;
@@ -532,7 +536,7 @@ namespace ReClassNET.Forms
             // nodeHexValueColorBox
             // 
             this.nodeHexValueColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeHexValueColorBox.Location = new System.Drawing.Point(133, 117);
+            this.nodeHexValueColorBox.Location = new System.Drawing.Point(133, 96);
             this.nodeHexValueColorBox.Name = "nodeHexValueColorBox";
             this.nodeHexValueColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeHexValueColorBox.TabIndex = 2;
@@ -540,15 +544,23 @@ namespace ReClassNET.Forms
             // nodePluginColorBox
             // 
             this.nodePluginColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodePluginColorBox.Location = new System.Drawing.Point(410, 169);
+            this.nodePluginColorBox.Location = new System.Drawing.Point(410, 148);
             this.nodePluginColorBox.Name = "nodePluginColorBox";
             this.nodePluginColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodePluginColorBox.TabIndex = 26;
             // 
+            // nodeClassColorBox
+            // 
+            this.nodeClassColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.nodeClassColorBox.Location = new System.Drawing.Point(410, 177);
+            this.nodeClassColorBox.Name = "nodeClassColorBox";
+            this.nodeClassColorBox.Size = new System.Drawing.Size(123, 20);
+            this.nodeClassColorBox.TabIndex = 2;
+            // 
             // nodeHexValueLabel
             // 
             this.nodeHexValueLabel.AutoSize = true;
-            this.nodeHexValueLabel.Location = new System.Drawing.Point(9, 120);
+            this.nodeHexValueLabel.Location = new System.Drawing.Point(9, 99);
             this.nodeHexValueLabel.Name = "nodeHexValueLabel";
             this.nodeHexValueLabel.Size = new System.Drawing.Size(86, 13);
             this.nodeHexValueLabel.TabIndex = 3;
@@ -557,7 +569,7 @@ namespace ReClassNET.Forms
             // nodeVTableLabel
             // 
             this.nodeVTableLabel.AutoSize = true;
-            this.nodeVTableLabel.Location = new System.Drawing.Point(286, 94);
+            this.nodeVTableLabel.Location = new System.Drawing.Point(286, 73);
             this.nodeVTableLabel.Name = "nodeVTableLabel";
             this.nodeVTableLabel.Size = new System.Drawing.Size(71, 13);
             this.nodeVTableLabel.TabIndex = 25;
@@ -566,7 +578,7 @@ namespace ReClassNET.Forms
             // nodeOffsetColorBox
             // 
             this.nodeOffsetColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeOffsetColorBox.Location = new System.Drawing.Point(133, 91);
+            this.nodeOffsetColorBox.Location = new System.Drawing.Point(133, 70);
             this.nodeOffsetColorBox.Name = "nodeOffsetColorBox";
             this.nodeOffsetColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeOffsetColorBox.TabIndex = 4;
@@ -574,7 +586,7 @@ namespace ReClassNET.Forms
             // nodeVTableColorBox
             // 
             this.nodeVTableColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeVTableColorBox.Location = new System.Drawing.Point(410, 91);
+            this.nodeVTableColorBox.Location = new System.Drawing.Point(410, 70);
             this.nodeVTableColorBox.Name = "nodeVTableColorBox";
             this.nodeVTableColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeVTableColorBox.TabIndex = 24;
@@ -582,7 +594,7 @@ namespace ReClassNET.Forms
             // nodeOffsetLabel
             // 
             this.nodeOffsetLabel.AutoSize = true;
-            this.nodeOffsetLabel.Location = new System.Drawing.Point(9, 94);
+            this.nodeOffsetLabel.Location = new System.Drawing.Point(9, 73);
             this.nodeOffsetLabel.Name = "nodeOffsetLabel";
             this.nodeOffsetLabel.Size = new System.Drawing.Size(65, 13);
             this.nodeOffsetLabel.TabIndex = 5;
@@ -591,7 +603,7 @@ namespace ReClassNET.Forms
             // nodeTextLabel
             // 
             this.nodeTextLabel.AutoSize = true;
-            this.nodeTextLabel.Location = new System.Drawing.Point(286, 146);
+            this.nodeTextLabel.Location = new System.Drawing.Point(286, 125);
             this.nodeTextLabel.Name = "nodeTextLabel";
             this.nodeTextLabel.Size = new System.Drawing.Size(58, 13);
             this.nodeTextLabel.TabIndex = 23;
@@ -600,7 +612,7 @@ namespace ReClassNET.Forms
             // nodeAddressColorBox
             // 
             this.nodeAddressColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeAddressColorBox.Location = new System.Drawing.Point(133, 65);
+            this.nodeAddressColorBox.Location = new System.Drawing.Point(133, 44);
             this.nodeAddressColorBox.Name = "nodeAddressColorBox";
             this.nodeAddressColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeAddressColorBox.TabIndex = 6;
@@ -608,7 +620,7 @@ namespace ReClassNET.Forms
             // nodeTextColorBox
             // 
             this.nodeTextColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeTextColorBox.Location = new System.Drawing.Point(410, 143);
+            this.nodeTextColorBox.Location = new System.Drawing.Point(410, 122);
             this.nodeTextColorBox.Name = "nodeTextColorBox";
             this.nodeTextColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeTextColorBox.TabIndex = 22;
@@ -616,7 +628,7 @@ namespace ReClassNET.Forms
             // nodeAddressLabel
             // 
             this.nodeAddressLabel.AutoSize = true;
-            this.nodeAddressLabel.Location = new System.Drawing.Point(9, 68);
+            this.nodeAddressLabel.Location = new System.Drawing.Point(9, 47);
             this.nodeAddressLabel.Name = "nodeAddressLabel";
             this.nodeAddressLabel.Size = new System.Drawing.Size(75, 13);
             this.nodeAddressLabel.TabIndex = 7;
@@ -625,7 +637,7 @@ namespace ReClassNET.Forms
             // nodeCommentLabel
             // 
             this.nodeCommentLabel.AutoSize = true;
-            this.nodeCommentLabel.Location = new System.Drawing.Point(286, 120);
+            this.nodeCommentLabel.Location = new System.Drawing.Point(286, 99);
             this.nodeCommentLabel.Name = "nodeCommentLabel";
             this.nodeCommentLabel.Size = new System.Drawing.Size(81, 13);
             this.nodeCommentLabel.TabIndex = 21;
@@ -642,7 +654,7 @@ namespace ReClassNET.Forms
             // nodeCommentColorBox
             // 
             this.nodeCommentColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeCommentColorBox.Location = new System.Drawing.Point(410, 117);
+            this.nodeCommentColorBox.Location = new System.Drawing.Point(410, 96);
             this.nodeCommentColorBox.Name = "nodeCommentColorBox";
             this.nodeCommentColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeCommentColorBox.TabIndex = 20;
@@ -659,7 +671,7 @@ namespace ReClassNET.Forms
             // nodeIndexLabel
             // 
             this.nodeIndexLabel.AutoSize = true;
-            this.nodeIndexLabel.Location = new System.Drawing.Point(286, 68);
+            this.nodeIndexLabel.Location = new System.Drawing.Point(286, 47);
             this.nodeIndexLabel.Name = "nodeIndexLabel";
             this.nodeIndexLabel.Size = new System.Drawing.Size(63, 13);
             this.nodeIndexLabel.TabIndex = 19;
@@ -676,7 +688,7 @@ namespace ReClassNET.Forms
             // nodeIndexColorBox
             // 
             this.nodeIndexColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeIndexColorBox.Location = new System.Drawing.Point(410, 65);
+            this.nodeIndexColorBox.Location = new System.Drawing.Point(410, 44);
             this.nodeIndexColorBox.Name = "nodeIndexColorBox";
             this.nodeIndexColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeIndexColorBox.TabIndex = 18;
@@ -693,7 +705,7 @@ namespace ReClassNET.Forms
             // nodeTypeColorBox
             // 
             this.nodeTypeColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeTypeColorBox.Location = new System.Drawing.Point(133, 143);
+            this.nodeTypeColorBox.Location = new System.Drawing.Point(133, 122);
             this.nodeTypeColorBox.Name = "nodeTypeColorBox";
             this.nodeTypeColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeTypeColorBox.TabIndex = 12;
@@ -701,7 +713,7 @@ namespace ReClassNET.Forms
             // nodeValueColorBox
             // 
             this.nodeValueColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeValueColorBox.Location = new System.Drawing.Point(133, 195);
+            this.nodeValueColorBox.Location = new System.Drawing.Point(133, 174);
             this.nodeValueColorBox.Name = "nodeValueColorBox";
             this.nodeValueColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeValueColorBox.TabIndex = 16;
@@ -709,7 +721,7 @@ namespace ReClassNET.Forms
             // nodeTypeLabel
             // 
             this.nodeTypeLabel.AutoSize = true;
-            this.nodeTypeLabel.Location = new System.Drawing.Point(9, 146);
+            this.nodeTypeLabel.Location = new System.Drawing.Point(9, 125);
             this.nodeTypeLabel.Name = "nodeTypeLabel";
             this.nodeTypeLabel.Size = new System.Drawing.Size(61, 13);
             this.nodeTypeLabel.TabIndex = 13;
@@ -718,16 +730,25 @@ namespace ReClassNET.Forms
             // nodeNameLabel
             // 
             this.nodeNameLabel.AutoSize = true;
-            this.nodeNameLabel.Location = new System.Drawing.Point(9, 172);
+            this.nodeNameLabel.Location = new System.Drawing.Point(9, 151);
             this.nodeNameLabel.Name = "nodeNameLabel";
             this.nodeNameLabel.Size = new System.Drawing.Size(65, 13);
             this.nodeNameLabel.TabIndex = 15;
             this.nodeNameLabel.Text = "Name Color:";
             // 
+            // nodeClassLabel
+            // 
+            this.nodeClassLabel.AutoSize = true;
+            this.nodeClassLabel.Location = new System.Drawing.Point(286, 177);
+            this.nodeClassLabel.Name = "nodeClassLabel";
+            this.nodeClassLabel.Size = new System.Drawing.Size(62, 13);
+            this.nodeClassLabel.TabIndex = 13;
+            this.nodeClassLabel.Text = "Class Color:";
+            // 
             // nodeNameColorBox
             // 
             this.nodeNameColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.nodeNameColorBox.Location = new System.Drawing.Point(133, 169);
+            this.nodeNameColorBox.Location = new System.Drawing.Point(133, 148);
             this.nodeNameColorBox.Name = "nodeNameColorBox";
             this.nodeNameColorBox.Size = new System.Drawing.Size(123, 20);
             this.nodeNameColorBox.TabIndex = 14;
@@ -756,7 +777,7 @@ namespace ReClassNET.Forms
             this.colorPresetsGroupBox.Controls.Add(this.loadPresetButton);
             this.colorPresetsGroupBox.Controls.Add(this.deletePresetButton);
             this.colorPresetsGroupBox.Controls.Add(this.presetLabel);
-            this.colorPresetsGroupBox.Location = new System.Drawing.Point(9, 325);
+            this.colorPresetsGroupBox.Location = new System.Drawing.Point(9, 297);
             this.colorPresetsGroupBox.Name = "colorPresetsGroupBox";
             this.colorPresetsGroupBox.Size = new System.Drawing.Size(539, 47);
             this.colorPresetsGroupBox.TabIndex = 30;
@@ -860,7 +881,7 @@ namespace ReClassNET.Forms
             this.typeDefinitionsSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.typeDefinitionsSettingsTabPage.Name = "typeDefinitionsSettingsTabPage";
             this.typeDefinitionsSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 383);
+            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 348);
             this.typeDefinitionsSettingsTabPage.TabIndex = 2;
             this.typeDefinitionsSettingsTabPage.Text = "Type Definitions";
             this.typeDefinitionsSettingsTabPage.UseVisualStyleBackColor = true;
@@ -1257,7 +1278,7 @@ namespace ReClassNET.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 478);
+            this.ClientSize = new System.Drawing.Size(586, 434);
             this.Controls.Add(this.bannerBox);
             this.Controls.Add(this.settingsTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -1347,6 +1368,8 @@ namespace ReClassNET.Forms
 		private ColorBox nodeIndexColorBox;
 		private System.Windows.Forms.Label nodePluginLabel;
 		private ColorBox nodePluginColorBox;
+		private System.Windows.Forms.Label nodeClassLabel;
+		private ColorBox nodeClassColorBox;
 		private System.Windows.Forms.Label floatSettingsLabel;
 		private System.Windows.Forms.TextBox floatTypeTextBox;
 		private System.Windows.Forms.Label uint64SettingsLabel;

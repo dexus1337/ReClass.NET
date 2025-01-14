@@ -287,6 +287,7 @@ namespace ReClassNET.Forms
 			settings.TextColor = Color.FromArgb(0, 0, 255);
 			settings.VTableColor = Color.FromArgb(0, 255, 0);
 			settings.PluginColor = Color.FromArgb(255, 0, 255);
+			settings.ClassColor = Color.FromArgb(32, 32, 128);
 		}
 
 		private void ApplyDefaultDarkPreset()
@@ -304,7 +305,7 @@ namespace ReClassNET.Forms
 			settings.CommentColor = Color.FromArgb(0, 200, 0);
 			settings.TextColor = Color.FromArgb(128, 128, 128);
 			settings.VTableColor = Color.FromArgb(0, 255, 0);
-
+			settings.ClassColor = Color.FromArgb(240, 240, 240); // MS 78, 201, 176
 		}
 
 		private void RefreshColorBindings()
@@ -453,6 +454,7 @@ namespace ReClassNET.Forms
 			SetBinding(nodeCommentColorBox, nameof(ColorBox.Color), settings, nameof(Settings.CommentColor));
 			SetBinding(nodeTextColorBox, nameof(ColorBox.Color), settings, nameof(Settings.TextColor));
 			SetBinding(nodePluginColorBox, nameof(ColorBox.Color), settings, nameof(Settings.PluginColor));
+			SetBinding(nodeClassColorBox, nameof(ColorBox.Color), settings, nameof(Settings.ClassColor));
 
 			themeComboBox.SelectedIndexChanged += (s, e) =>
 			{

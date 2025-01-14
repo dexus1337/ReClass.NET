@@ -76,6 +76,8 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(colors, nameof(settings.CommentColor), e => settings.CommentColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(colors, nameof(settings.TextColor), e => settings.TextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(colors, nameof(settings.VTableColor), e => settings.VTableColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(colors, nameof(settings.PluginColor), e => settings.PluginColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(colors, nameof(settings.ClassColor), e => settings.ClassColor = XElementSerializer.ToColor(e));
 				}
 				var customData = root?.Element(XmlCustomDataElement);
 				if (customData != null)
@@ -148,7 +150,9 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.IndexColor), settings.IndexColor),
 						XElementSerializer.ToXml(nameof(settings.CommentColor), settings.CommentColor),
 						XElementSerializer.ToXml(nameof(settings.TextColor), settings.TextColor),
-						XElementSerializer.ToXml(nameof(settings.VTableColor), settings.VTableColor)
+						XElementSerializer.ToXml(nameof(settings.VTableColor), settings.VTableColor),
+						XElementSerializer.ToXml(nameof(settings.PluginColor), settings.PluginColor),
+						XElementSerializer.ToXml(nameof(settings.ClassColor), settings.ClassColor)
 					),
 					settings.CustomData.Serialize(XmlCustomDataElement)
 				)

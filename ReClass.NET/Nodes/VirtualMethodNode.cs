@@ -7,7 +7,8 @@ namespace ReClassNET.Nodes
 {
 	public class VirtualMethodNode : BaseFunctionPtrNode
 	{
-		public string MethodName => string.IsNullOrEmpty(Name) ? $"Function{Offset / IntPtr.Size}" : Name;
+//		public string MethodName => string.IsNullOrEmpty(Name) ? $"Function{Offset / IntPtr.Size}" : Name;
+		public string MethodName => string.IsNullOrEmpty(Name) ? $"void Function{Offset / IntPtr.Size}()" : Name;
 
 		public override void GetUserInterfaceInfo(out string name, out Image icon)
 		{

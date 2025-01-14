@@ -102,7 +102,7 @@ namespace ReClassNET.DataExchange.ReClass
 					.Elements(XmlClassElement)
 					.DistinctBy(e => e.Attribute(XmlUuidAttribute)?.Value))
 				{
-					var node = new ClassNode(false)
+					var node = new ClassNode(true)
 					{
 						Uuid = ParseUuid(element.Attribute(XmlUuidAttribute)?.Value),
 						Name = element.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
@@ -320,6 +320,11 @@ namespace ReClassNET.DataExchange.ReClass
 					var @enum = project.Enums.FirstOrDefault(e => e.Name == enumName) ?? EnumDescription.Default;
 					
 					enumNode.ChangeEnum(@enum);
+					break;
+				}
+				case CustomNode customNode:
+				{
+					customNode.RealSize = (int?)element.Attribute(XmlSizeAttribute) ?? 0;
 					break;
 				}
 			}

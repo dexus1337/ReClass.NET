@@ -167,7 +167,7 @@ namespace ReClassNET.DataExchange.ReClass
 				node.IsHidden = element.Attribute("bHidden")?.Value.Equals("1") ?? false;
 
 				// Convert the Custom node into normal hex nodes.
-				if (node is CustomNode customNode)
+				if (node is OrigCustomNode customNode) // CustomNode
 				{
 					int.TryParse(element.Attribute("Size")?.Value, out var size);
 
@@ -296,7 +296,7 @@ namespace ReClassNET.DataExchange.ReClass
 			typeof(UInt8Node),
 			typeof(Utf8TextNode),
 			typeof(FunctionPtrNode),
-			typeof(CustomNode),
+			typeof(OrigCustomNode), // CustomNode
 			typeof(Vector2Node),
 			typeof(Vector3Node),
 			typeof(Vector4Node),
@@ -339,7 +339,7 @@ namespace ReClassNET.DataExchange.ReClass
 			typeof(Utf8TextNode),
 			typeof(Utf16TextNode),
 			typeof(FunctionPtrNode),
-			typeof(CustomNode),
+			typeof(OrigCustomNode), // CustomNode
 			typeof(Vector2Node),
 			typeof(Vector3Node),
 			typeof(Vector4Node),

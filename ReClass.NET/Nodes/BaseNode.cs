@@ -68,6 +68,8 @@ namespace ReClassNET.Nodes
 		/// <summary>Size of the node in bytes.</summary>
 		public abstract int MemorySize { get; }
 
+		/// <summary>Gets or sets a value indicating whether this node is padding.</summary>
+		public bool IsPadding { get; set; }
 		public event NodeEventHandler NameChanged;
 		public event NodeEventHandler CommentChanged;
 		public event NodeToggleHandler OnLevelToggled;
@@ -290,6 +292,12 @@ namespace ReClassNET.Nodes
 			OnLevelToggled?.Invoke(this, LevelsOpen[level]);
 		}
 
+		/// <summary>Sets the default level.</summary>
+		/// <param name="open">True to open.</param>
+		internal void SetLevelDefaultOpen(bool open)
+		{
+			LevelsOpen.DefaultValue = open;
+		}
 		/// <summary>Sets the specific level.</summary>
 		/// <param name="level">The level to set.</param>
 		/// <param name="open">True to open.</param>
@@ -298,6 +306,12 @@ namespace ReClassNET.Nodes
 			LevelsOpen[level] = open;
 		}
 
+		/// <summary>Gets the specific level.</summary>
+		/// <param name="level">The level to set.</param>
+		internal bool GetLevelOpen(int level)
+		{
+			return LevelsOpen[level];
+		}
 		/// <summary>Adds a <see cref="HotSpot"/> the user can interact with.</summary>
 		/// <param name="context">The drawing context.</param>
 		/// <param name="spot">The spot.</param>

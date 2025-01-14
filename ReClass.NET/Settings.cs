@@ -87,6 +87,8 @@ namespace ReClassNET
 
 		public Color PluginColor { get; set; } = Color.FromArgb(255, 0, 255);
 
+		public Color ClassColor { get; set; } = Color.FromArgb(32, 32, 128); 
+
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
 		// HotKeys
