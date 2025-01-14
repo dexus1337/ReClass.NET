@@ -563,7 +563,7 @@ namespace DarkModeForms
 					comboBox.SelectionStart = comboBox.Text.Length;
 				}
 				//The below line is commented out because it was causing an exception in the theme switching combobox
-				// control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
+				 control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
 
 				// Fixes a glitch showing the Combo Backgroud white when the control is Disabled:
 				if (!control.Enabled && this.IsDarkMode)
@@ -994,7 +994,7 @@ namespace DarkModeForms
 
 			if (ColorMode <= 0)
 			{
-				_ret.Background = Color.FromArgb(32, 32, 32);   //<- Negro Claro
+				_ret.Background = Color.FromArgb(55, 55, 55);   //<- Negro Claro
 				_ret.BackgroundDark = Color.FromArgb(18, 18, 18);
 				_ret.BackgroundLight = ControlPaint.Light(_ret.Background);
 
@@ -1013,7 +1013,22 @@ namespace DarkModeForms
 				_ret.Primary = Color.FromArgb(3, 218, 198);   //<- Verde Pastel
 				_ret.Secondary = Color.MediumSlateBlue;         //<- Magenta Claro
 
+				// New menu colors for dark mode
+				_ret.MenuBackground = Color.FromArgb(43, 43, 43);
+				_ret.MenuBorder = Color.FromArgb(67, 67, 67);
+				_ret.MenuHighlight = Color.FromArgb(55, 55, 55);
+				_ret.MenuText = Color.FromArgb(240, 240, 240);
+				_ret.MenuTextDisabled = Color.FromArgb(128, 128, 128);
+			}
+			else // Light Mode
+			{
 
+				// New menu colors for light mode
+				_ret.MenuBackground = Color.FromArgb(255, 255, 255);
+				_ret.MenuBorder = Color.FromArgb(0, 0, 0);
+				_ret.MenuHighlight = Color.FromArgb(220, 220, 220);
+				_ret.MenuText = Color.FromArgb(0, 0, 0);
+				_ret.MenuTextDisabled = Color.FromArgb(160, 160, 160);
 			}
 
 			return _ret;
@@ -1256,6 +1271,21 @@ namespace DarkModeForms
 		{
 		}
 
+		/// <summary>Background color for context menus and dropdowns</summary>
+		public System.Drawing.Color MenuBackground { get; set; } = SystemColors.Control;
+
+		/// <summary>Border color for context menus and dropdowns</summary>
+		public System.Drawing.Color MenuBorder { get; set; } = SystemColors.ControlDark;
+
+		/// <summary>Highlight color for selected menu items</summary>
+		public System.Drawing.Color MenuHighlight { get; set; } = SystemColors.Highlight;
+
+		/// <summary>Text color for menu items</summary>
+		public System.Drawing.Color MenuText { get; set; } = SystemColors.ControlText;
+
+		/// <summary>Text color for disabled menu items</summary>
+		public System.Drawing.Color MenuTextDisabled { get; set; } = SystemColors.GrayText;
+
 		/// <summary>For the very back of the Window</summary>
 		public System.Drawing.Color Background { get; set; } = SystemColors.Control;
 
@@ -1368,7 +1398,14 @@ namespace DarkModeForms
 		// Background of the whole ToolBar Or MenuBar:
 		protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
 		{
-			e.ToolStrip.BackColor = MyColors.Background;
+			if (e.ToolStrip is ContextMenuStrip || e.ToolStrip is ToolStripDropDownMenu)
+			{
+				e.ToolStrip.BackColor = MyColors.MenuBackground;
+			}
+			else
+			{
+				e.ToolStrip.BackColor = MyColors.Background;
+			}
 			base.OnRenderToolStripBackground(e);
 		}
 
@@ -1562,33 +1599,39 @@ namespace DarkModeForms
 			Graphics g = e.Graphics;
 			Rectangle bounds = new Rectangle(Point.Empty, e.Item.Size);
 
-			Color gradientBegin = MyColors.Background; // Color.FromArgb(203, 225, 252);
-			Color gradientEnd = MyColors.Background; // Color.FromArgb(125, 165, 224);
+			Color gradientBegin = MyColors.MenuBackground;
+			Color gradientEnd = MyColors.MenuBackground;
 
 			bool DrawIt = false;
 			var _menu = e.Item as ToolStripItem;
 			if (_menu.Pressed)
 			{
-				gradientBegin = MyColors.Control; // Color.FromArgb(254, 128, 62);
-				gradientEnd = MyColors.Control; // Color.FromArgb(255, 223, 154);
+				gradientBegin = MyColors.MenuHighlight;
+				gradientEnd = MyColors.MenuHighlight;
 				DrawIt = true;
 			}
 			else if (_menu.Selected)
 			{
-				gradientBegin = MyColors.Accent;// Color.FromArgb(255, 255, 222);
-				gradientEnd = MyColors.Accent; // Color.FromArgb(255, 203, 136);
+				gradientBegin = MyColors.MenuHighlight;
+				gradientEnd = MyColors.MenuHighlight;
 				DrawIt = true;
 			}
 
 			if (DrawIt)
 			{
 				using (Brush b = new LinearGradientBrush(
-				bounds,
-				gradientBegin,
-				gradientEnd,
-				LinearGradientMode.Vertical))
+					bounds,
+					gradientBegin,
+					gradientEnd,
+					LinearGradientMode.Vertical))
 				{
 					g.FillRectangle(b, bounds);
+				}
+
+				// Draw border
+				using (Pen p = new Pen(MyColors.MenuBorder))
+				{
+					g.DrawRectangle(p, bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
 				}
 			}
 		}
