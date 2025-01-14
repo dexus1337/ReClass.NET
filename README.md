@@ -45,6 +45,11 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Plugins can interact with the ReClass.NET windows
   - Plugins can provide node infos which will be displayed (example: class informations for Frostbite games)
   - Plugins can implement custom nodes with load/save and code generation support
+- DarkMode
+- Configurable Editor Colors
+  - Import/Export of Editor Themes
+- Open MiniDumps
+- Basic Networking-functionality
 
 ## Plugins
 - [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin)
@@ -155,3 +160,18 @@ Settings
 - [DrP3pp3r](https://github.com/DrP3pp3r)
 - [ko1N](https://github.com/ko1N)
 - [Niemand](https://github.com/niemand-sec) (see his talk at [BlackHat Europe 2019 (London) "Unveiling the underground world of Anti-Cheats"](https://www.blackhat.com/eu-19/briefings/schedule/index.html#unveiling-the-underground-world-of-anti-cheats-17358))
+- [Pharaoh2k](https://github.com/Pharaoh2k/)
+- [Frans Bouma](https://github.com/FransBouma/)
+- [João Vítor Moutinho Rocha](https://github.com/jvmr10/)
+- [kapai](https://github.com/mkapai/)
+- [sakiodre](https://github.com/sakiodre/)
+- [кафіф](https://github.com/cafeed28/)
+- [Gabriel-Marian Cristei](https://github.com/cristeigabriel/)
+- [Peter Elmegaard](https://github.com/Elmegaard/)
+- [Deniz Ozmus](https://github.com/dozmus/)
+- [FynnTW](https://github.com/FynnTW/)
+- [TechForBad](https://github.com/TechForBad/)
+- [PeaceBeUponYou](https://github.com/PeaceBeUponYou/)
+- [user23333](https://github.com/user23333/)
+- [Pinwhell](https://github.com/pinwhell/)
+- [Nu](https://github.com/Autoplay1999/)
