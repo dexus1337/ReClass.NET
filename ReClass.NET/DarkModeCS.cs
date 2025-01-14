@@ -562,7 +562,8 @@ namespace DarkModeForms
 				{
 					comboBox.SelectionStart = comboBox.Text.Length;
 				}
-				control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
+				//The below line is commented out because it was causing an exception in the theme switching combobox
+				// control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
 
 				// Fixes a glitch showing the Combo Backgroud white when the control is Disabled:
 				if (!control.Enabled && this.IsDarkMode)

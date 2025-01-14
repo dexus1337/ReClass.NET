@@ -184,6 +184,7 @@
     <Compile Include="AddressParser\Token.cs" />
     <Compile Include="AddressParser\Tokenizer.cs" />
     <Compile Include="CodeGenerator\Language.cs" />
+    <Compile Include="ColorPreset.cs" />
     <Compile Include="Core\CoreFunctionsManager.cs" />
     <Compile Include="Core\DataExchange.cs" />
     <Compile Include="Core\ICoreProcessFunctions.cs" />
@@ -249,6 +250,12 @@
     </Compile>
     <Compile Include="Forms\EnumSelectionForm.Designer.cs">
       <DependentUpon>EnumSelectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainForm.Functions.cs">
       <SubType>Form</SubType>
@@ -462,6 +469,7 @@
     </Compile>
     <Compile Include="Util\BitString.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
+    <Compile Include="Util\ColorPresetSerializer.cs" />
     <Compile Include="Util\CommandLineArgs.cs" />
     <Compile Include="Util\Conversion\BigEndianBitConverter.cs" />
     <Compile Include="Util\Conversion\EndianBitConverter.cs" />
