@@ -267,8 +267,9 @@ namespace ReClassNET.CodeGenerator
 					return (typeName + "[]", $"[MarshalAs(UnmanagedType.ByValArray, SizeConst = {arrayNode.Count})]");
 
 				case ClassInstanceNode classInstanceNode:
-					var innerNodeName = classInstanceNode.InnerNode.Name;
-					return (innerNodeName, null);
+//					var innerNodeName = classInstanceNode.InnerNode.Name; // MS ?
+//					return (innerNodeName, null);
+
 					var innerNode = GetTypeDefinition(classInstanceNode.InnerNode);
 					var innerNodeType = innerNode.typeName;
 					if (string.IsNullOrEmpty(innerNodeType))

@@ -3,34 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Nodes;
 using ReClassNET.Util;
 
 namespace ReClassNET
 {
 	public class Settings
-	{
-		private readonly Dictionary<Type, Keys> _shortcutKeyPerNode;
-
-		public Settings()
-		{
-			_shortcutKeyPerNode = new Dictionary<Type, Keys> // MS
-								  {
-									  { typeof(Hex64Node), Keys.Control | Keys.Shift | Keys.D6 },
-									  { typeof(ClassInstanceNode), Keys.Control | Keys.Shift | Keys.C },
-									  { typeof(FloatNode), Keys.Control | Keys.Shift | Keys.F },
-									  { typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
-									  { typeof(PointerNode), Keys.Control | Keys.Shift | Keys.P },
-									  { typeof(Vector2Node), Keys.Control | Keys.Shift | Keys.D2 },
-									  { typeof(Vector3Node), Keys.Control | Keys.Shift | Keys.D3 },
-									  { typeof(Vector4Node), Keys.Control | Keys.Shift | Keys.D4 },
-									  { typeof(VirtualMethodTableNode), Keys.Control | Keys.Shift | Keys.V },
-									  { typeof(BoolNode), Keys.Control | Keys.Shift | Keys.O },
-									  { typeof(EnumNode), Keys.Control | Keys.Shift | Keys.E },
-									  { typeof(Int32Node), Keys.Control | Keys.Shift | Keys.I }
-								  };
-		}
-		
+	{	
 		// Application Settings
 
 		public string LastProcess { get; set; } = string.Empty;
@@ -109,10 +89,71 @@ namespace ReClassNET
 
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
+		// HotKeys
+		private Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS
+		{
+			{ typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
+			{ typeof(Hex16Node), 0 },
+			{ typeof(Hex32Node), 0 },
+			{ typeof(Hex64Node), Keys.Control | Keys.Shift | Keys.D6 },
+
+			{ typeof(NIntNode), 0 },
+			{ typeof(Int8Node), 0 },
+			{ typeof(Int16Node), 0 },
+			{ typeof(Int32Node), Keys.Control | Keys.Shift | Keys.I },
+			{ typeof(Int64Node), 0 },
+
+			{ typeof(NUIntNode), 0 },
+			{ typeof(UInt8Node), 0 },
+			{ typeof(UInt16Node), 0 },
+			{ typeof(UInt32Node), 0 },
+			{ typeof(UInt64Node), 0 },
+
+			{ typeof(BoolNode), Keys.Control | Keys.Shift | Keys.O },
+			{ typeof(SingleBitNode), 0 },
+			{ typeof(BitFieldNode), 0 },
+			{ typeof(EnumNode), Keys.Control | Keys.Shift | Keys.E },
+
+			{ typeof(FloatNode), Keys.Control | Keys.Shift | Keys.F },
+			{ typeof(DoubleNode), 0 },
+
+			{ typeof(Vector2Node), Keys.Control | Keys.Shift | Keys.D2 },
+			{ typeof(Vector3Node), Keys.Control | Keys.Shift | Keys.D3 },
+			{ typeof(Vector4Node), Keys.Control | Keys.Shift | Keys.D4 },
+			{ typeof(Matrix3x3Node), 0 },
+			{ typeof(Matrix3x4Node), 0 },
+			{ typeof(Matrix4x4Node), 0 },
+
+			{ typeof(Utf8TextNode), 0 },
+			{ typeof(Utf8TextPtrNode), 0 },
+			{ typeof(Utf16TextNode), 0 },
+			{ typeof(Utf16TextPtrNode), 0 },
+			{ typeof(Utf32TextNode), 0 },
+			{ typeof(Utf32TextPtrNode), 0 },
+
+			{ typeof(PointerNode), Keys.Control | Keys.Shift | Keys.P },
+			{ typeof(ArrayNode), 0 },
+			{ typeof(UnionNode), 0 },
+			{ typeof(ClassNode), 0 },
+			{ typeof(ClassInstanceNode), Keys.Control | Keys.Shift | Keys.C },
+			{ typeof(ClassInstanceArrayNode), 0 },
+			{ typeof(VirtualMethodTableNode), Keys.Control | Keys.Shift | Keys.V },
+			{ typeof(VirtualMethodNode), 0 },
+			{ typeof(FunctionNode), 0 },
+			{ typeof(FunctionPtrNode), 0 }
+		};
+
 		public Keys GetShortcutKeyForNodeType(Type nodeType)
 		{
-			return !_shortcutKeyPerNode.TryGetValue(nodeType, out var shortcutKeys) ? Keys.None : shortcutKeys;
+			return !_nodeShortcuts.TryGetValue(nodeType, out var shortcutKeys) ? Keys.None : shortcutKeys;
 		}
+
+		public void SetShortcutKeyForNodeType(Type nodeType, Keys shortCut)
+		{
+			if (_nodeShortcuts.TryGetValue(nodeType, out var shortcutKeys_))
+				shortcutKeys_ = shortCut;
+		}
+
 		public Settings Clone() => MemberwiseClone() as Settings;
 	}
 }

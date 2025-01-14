@@ -10,7 +10,7 @@ namespace ReClassNET.Forms
 	{
 		private Icon icon;
 
-		public Icon Icon
+		new public Icon Icon
 		{
 			get => icon;
 			set

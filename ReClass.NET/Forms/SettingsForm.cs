@@ -21,8 +21,6 @@ namespace ReClassNET.Forms
 		private readonly Settings settings;
 		private readonly CppTypeMapping typeMapping;
 		private List<ColorPreset> presets;
-		private bool isLoadingPreset;
-
 
 		public TabControl SettingsTabControl => settingsTabControl;
 
@@ -328,8 +326,6 @@ namespace ReClassNET.Forms
 		{
 			if (presetComboBox.SelectedIndex < 0) return;
 
-			isLoadingPreset = true;
-
 			if (presetComboBox.SelectedIndex == 0) // Default Light
 			{
 				ApplyDefaultLightPreset();
@@ -348,7 +344,6 @@ namespace ReClassNET.Forms
 			}
 
 			RefreshColorBindings();
-			isLoadingPreset = false;
 		}
 
 		protected override void OnLoad(EventArgs e)
@@ -384,7 +379,7 @@ namespace ReClassNET.Forms
 			control.DataBindings.Add(propertyName, dataSource, dataMember, true, DataSourceUpdateMode.OnPropertyChanged);
 		}
 
-		private void UpdateDarkMode()
+		new private void UpdateDarkMode()
 		{
 			foreach (Form form in Application.OpenForms)
 			{
@@ -416,7 +411,8 @@ namespace ReClassNET.Forms
 			SetBinding(randomizeWindowTitleCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RandomizeWindowTitle));
 			SetBinding(colorizeIconsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ColorizeIcons));
 			SetBinding(roundedPanelsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RoundedPanels));
-
+			SetBinding(enhancedCaretCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.EnhancedCaret));
+			
 			colorizeIconsCheckBox.CheckedChanged += (_, _2) =>
 			{
 				foreach (Form form in Application.OpenForms)
@@ -457,7 +453,6 @@ namespace ReClassNET.Forms
 			SetBinding(nodeCommentColorBox, nameof(ColorBox.Color), settings, nameof(Settings.CommentColor));
 			SetBinding(nodeTextColorBox, nameof(ColorBox.Color), settings, nameof(Settings.TextColor));
 			SetBinding(nodePluginColorBox, nameof(ColorBox.Color), settings, nameof(Settings.PluginColor));
-
 
 			themeComboBox.SelectedIndexChanged += (s, e) =>
 			{

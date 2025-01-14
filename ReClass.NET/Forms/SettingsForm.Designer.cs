@@ -49,6 +49,7 @@ namespace ReClassNET.Forms
             this.runAsAdminCheckBox = new System.Windows.Forms.CheckBox();
             this.colorizeIconsCheckBox = new System.Windows.Forms.CheckBox();
             this.roundedPanelsCheckBox = new System.Windows.Forms.CheckBox();
+            this.enhancedCaretCheckBox = new System.Windows.Forms.CheckBox();
             this.highlightChangedValuesCheckBox = new System.Windows.Forms.CheckBox();
             this.showTextCheckBox = new System.Windows.Forms.CheckBox();
             this.showNodeOffsetCheckBox = new System.Windows.Forms.CheckBox();
@@ -168,8 +169,10 @@ namespace ReClassNET.Forms
             // 
             // generalSettingsTabPage
             // 
+            this.generalSettingsTabPage.Controls.Add(this.randomizeWindowTitleCheckBox);
             this.generalSettingsTabPage.Controls.Add(this.fileAssociationGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.commentsGroupBox);
+            this.generalSettingsTabPage.Controls.Add(this.runAsAdminCheckBox);
             this.generalSettingsTabPage.Controls.Add(this.displayGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.stayOnTopCheckBox);
             this.generalSettingsTabPage.Location = new System.Drawing.Point(4, 22);
@@ -185,7 +188,7 @@ namespace ReClassNET.Forms
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.createAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
-            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 281);
+            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 292);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
             this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 85);
             this.fileAssociationGroupBox.TabIndex = 4;
@@ -311,17 +314,16 @@ namespace ReClassNET.Forms
             // 
             // displayGroupBox
             // 
-            this.displayGroupBox.Controls.Add(this.randomizeWindowTitleCheckBox);
-            this.displayGroupBox.Controls.Add(this.runAsAdminCheckBox);
             this.displayGroupBox.Controls.Add(this.colorizeIconsCheckBox);
             this.displayGroupBox.Controls.Add(this.roundedPanelsCheckBox);
+            this.displayGroupBox.Controls.Add(this.enhancedCaretCheckBox);
             this.displayGroupBox.Controls.Add(this.highlightChangedValuesCheckBox);
             this.displayGroupBox.Controls.Add(this.showTextCheckBox);
             this.displayGroupBox.Controls.Add(this.showNodeOffsetCheckBox);
             this.displayGroupBox.Controls.Add(this.showNodeAddressCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(283, 39);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(265, 202);
+            this.displayGroupBox.Size = new System.Drawing.Size(265, 186);
             this.displayGroupBox.TabIndex = 2;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
@@ -329,7 +331,7 @@ namespace ReClassNET.Forms
             // randomizeWindowTitleCheckBox
             // 
             this.randomizeWindowTitleCheckBox.AutoSize = true;
-            this.randomizeWindowTitleCheckBox.Location = new System.Drawing.Point(6, 180);
+            this.randomizeWindowTitleCheckBox.Location = new System.Drawing.Point(405, 6);
             this.randomizeWindowTitleCheckBox.Name = "randomizeWindowTitleCheckBox";
             this.randomizeWindowTitleCheckBox.Size = new System.Drawing.Size(137, 17);
             this.randomizeWindowTitleCheckBox.TabIndex = 5;
@@ -339,7 +341,7 @@ namespace ReClassNET.Forms
             // runAsAdminCheckBox
             // 
             this.runAsAdminCheckBox.AutoSize = true;
-            this.runAsAdminCheckBox.Location = new System.Drawing.Point(6, 157);
+            this.runAsAdminCheckBox.Location = new System.Drawing.Point(199, 6);
             this.runAsAdminCheckBox.Name = "runAsAdminCheckBox";
             this.runAsAdminCheckBox.Size = new System.Drawing.Size(200, 17);
             this.runAsAdminCheckBox.TabIndex = 4;
@@ -365,6 +367,16 @@ namespace ReClassNET.Forms
             this.roundedPanelsCheckBox.TabIndex = 7;
             this.roundedPanelsCheckBox.Text = "Use rounded panel borders";
             this.roundedPanelsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // enhancedCaretCheckBox
+            // 
+            this.enhancedCaretCheckBox.AutoSize = true;
+            this.enhancedCaretCheckBox.Location = new System.Drawing.Point(6, 157);
+            this.enhancedCaretCheckBox.Name = "enhancedCaretCheckBox";
+            this.enhancedCaretCheckBox.Size = new System.Drawing.Size(124, 17);
+            this.enhancedCaretCheckBox.TabIndex = 7;
+            this.enhancedCaretCheckBox.Text = "Use enhanced Caret";
+            this.enhancedCaretCheckBox.UseVisualStyleBackColor = true;
             // 
             // highlightChangedValuesCheckBox
             // 
@@ -1291,6 +1303,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.CheckBox showNodeOffsetCheckBox;
 		private System.Windows.Forms.CheckBox colorizeIconsCheckBox;
 		private System.Windows.Forms.CheckBox roundedPanelsCheckBox;
+		private System.Windows.Forms.CheckBox enhancedCaretCheckBox;
 		private System.Windows.Forms.CheckBox highlightChangedValuesCheckBox;
 		private System.Windows.Forms.GroupBox colorPresetsGroupBox;
 		private System.Windows.Forms.ComboBox presetComboBox;

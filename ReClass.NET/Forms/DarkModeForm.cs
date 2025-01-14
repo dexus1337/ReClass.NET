@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Reflection;
 using ReClassNET;
 
 namespace DarkModeForms
@@ -11,25 +13,23 @@ namespace DarkModeForms
 
 		public DarkModeForm()
 		{
-			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
-			{
-				InitializeDarkMode();
-			}
+			//initialization will happen in OnHandleCreated
 		}
 
 		protected virtual void InitializeDarkMode()
 		{
-			if (darkMode == null)
+			if (darkMode == null && !DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
 			{
 				// Get components from the derived form
 				IContainer formComponents = null;
-				var componentsProp = GetType().GetProperty("components",
-					System.Reflection.BindingFlags.NonPublic |
-					System.Reflection.BindingFlags.Instance);
+				var componentsField = GetType().GetField("components",
+					BindingFlags.NonPublic |
+					BindingFlags.Instance |
+					BindingFlags.DeclaredOnly);
 
-				if (componentsProp != null)
+				if (componentsField != null)
 				{
-					formComponents = componentsProp.GetValue(this) as IContainer;
+					formComponents = componentsField.GetValue(this) as IContainer;
 				}
 
 				darkMode = new DarkModeCS(this)
@@ -39,12 +39,23 @@ namespace DarkModeForms
 					ColorizeIcons = Program.Settings.ColorizeIcons,
 					RoundedPanels = Program.Settings.RoundedPanels
 				};
+
 			}
 		}
 
 		protected override void OnHandleCreated(EventArgs e)
 		{
 			base.OnHandleCreated(e);
+
+			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
+			{
+				InitializeDarkMode();
+			}
+		}
+
+		protected override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
 
 			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime))
 			{

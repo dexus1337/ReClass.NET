@@ -281,7 +281,7 @@ namespace DarkModeForms
 
 		private IntPtr originalWndProc;
 		private WndProc newWndProcDelegate;
-		private IntPtr formHandle;
+//		private IntPtr formHandle;
 		private bool applyingTheme = false; // Flag to prevent recursion
 
 		#endregion
@@ -562,7 +562,6 @@ namespace DarkModeForms
 				{
 					comboBox.SelectionStart = comboBox.Text.Length;
 				}
-				//The below line is commented out because it was causing an exception in the theme switching combobox
 				 control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
 
 				// Fixes a glitch showing the Combo Backgroud white when the control is Disabled:
@@ -994,7 +993,7 @@ namespace DarkModeForms
 
 			if (ColorMode <= 0)
 			{
-				_ret.Background = Color.FromArgb(55, 55, 55);   //<- Negro Claro
+				_ret.Background = Color.FromArgb(55, 55, 55);   // Color.FromArgb(32, 32, 32) <- Negro Claro
 				_ret.BackgroundDark = Color.FromArgb(18, 18, 18);
 				_ret.BackgroundLight = ControlPaint.Light(_ret.Background);
 
@@ -1022,7 +1021,6 @@ namespace DarkModeForms
 			}
 			else // Light Mode
 			{
-
 				// New menu colors for light mode
 				_ret.MenuBackground = Color.FromArgb(255, 255, 255);
 				_ret.MenuBorder = Color.FromArgb(0, 0, 0);
@@ -1586,7 +1584,7 @@ namespace DarkModeForms
 			base.OnRenderItemBackground(e);
 
 			// Only draw border for ComboBox items
-			if (e.Item is ComboBox)
+			if (e.Item is ToolStripComboBox)
 			{
 				Rectangle rect = new Rectangle(Point.Empty, e.Item.Size);
 				e.Graphics.DrawRectangle(new Pen(MyColors.ControlLight, 1), rect);
@@ -1599,21 +1597,21 @@ namespace DarkModeForms
 			Graphics g = e.Graphics;
 			Rectangle bounds = new Rectangle(Point.Empty, e.Item.Size);
 
-			Color gradientBegin = MyColors.MenuBackground;
-			Color gradientEnd = MyColors.MenuBackground;
+			Color gradientBegin = MyColors.MenuBackground; // MyColors.Background; // Color.FromArgb(203, 225, 252);
+			Color gradientEnd = MyColors.MenuBackground; // MyColors.Background; // Color.FromArgb(203, 225, 252);
 
 			bool DrawIt = false;
 			var _menu = e.Item as ToolStripItem;
 			if (_menu.Pressed)
 			{
-				gradientBegin = MyColors.MenuHighlight;
-				gradientEnd = MyColors.MenuHighlight;
+				gradientBegin = MyColors.MenuHighlight; // MyColors.Control; // Color.FromArgb(254, 128, 62);
+				gradientEnd = MyColors.MenuHighlight; // MyColors.Control; // Color.FromArgb(255, 223, 154);
 				DrawIt = true;
 			}
 			else if (_menu.Selected)
 			{
-				gradientBegin = MyColors.MenuHighlight;
-				gradientEnd = MyColors.MenuHighlight;
+				gradientBegin = MyColors.MenuHighlight; // MyColors.Accent;// Color.FromArgb(255, 255, 222);
+				gradientEnd = MyColors.MenuHighlight; // MyColors.Accent; // Color.FromArgb(255, 203, 136);
 				DrawIt = true;
 			}
 
