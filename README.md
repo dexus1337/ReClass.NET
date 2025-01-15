@@ -22,6 +22,7 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Function
   - Function Pointer
   - Unions
+- Configurable Shortcuts for Nodes
 - Automatic Node Dissection
 - Highlight changed memory
 - Pointer Preview
