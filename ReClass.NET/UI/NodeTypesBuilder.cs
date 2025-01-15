@@ -1,3 +1,5 @@
+// File: NodeTypesBuilder.cs
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -217,7 +219,12 @@ namespace ReClassNET.UI
 		{
 			Contract.Requires(nodeType != null);
 
-			shortcutKeys = Program.Settings.GetShortcutKeyForNodeType(nodeType);
+			var rawShortcut = Program.Settings.GetShortcutKeyForNodeType(nodeType);
+
+			// Only set ShortcutKeys for shortcuts with modifiers
+			shortcutKeys = (rawShortcut & (Keys.Control | Keys.Alt | Keys.Shift)) != 0
+				? rawShortcut
+				: Keys.None;
 
 			var node = BaseNode.CreateInstanceFromType(nodeType, false);
 			if (node == null)

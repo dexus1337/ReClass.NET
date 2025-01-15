@@ -4,6 +4,127 @@ namespace ReClassNET.Forms
 {
 	partial class SettingsForm
 	{
+		// Field declarations are supposed to be at the top of the class in C#.
+		private System.Windows.Forms.TabControl settingsTabControl;
+		private System.Windows.Forms.TabPage generalSettingsTabPage;
+		private System.Windows.Forms.TabPage colorsSettingTabPage;
+		private System.Windows.Forms.TabPage typeDefinitionsSettingsTabPage;
+		private System.Windows.Forms.TabPage hotkeysSettingsTabPage;
+		private System.Windows.Forms.FlowLayoutPanel hotkeysFlowLayoutPanel;
+		private System.Windows.Forms.CheckBox stayOnTopCheckBox;
+		private System.Windows.Forms.GroupBox displayGroupBox;
+		private System.Windows.Forms.CheckBox showNodeAddressCheckBox;
+		private System.Windows.Forms.CheckBox showTextCheckBox;
+		private System.Windows.Forms.CheckBox showNodeOffsetCheckBox;
+		private System.Windows.Forms.CheckBox colorizeIconsCheckBox;
+		private System.Windows.Forms.CheckBox roundedPanelsCheckBox;
+		private System.Windows.Forms.CheckBox enhancedCaretCheckBox;
+		private System.Windows.Forms.CheckBox cppGeneratorShowOffsetCheckBox;
+		private System.Windows.Forms.CheckBox cppGeneratorShowPaddingCheckBox;
+		private System.Windows.Forms.CheckBox highlightChangedValuesCheckBox;
+		private System.Windows.Forms.GroupBox colorPresetsGroupBox;
+		private System.Windows.Forms.ComboBox presetComboBox;
+		private System.Windows.Forms.Button savePresetButton;
+		private System.Windows.Forms.Button loadPresetButton;
+		private System.Windows.Forms.Button deletePresetButton;
+		private System.Windows.Forms.Label presetLabel;
+		private System.Windows.Forms.GroupBox commentsGroupBox;
+		private System.Windows.Forms.CheckBox showRttiCheckBox;
+		private System.Windows.Forms.CheckBox showPointerCheckBox;
+		private System.Windows.Forms.CheckBox showIntegerCheckBox;
+		private System.Windows.Forms.CheckBox showFloatCheckBox;
+		private System.Windows.Forms.CheckBox showPluginInfoCheckBox;
+		private System.Windows.Forms.CheckBox showStringCheckBox;
+		private System.Windows.Forms.CheckBox showSymbolsCheckBox;
+		private ColorBox backgroundColorBox;
+		private System.Windows.Forms.Label nodeSelectedLabel;
+		private ColorBox nodeSelectedColorBox;
+		private System.Windows.Forms.Label nodeHiddenLabel;
+		private ColorBox nodeHiddenColorBox;
+		private System.Windows.Forms.Label nodeAddressLabel;
+		private ColorBox nodeAddressColorBox;
+		private System.Windows.Forms.Label nodeOffsetLabel;
+		private ColorBox nodeOffsetColorBox;
+		private System.Windows.Forms.Label nodeHexValueLabel;
+		private ColorBox nodeHexValueColorBox;
+		private System.Windows.Forms.Label backgroundLabel;
+		private System.Windows.Forms.Label nodeValueLabel;
+		private ColorBox nodeValueColorBox;
+		private System.Windows.Forms.Label nodeNameLabel;
+		private ColorBox nodeNameColorBox;
+		private System.Windows.Forms.Label nodeTypeLabel;
+		private ColorBox nodeTypeColorBox;
+		private System.Windows.Forms.Label nodeVTableLabel;
+		private ColorBox nodeVTableColorBox;
+		private System.Windows.Forms.Label nodeTextLabel;
+		private ColorBox nodeTextColorBox;
+		private System.Windows.Forms.Label nodeCommentLabel;
+		private ColorBox nodeCommentColorBox;
+		private System.Windows.Forms.Label nodeIndexLabel;
+		private ColorBox nodeIndexColorBox;
+		private System.Windows.Forms.Label nodePluginLabel;
+		private ColorBox nodePluginColorBox;
+		private System.Windows.Forms.Label nodeClassLabel;
+		private ColorBox nodeClassColorBox;
+		private System.Windows.Forms.Label floatSettingsLabel;
+		private System.Windows.Forms.TextBox floatTypeTextBox;
+		private System.Windows.Forms.Label uint64SettingsLabel;
+		private System.Windows.Forms.TextBox uint64TypeTextBox;
+		private System.Windows.Forms.Label uint32SettingsLabel;
+		private System.Windows.Forms.TextBox uint32TypeTextBox;
+		private System.Windows.Forms.Label uint16SettingsLabel;
+		private System.Windows.Forms.TextBox uint16TypeTextBox;
+		private System.Windows.Forms.Label uint8SettingsLabel;
+		private System.Windows.Forms.TextBox uint8TypeTextBox;
+		private System.Windows.Forms.Label int64SettingsLabel;
+		private System.Windows.Forms.TextBox int64TypeTextBox;
+		private System.Windows.Forms.Label int32SettingsLabel;
+		private System.Windows.Forms.TextBox int32TypeTextBox;
+		private System.Windows.Forms.Label int16SettingsLabel;
+		private System.Windows.Forms.TextBox int16TypeTextBox;
+		private System.Windows.Forms.Label int8SettingsLabel;
+		private System.Windows.Forms.TextBox int8TypeTextBox;
+		private System.Windows.Forms.Label functionPtrSettingsLabel;
+		private System.Windows.Forms.TextBox functionPtrTypeTextBox;
+		private System.Windows.Forms.Label utf16TextSettingsLabel;
+		private System.Windows.Forms.TextBox utf16TextTypeTextBox;
+		private System.Windows.Forms.Label utf8TextSettingsLabel;
+		private System.Windows.Forms.TextBox utf8TextTypeTextBox;
+		private System.Windows.Forms.Label matrix3x3SettingsLabel;
+		private System.Windows.Forms.TextBox matrix3x3TypeTextBox;
+		private System.Windows.Forms.Label matrix3x4SettingsLabel;
+		private System.Windows.Forms.TextBox matrix3x4TypeTextBox;
+		private System.Windows.Forms.Label matrix4x4SettingsLabel;
+		private System.Windows.Forms.TextBox matrix4x4TypeTextBox;
+		private System.Windows.Forms.Label vector2SettingsLabel;
+		private System.Windows.Forms.TextBox vector2TypeTextBox;
+		private System.Windows.Forms.Label vector3SettingsLabel;
+		private System.Windows.Forms.TextBox vector3TypeTextBox;
+		private System.Windows.Forms.Label vector4SettingsLabel;
+		private System.Windows.Forms.TextBox vector4TypeTextBox;
+		private System.Windows.Forms.Label doubleSettingsLabel;
+		private System.Windows.Forms.TextBox doubleTypeTextBox;
+		private System.Windows.Forms.GroupBox nodeColorGroupBox;
+		private System.Windows.Forms.GroupBox themeSettingsGroupBox;
+		private System.Windows.Forms.Label themeLabel;
+		private System.Windows.Forms.ComboBox themeComboBox;
+		private System.Windows.Forms.Label generatorInfoLabel;
+		private BannerBox bannerBox;
+		private System.Windows.Forms.Label boolSettingsLabel;
+		private System.Windows.Forms.TextBox boolTypeTextBox;
+		private System.Windows.Forms.GroupBox fileAssociationGroupBox;
+		private System.Windows.Forms.Button removeAssociationButton;
+		private System.Windows.Forms.Button createAssociationButton;
+		private System.Windows.Forms.Label associationInfoLabel;
+		private System.Windows.Forms.CheckBox randomizeWindowTitleCheckBox;
+		private System.Windows.Forms.CheckBox runAsAdminCheckBox;
+		private System.Windows.Forms.Label nuintSettingsLabel;
+		private System.Windows.Forms.TextBox nuintTypeTextBox;
+		private System.Windows.Forms.Label nintSettingsLabel;
+		private System.Windows.Forms.TextBox nintTypeTextBox;
+		private System.Windows.Forms.Label utf32TextSettingsLabel;
+		private System.Windows.Forms.TextBox utf32TextTypeTextBox;
+		private System.Windows.Forms.GroupBox cppGeneratorGroupBox;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -147,6 +268,8 @@ namespace ReClassNET.Forms
             this.int16TypeTextBox = new System.Windows.Forms.TextBox();
             this.int8SettingsLabel = new System.Windows.Forms.Label();
             this.int8TypeTextBox = new System.Windows.Forms.TextBox();
+            this.hotkeysSettingsTabPage = new System.Windows.Forms.TabPage();
+            this.hotkeysFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.bannerBox = new ReClassNET.Controls.BannerBox();
             this.settingsTabControl.SuspendLayout();
             this.generalSettingsTabPage.SuspendLayout();
@@ -159,6 +282,7 @@ namespace ReClassNET.Forms
             this.nodeColorGroupBox.SuspendLayout();
             this.colorPresetsGroupBox.SuspendLayout();
             this.typeDefinitionsSettingsTabPage.SuspendLayout();
+            this.hotkeysSettingsTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bannerBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -167,10 +291,11 @@ namespace ReClassNET.Forms
             this.settingsTabControl.Controls.Add(this.generalSettingsTabPage);
             this.settingsTabControl.Controls.Add(this.colorsSettingTabPage);
             this.settingsTabControl.Controls.Add(this.typeDefinitionsSettingsTabPage);
+            this.settingsTabControl.Controls.Add(this.hotkeysSettingsTabPage);
             this.settingsTabControl.Location = new System.Drawing.Point(12, 60);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(562, 372);
+            this.settingsTabControl.Size = new System.Drawing.Size(562, 380);
             this.settingsTabControl.TabIndex = 1;
             // 
             // generalSettingsTabPage
@@ -185,7 +310,7 @@ namespace ReClassNET.Forms
             this.generalSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.generalSettingsTabPage.Name = "generalSettingsTabPage";
             this.generalSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 346);
+            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 354);
             this.generalSettingsTabPage.TabIndex = 0;
             this.generalSettingsTabPage.Text = "General";
             this.generalSettingsTabPage.UseVisualStyleBackColor = true;
@@ -238,7 +363,7 @@ namespace ReClassNET.Forms
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
             this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 262);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
-            this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 78);
+            this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 86);
             this.fileAssociationGroupBox.TabIndex = 4;
             this.fileAssociationGroupBox.TabStop = false;
             this.fileAssociationGroupBox.Text = "RCNET File Association";
@@ -476,7 +601,7 @@ namespace ReClassNET.Forms
             this.colorsSettingTabPage.Location = new System.Drawing.Point(4, 22);
             this.colorsSettingTabPage.Name = "colorsSettingTabPage";
             this.colorsSettingTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 346);
+            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 354);
             this.colorsSettingTabPage.TabIndex = 1;
             this.colorsSettingTabPage.Text = "Colors";
             this.colorsSettingTabPage.UseVisualStyleBackColor = true;
@@ -546,7 +671,7 @@ namespace ReClassNET.Forms
             this.nodeColorGroupBox.Controls.Add(this.nodeNameColorBox);
             this.nodeColorGroupBox.Location = new System.Drawing.Point(9, 135);
             this.nodeColorGroupBox.Name = "nodeColorGroupBox";
-            this.nodeColorGroupBox.Size = new System.Drawing.Size(539, 200);
+            this.nodeColorGroupBox.Size = new System.Drawing.Size(539, 213);
             this.nodeColorGroupBox.TabIndex = 28;
             this.nodeColorGroupBox.TabStop = false;
             this.nodeColorGroupBox.Text = "Node Colors";
@@ -917,7 +1042,7 @@ namespace ReClassNET.Forms
             this.typeDefinitionsSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.typeDefinitionsSettingsTabPage.Name = "typeDefinitionsSettingsTabPage";
             this.typeDefinitionsSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 346);
+            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 354);
             this.typeDefinitionsSettingsTabPage.TabIndex = 2;
             this.typeDefinitionsSettingsTabPage.Text = "Type Definitions";
             this.typeDefinitionsSettingsTabPage.UseVisualStyleBackColor = true;
@@ -1299,6 +1424,28 @@ namespace ReClassNET.Forms
             this.int8TypeTextBox.Size = new System.Drawing.Size(120, 20);
             this.int8TypeTextBox.TabIndex = 2;
             // 
+            // hotkeysSettingsTabPage
+            // 
+            this.hotkeysSettingsTabPage.Controls.Add(this.hotkeysFlowLayoutPanel);
+            this.hotkeysSettingsTabPage.Location = new System.Drawing.Point(4, 22);
+            this.hotkeysSettingsTabPage.Name = "hotkeysSettingsTabPage";
+            this.hotkeysSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.hotkeysSettingsTabPage.Size = new System.Drawing.Size(554, 354);
+            this.hotkeysSettingsTabPage.TabIndex = 3;
+            this.hotkeysSettingsTabPage.Text = "Hotkeys";
+            this.hotkeysSettingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // hotkeysFlowLayoutPanel
+            // 
+            this.hotkeysFlowLayoutPanel.AutoScroll = true;
+            this.hotkeysFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hotkeysFlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.hotkeysFlowLayoutPanel.Location = new System.Drawing.Point(3, 3);
+            this.hotkeysFlowLayoutPanel.Name = "hotkeysFlowLayoutPanel";
+            this.hotkeysFlowLayoutPanel.Size = new System.Drawing.Size(548, 348);
+            this.hotkeysFlowLayoutPanel.TabIndex = 0;
+            this.hotkeysFlowLayoutPanel.WrapContents = false;
+            // 
             // bannerBox
             // 
             this.bannerBox.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1345,129 +1492,13 @@ namespace ReClassNET.Forms
             this.colorPresetsGroupBox.PerformLayout();
             this.typeDefinitionsSettingsTabPage.ResumeLayout(false);
             this.typeDefinitionsSettingsTabPage.PerformLayout();
+            this.hotkeysSettingsTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bannerBox)).EndInit();
             this.ResumeLayout(false);
 
 		}
 
 		#endregion
-		private System.Windows.Forms.TabControl settingsTabControl;
-		private System.Windows.Forms.TabPage generalSettingsTabPage;
-		private System.Windows.Forms.TabPage colorsSettingTabPage;
-		private System.Windows.Forms.TabPage typeDefinitionsSettingsTabPage;
-		private System.Windows.Forms.CheckBox stayOnTopCheckBox;
-		private System.Windows.Forms.GroupBox displayGroupBox;
-		private System.Windows.Forms.CheckBox showNodeAddressCheckBox;
-		private System.Windows.Forms.CheckBox showTextCheckBox;
-		private System.Windows.Forms.CheckBox showNodeOffsetCheckBox;
-		private System.Windows.Forms.CheckBox colorizeIconsCheckBox;
-		private System.Windows.Forms.CheckBox roundedPanelsCheckBox;
-		private System.Windows.Forms.CheckBox enhancedCaretCheckBox;
-		private System.Windows.Forms.CheckBox cppGeneratorShowOffsetCheckBox;
-		private System.Windows.Forms.CheckBox cppGeneratorShowPaddingCheckBox;
-		private System.Windows.Forms.CheckBox highlightChangedValuesCheckBox;
-		private System.Windows.Forms.GroupBox colorPresetsGroupBox;
-		private System.Windows.Forms.ComboBox presetComboBox;
-		private System.Windows.Forms.Button savePresetButton;
-		private System.Windows.Forms.Button loadPresetButton;
-		private System.Windows.Forms.Button deletePresetButton;
-		private System.Windows.Forms.Label presetLabel;
-		private System.Windows.Forms.GroupBox commentsGroupBox;
-		private System.Windows.Forms.CheckBox showRttiCheckBox;
-		private System.Windows.Forms.CheckBox showPointerCheckBox;
-		private System.Windows.Forms.CheckBox showIntegerCheckBox;
-		private System.Windows.Forms.CheckBox showFloatCheckBox;
-		private System.Windows.Forms.CheckBox showPluginInfoCheckBox;
-		private System.Windows.Forms.CheckBox showStringCheckBox;
-		private System.Windows.Forms.CheckBox showSymbolsCheckBox;
-		private ColorBox backgroundColorBox;
-		private System.Windows.Forms.Label nodeSelectedLabel;
-		private ColorBox nodeSelectedColorBox;
-		private System.Windows.Forms.Label nodeHiddenLabel;
-		private ColorBox nodeHiddenColorBox;
-		private System.Windows.Forms.Label nodeAddressLabel;
-		private ColorBox nodeAddressColorBox;
-		private System.Windows.Forms.Label nodeOffsetLabel;
-		private ColorBox nodeOffsetColorBox;
-		private System.Windows.Forms.Label nodeHexValueLabel;
-		private ColorBox nodeHexValueColorBox;
-		private System.Windows.Forms.Label backgroundLabel;
-		private System.Windows.Forms.Label nodeValueLabel;
-		private ColorBox nodeValueColorBox;
-		private System.Windows.Forms.Label nodeNameLabel;
-		private ColorBox nodeNameColorBox;
-		private System.Windows.Forms.Label nodeTypeLabel;
-		private ColorBox nodeTypeColorBox;
-		private System.Windows.Forms.Label nodeVTableLabel;
-		private ColorBox nodeVTableColorBox;
-		private System.Windows.Forms.Label nodeTextLabel;
-		private ColorBox nodeTextColorBox;
-		private System.Windows.Forms.Label nodeCommentLabel;
-		private ColorBox nodeCommentColorBox;
-		private System.Windows.Forms.Label nodeIndexLabel;
-		private ColorBox nodeIndexColorBox;
-		private System.Windows.Forms.Label nodePluginLabel;
-		private ColorBox nodePluginColorBox;
-		private System.Windows.Forms.Label nodeClassLabel;
-		private ColorBox nodeClassColorBox;
-		private System.Windows.Forms.Label floatSettingsLabel;
-		private System.Windows.Forms.TextBox floatTypeTextBox;
-		private System.Windows.Forms.Label uint64SettingsLabel;
-		private System.Windows.Forms.TextBox uint64TypeTextBox;
-		private System.Windows.Forms.Label uint32SettingsLabel;
-		private System.Windows.Forms.TextBox uint32TypeTextBox;
-		private System.Windows.Forms.Label uint16SettingsLabel;
-		private System.Windows.Forms.TextBox uint16TypeTextBox;
-		private System.Windows.Forms.Label uint8SettingsLabel;
-		private System.Windows.Forms.TextBox uint8TypeTextBox;
-		private System.Windows.Forms.Label int64SettingsLabel;
-		private System.Windows.Forms.TextBox int64TypeTextBox;
-		private System.Windows.Forms.Label int32SettingsLabel;
-		private System.Windows.Forms.TextBox int32TypeTextBox;
-		private System.Windows.Forms.Label int16SettingsLabel;
-		private System.Windows.Forms.TextBox int16TypeTextBox;
-		private System.Windows.Forms.Label int8SettingsLabel;
-		private System.Windows.Forms.TextBox int8TypeTextBox;
-		private System.Windows.Forms.Label functionPtrSettingsLabel;
-		private System.Windows.Forms.TextBox functionPtrTypeTextBox;
-		private System.Windows.Forms.Label utf16TextSettingsLabel;
-		private System.Windows.Forms.TextBox utf16TextTypeTextBox;
-		private System.Windows.Forms.Label utf8TextSettingsLabel;
-		private System.Windows.Forms.TextBox utf8TextTypeTextBox;
-		private System.Windows.Forms.Label matrix3x3SettingsLabel;
-		private System.Windows.Forms.TextBox matrix3x3TypeTextBox;
-		private System.Windows.Forms.Label matrix3x4SettingsLabel;
-		private System.Windows.Forms.TextBox matrix3x4TypeTextBox;
-		private System.Windows.Forms.Label matrix4x4SettingsLabel;
-		private System.Windows.Forms.TextBox matrix4x4TypeTextBox;
-		private System.Windows.Forms.Label vector2SettingsLabel;
-		private System.Windows.Forms.TextBox vector2TypeTextBox;
-		private System.Windows.Forms.Label vector3SettingsLabel;
-		private System.Windows.Forms.TextBox vector3TypeTextBox;
-		private System.Windows.Forms.Label vector4SettingsLabel;
-		private System.Windows.Forms.TextBox vector4TypeTextBox;
-		private System.Windows.Forms.Label doubleSettingsLabel;
-		private System.Windows.Forms.TextBox doubleTypeTextBox;
-		private System.Windows.Forms.GroupBox nodeColorGroupBox;
-		private System.Windows.Forms.GroupBox themeSettingsGroupBox;
-		private System.Windows.Forms.Label themeLabel;
-		private System.Windows.Forms.ComboBox themeComboBox;
-		private System.Windows.Forms.Label generatorInfoLabel;
-		private BannerBox bannerBox;
-		private System.Windows.Forms.Label boolSettingsLabel;
-		private System.Windows.Forms.TextBox boolTypeTextBox;
-		private System.Windows.Forms.GroupBox fileAssociationGroupBox;
-		private System.Windows.Forms.Button removeAssociationButton;
-		private System.Windows.Forms.Button createAssociationButton;
-		private System.Windows.Forms.Label associationInfoLabel;
-		private System.Windows.Forms.CheckBox randomizeWindowTitleCheckBox;
-		private System.Windows.Forms.CheckBox runAsAdminCheckBox;
-		private System.Windows.Forms.Label nuintSettingsLabel;
-		private System.Windows.Forms.TextBox nuintTypeTextBox;
-		private System.Windows.Forms.Label nintSettingsLabel;
-		private System.Windows.Forms.TextBox nintTypeTextBox;
-		private System.Windows.Forms.Label utf32TextSettingsLabel;
-		private System.Windows.Forms.TextBox utf32TextTypeTextBox;
-		private System.Windows.Forms.GroupBox cppGeneratorGroupBox;
+		
 	}
 }
