@@ -37,15 +37,18 @@ namespace ReClassNET.Forms
 			imageList.Images.Add(Properties.Resources.B16x16_Gear);
 			imageList.Images.Add(Properties.Resources.B16x16_Color_Wheel);
 			imageList.Images.Add(Properties.Resources.B16x16_Settings_Edit);
+			imageList.Images.Add(Properties.Resources.B16x16_Gear);
 
 			settingsTabControl.ImageList = imageList;
 			generalSettingsTabPage.ImageIndex = 0;
 			colorsSettingTabPage.ImageIndex = 1;
 			typeDefinitionsSettingsTabPage.ImageIndex = 2;
+			hotkeysSettingsTabPage.ImageIndex = 3;
 
 			SetGeneralBindings();
 			SetColorBindings();
 			SetTypeDefinitionBindings();
+			SetHotkeyBindings();
 
 			if (NativeMethods.IsUnix())
 			{
@@ -58,6 +61,7 @@ namespace ReClassNET.Forms
 				NativeMethodsWindows.SetButtonShield(removeAssociationButton, true);
 			}
 			LoadPresets();
+			hotkeysFlowLayoutPanel.Width = hotkeysSettingsTabPage.Width - 30;
 
 			// Wire up events
 			savePresetButton.Click += savePresetButton_Click;
@@ -515,6 +519,87 @@ namespace ReClassNET.Forms
 			SetBinding(utf16TextTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeUtf16Text));
 			SetBinding(utf32TextTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeUtf32Text));
 			SetBinding(functionPtrTypeTextBox, nameof(TextBox.Text), typeMapping, nameof(CppTypeMapping.TypeFunctionPtr));
+		}
+
+		private void SetHotkeyBindings()
+		{
+			foreach (var kvp in settings._nodeShortcuts)
+			{
+				var type = kvp.Key;
+				var panel = new System.Windows.Forms.Panel
+				{
+					AutoSize = true,
+					Margin = new Padding(3),
+					Padding = new Padding(3),
+					Width = hotkeysFlowLayoutPanel.Width - 10
+				};
+
+				var label = new Label
+				{
+					Text = type.Name.Replace("Node", ""),
+					AutoSize = true,
+					Location = new Point(3, 8),
+					Width = 120
+				};
+
+				var currentKey = new TextBox
+				{
+					ReadOnly = true,
+					Location = new Point(130, 5),
+					Width = 200,
+					Text = settings.GetShortcutKeyForNodeType(type) == Keys.None ?
+						  "None" :
+						  settings.GetShortcutKeyForNodeType(type).ToString()
+				};
+
+				var setButton = new Button
+				{
+					Text = "Set",
+					Location = new Point(340, 3),
+					Width = 75
+				};
+
+				var clearButton = new Button
+				{
+					Text = "Clear",
+					Location = new Point(420, 3),
+					Width = 75
+				};
+
+				setButton.Click += (s, e) =>
+				{
+					using (var form = new HotkeyInputForm(settings, type))
+					{
+						if (form.ShowDialog() == DialogResult.OK)
+						{
+							settings.SetShortcutKeyForNodeType(type, form.HotKey);
+							currentKey.Text = form.HotKey == Keys.None ? "None" : form.HotKey.ToString();
+
+							// Rebuild toolbar and menu items
+							Program.MainForm.RebuildToolbarButtons();
+							Program.MainForm.RebuildTypeChangeDropDownItems();
+						}
+					}
+				};
+
+
+				clearButton.Click += (s, e) =>
+				{
+					settings.SetShortcutKeyForNodeType(type, Keys.None);
+					currentKey.Text = "None";
+
+					// Rebuild toolbar and menu items
+					Program.MainForm.RebuildToolbarButtons();
+					Program.MainForm.RebuildTypeChangeDropDownItems();
+				};
+
+				panel.Controls.Add(label);
+				panel.Controls.Add(currentKey);
+				panel.Controls.Add(setButton);
+				panel.Controls.Add(clearButton);
+
+				hotkeysFlowLayoutPanel.Controls.Add(panel);
+			}
 		}
 
 		private void SettingsForm_Load(object sender, EventArgs e)

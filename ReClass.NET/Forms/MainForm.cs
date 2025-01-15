@@ -101,6 +101,7 @@ namespace ReClassNET.Forms
 			pluginManager = new PluginManager(new DefaultPluginHost(this, Program.RemoteProcess, Program.Logger));
 
 			CommandQueueManagerSingleton.GetInstance().CommandQueueActionPerformed += OnCommandQueueActionPerformed;
+
 		}
 
 
@@ -851,7 +852,27 @@ namespace ReClassNET.Forms
 			}
 		}
 
-#endregion
+		#endregion
+
+
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+
+			// Handle all key combinations, whether they have modifiers or not
+			foreach (var kvp in Program.Settings._nodeShortcuts)
+			{
+				if (kvp.Value == keyData)
+				{
+					if (memoryViewControl != null)
+					{
+						ReplaceSelectedNodesWithType(kvp.Key);
+						return true; // Return true to indicate we handled the key
+					}
+				}
+			}
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
+
 
 		private void MainForm_DragEnter(object sender, DragEventArgs e)
 		{
@@ -955,6 +976,25 @@ namespace ReClassNET.Forms
 
 			}
 			);
+		}
+
+		public void RebuildToolbarButtons()
+		{
+			// Remove all node type buttons
+			var nodeTypeSeparatorIndex = toolStrip.Items.IndexOf(nodeTypesToolStripSeparator);
+			while (toolStrip.Items.Count > nodeTypeSeparatorIndex + 1)
+			{
+				toolStrip.Items.RemoveAt(nodeTypeSeparatorIndex + 1);
+			}
+
+			// Rebuild node type buttons
+			toolStrip.Items.AddRange(NodeTypesBuilder.CreateToolStripButtons(ReplaceSelectedNodesWithType).ToArray());
+		}
+
+		public void RebuildTypeChangeDropDownItems()
+		{
+			changeTypeToolStripMenuItem.DropDownItems.Clear();
+			changeTypeToolStripMenuItem.DropDownItems.AddRange(NodeTypesBuilder.CreateToolStripMenuItems(ReplaceSelectedNodesWithType, false).ToArray());
 		}
 
 		private void memoryViewControl_ChangeClassTypeClick(object sender, NodeClickEventArgs e)
