@@ -96,7 +96,7 @@ namespace ReClassNET
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
 		// HotKeys
-		private Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS Form
+		internal Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS Form
 		{
 			{ typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
 			{ typeof(Hex16Node), 0 },
@@ -156,8 +156,37 @@ namespace ReClassNET
 
 		public void SetShortcutKeyForNodeType(Type nodeType, Keys shortCut)
 		{
-			if (_nodeShortcuts.TryGetValue(nodeType, out var shortcutKeys_))
-				shortcutKeys_ = shortCut;
+			if (_nodeShortcuts.ContainsKey(nodeType))
+			{
+				_nodeShortcuts[nodeType] = shortCut;
+			}
+		}
+
+		public bool IsHotkeyInUse(Keys hotkey, Type excludeType = null)
+		{
+			if (hotkey == Keys.None)
+				return false;
+
+			foreach (var kvp in _nodeShortcuts)
+			{
+				if (kvp.Key != excludeType && kvp.Value == hotkey)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public string GetHotkeyOwner(Keys hotkey)
+		{
+			foreach (var kvp in _nodeShortcuts)
+			{
+				if (kvp.Value == hotkey)
+				{
+					return kvp.Key.Name;
+				}
+			}
+			return null;
 		}
 
 		public Settings Clone() => MemberwiseClone() as Settings;

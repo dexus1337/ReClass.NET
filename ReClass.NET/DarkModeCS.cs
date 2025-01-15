@@ -562,7 +562,11 @@ namespace DarkModeForms
 				{
 					comboBox.SelectionStart = comboBox.Text.Length;
 				}
-				 control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
+
+				// Commenting this out as it's still causing exceptions in multiple situations
+				// (even when just opening the settings menu) due to handle re-creation or asynchronous calls.
+				// This LOC is just a minor cosmetic tweak meant to ensure that the user sees no highlight.
+				// control.BeginInvoke(new Action(() => (control as ComboBox).SelectionLength = 0));
 
 				// Fixes a glitch showing the Combo Backgroud white when the control is Disabled:
 				if (!control.Enabled && this.IsDarkMode)
