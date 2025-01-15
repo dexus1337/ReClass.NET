@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace ReClassNET.Util
@@ -13,6 +14,7 @@ namespace ReClassNET.Util
 		private const string XmlDisplayElement = "Display";
 		private const string XmlColorsElement = "Colors";
 		private const string XmlCustomDataElement = "CustomData";
+		private const string XmlHotkeysElement = "NodeHotkeys";
 
 		#region Read Settings
 
@@ -44,6 +46,24 @@ namespace ReClassNET.Util
 						(DarkModeForms.DarkModeCS.DisplayMode)int.Parse(XElementSerializer.ToString(e)));
 					XElementSerializer.TryRead(general, nameof(settings.ColorizeIcons), e => settings.ColorizeIcons = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RoundedPanels), e => settings.RoundedPanels = XElementSerializer.ToBool(e));
+					// Load hotkeys
+					XElementSerializer.TryRead(general, "NodeHotkeys", e =>
+					{
+						foreach (var hotkeyElement in e.Elements("Hotkey"))
+						{
+							var typeStr = hotkeyElement.Attribute("Type")?.Value;
+							var keyStr = hotkeyElement.Attribute("Key")?.Value;
+
+							if (string.IsNullOrEmpty(typeStr) || string.IsNullOrEmpty(keyStr))
+								continue;
+
+							var type = Type.GetType(typeStr);
+							if (type != null && Enum.TryParse(keyStr, out Keys key))
+							{
+								settings.SetShortcutKeyForNodeType(type, key);
+							}
+						}
+					});
 				}
 				var display = root?.Element(XmlDisplayElement);
 				if (display != null)
@@ -83,6 +103,31 @@ namespace ReClassNET.Util
 				if (customData != null)
 				{
 					settings.CustomData.Deserialize(customData);
+				}
+				var hotkeys = root?.Element(XmlHotkeysElement);
+				if (hotkeys != null)
+				{
+					foreach (var hotkeyElement in hotkeys.Elements("Hotkey"))
+					{
+						var typeStr = hotkeyElement.Attribute("Type")?.Value;
+						var keyStr = hotkeyElement.Attribute("Key")?.Value;
+
+						if (string.IsNullOrEmpty(typeStr) || string.IsNullOrEmpty(keyStr))
+							continue;
+
+						var type = Type.GetType(typeStr);
+						if (type != null)
+						{
+							if (keyStr == "None")
+							{
+								settings.SetShortcutKeyForNodeType(type, Keys.None);
+							}
+							else if (Enum.TryParse(keyStr, true, out Keys key))
+							{
+								settings.SetShortcutKeyForNodeType(type, key);
+							}
+						}
+					}
 				}
 			}
 			catch
@@ -154,7 +199,16 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.PluginColor), settings.PluginColor),
 						XElementSerializer.ToXml(nameof(settings.ClassColor), settings.ClassColor)
 					),
-					settings.CustomData.Serialize(XmlCustomDataElement)
+					// Save hotkeys
+					settings.CustomData.Serialize(XmlCustomDataElement),
+					new XElement(XmlHotkeysElement,
+						settings._nodeShortcuts.Select(kvp =>
+							new XElement("Hotkey",
+								new XAttribute("Type", kvp.Key.AssemblyQualifiedName),
+								new XAttribute("Key", kvp.Value.ToString())
+							)
+						)
+					)
 				)
 			);
 
