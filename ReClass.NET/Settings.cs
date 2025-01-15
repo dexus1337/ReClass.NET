@@ -29,6 +29,10 @@ namespace ReClassNET
 
 		public bool EnhancedCaret { get; set; } = false;
 
+		public bool CppGeneratorShowOffset { get; set; } = true;
+
+		public bool CppGeneratorShowPadding { get; set; } = true;
+
 		// Node Drawing Settings
 
 		public bool ShowNodeAddress { get; set; } = true;
@@ -92,7 +96,7 @@ namespace ReClassNET
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
 		// HotKeys
-		private Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS
+		private Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS Form
 		{
 			{ typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
 			{ typeof(Hex16Node), 0 },

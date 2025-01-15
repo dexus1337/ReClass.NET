@@ -49,6 +49,8 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.CommentColor), e => preset.CommentColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.TextColor), e => preset.TextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.VTableColor), e => preset.VTableColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.PluginColor), e => preset.PluginColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.ClassColor), e => preset.ClassColor = XElementSerializer.ToColor(e));
 
 					presets.Add(preset);
 				}
@@ -82,7 +84,9 @@ namespace ReClassNET.Util
 							XElementSerializer.ToXml(nameof(ColorPreset.IndexColor), preset.IndexColor),
 							XElementSerializer.ToXml(nameof(ColorPreset.CommentColor), preset.CommentColor),
 							XElementSerializer.ToXml(nameof(ColorPreset.TextColor), preset.TextColor),
-							XElementSerializer.ToXml(nameof(ColorPreset.VTableColor), preset.VTableColor)
+							XElementSerializer.ToXml(nameof(ColorPreset.VTableColor), preset.VTableColor),
+							XElementSerializer.ToXml(nameof(ColorPreset.PluginColor), preset.PluginColor),
+							XElementSerializer.ToXml(nameof(ColorPreset.ClassColor), preset.ClassColor)
 						)
 					)
 				);

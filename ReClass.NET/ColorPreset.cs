@@ -21,7 +21,6 @@ namespace ReClassNET.Util
 		public Color TextColor { get; set; }
 		public Color VTableColor { get; set; }
 		public Color PluginColor { get; set; }
-
 		public Color ClassColor { get; set; }
 
 		public void ApplyTo(Settings settings)
@@ -39,6 +38,7 @@ namespace ReClassNET.Util
 			settings.CommentColor = CommentColor;
 			settings.TextColor = TextColor;
 			settings.VTableColor = VTableColor;
+			settings.PluginColor = PluginColor;
 			settings.ClassColor = ClassColor;
 		}
 
@@ -60,6 +60,7 @@ namespace ReClassNET.Util
 				CommentColor = settings.CommentColor,
 				TextColor = settings.TextColor,
 				VTableColor = settings.VTableColor,
+				PluginColor = settings.PluginColor,
 				ClassColor = settings.ClassColor
 			};
 		}

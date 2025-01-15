@@ -32,6 +32,9 @@ namespace ReClassNET.Forms
 		{
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.generalSettingsTabPage = new System.Windows.Forms.TabPage();
+            this.cppGeneratorGroupBox = new System.Windows.Forms.GroupBox();
+            this.cppGeneratorShowOffsetCheckBox = new System.Windows.Forms.CheckBox();
+            this.cppGeneratorShowPaddingCheckBox = new System.Windows.Forms.CheckBox();
             this.randomizeWindowTitleCheckBox = new System.Windows.Forms.CheckBox();
             this.fileAssociationGroupBox = new System.Windows.Forms.GroupBox();
             this.removeAssociationButton = new System.Windows.Forms.Button();
@@ -147,6 +150,7 @@ namespace ReClassNET.Forms
             this.bannerBox = new ReClassNET.Controls.BannerBox();
             this.settingsTabControl.SuspendLayout();
             this.generalSettingsTabPage.SuspendLayout();
+            this.cppGeneratorGroupBox.SuspendLayout();
             this.fileAssociationGroupBox.SuspendLayout();
             this.commentsGroupBox.SuspendLayout();
             this.displayGroupBox.SuspendLayout();
@@ -166,11 +170,12 @@ namespace ReClassNET.Forms
             this.settingsTabControl.Location = new System.Drawing.Point(12, 60);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(562, 374);
+            this.settingsTabControl.Size = new System.Drawing.Size(562, 372);
             this.settingsTabControl.TabIndex = 1;
             // 
             // generalSettingsTabPage
             // 
+            this.generalSettingsTabPage.Controls.Add(this.cppGeneratorGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.randomizeWindowTitleCheckBox);
             this.generalSettingsTabPage.Controls.Add(this.fileAssociationGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.commentsGroupBox);
@@ -180,10 +185,41 @@ namespace ReClassNET.Forms
             this.generalSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.generalSettingsTabPage.Name = "generalSettingsTabPage";
             this.generalSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 348);
+            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 346);
             this.generalSettingsTabPage.TabIndex = 0;
             this.generalSettingsTabPage.Text = "General";
             this.generalSettingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // cppGeneratorGroupBox
+            // 
+            this.cppGeneratorGroupBox.Controls.Add(this.cppGeneratorShowOffsetCheckBox);
+            this.cppGeneratorGroupBox.Controls.Add(this.cppGeneratorShowPaddingCheckBox);
+            this.cppGeneratorGroupBox.Location = new System.Drawing.Point(6, 214);
+            this.cppGeneratorGroupBox.Name = "cppGeneratorGroupBox";
+            this.cppGeneratorGroupBox.Size = new System.Drawing.Size(542, 45);
+            this.cppGeneratorGroupBox.TabIndex = 6;
+            this.cppGeneratorGroupBox.TabStop = false;
+            this.cppGeneratorGroupBox.Text = "CppGenerator";
+            // 
+            // cppGeneratorShowOffsetCheckBox
+            // 
+            this.cppGeneratorShowOffsetCheckBox.AutoSize = true;
+            this.cppGeneratorShowOffsetCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.cppGeneratorShowOffsetCheckBox.Name = "cppGeneratorShowOffsetCheckBox";
+            this.cppGeneratorShowOffsetCheckBox.Size = new System.Drawing.Size(84, 17);
+            this.cppGeneratorShowOffsetCheckBox.TabIndex = 7;
+            this.cppGeneratorShowOffsetCheckBox.Text = "Show Offset";
+            this.cppGeneratorShowOffsetCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // cppGeneratorShowPaddingCheckBox
+            // 
+            this.cppGeneratorShowPaddingCheckBox.AutoSize = true;
+            this.cppGeneratorShowPaddingCheckBox.Location = new System.Drawing.Point(106, 19);
+            this.cppGeneratorShowPaddingCheckBox.Name = "cppGeneratorShowPaddingCheckBox";
+            this.cppGeneratorShowPaddingCheckBox.Size = new System.Drawing.Size(95, 17);
+            this.cppGeneratorShowPaddingCheckBox.TabIndex = 7;
+            this.cppGeneratorShowPaddingCheckBox.Text = "Show Padding";
+            this.cppGeneratorShowPaddingCheckBox.UseVisualStyleBackColor = true;
             // 
             // randomizeWindowTitleCheckBox
             // 
@@ -200,9 +236,9 @@ namespace ReClassNET.Forms
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.createAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
-            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 255);
+            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 262);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
-            this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 85);
+            this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 78);
             this.fileAssociationGroupBox.TabIndex = 4;
             this.fileAssociationGroupBox.TabStop = false;
             this.fileAssociationGroupBox.Text = "RCNET File Association";
@@ -210,7 +246,7 @@ namespace ReClassNET.Forms
             // removeAssociationButton
             // 
             this.removeAssociationButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.removeAssociationButton.Location = new System.Drawing.Point(146, 52);
+            this.removeAssociationButton.Location = new System.Drawing.Point(146, 51);
             this.removeAssociationButton.Name = "removeAssociationButton";
             this.removeAssociationButton.Size = new System.Drawing.Size(135, 23);
             this.removeAssociationButton.TabIndex = 2;
@@ -221,7 +257,7 @@ namespace ReClassNET.Forms
             // createAssociationButton
             // 
             this.createAssociationButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.createAssociationButton.Location = new System.Drawing.Point(9, 52);
+            this.createAssociationButton.Location = new System.Drawing.Point(9, 51);
             this.createAssociationButton.Name = "createAssociationButton";
             this.createAssociationButton.Size = new System.Drawing.Size(131, 23);
             this.createAssociationButton.TabIndex = 1;
@@ -231,7 +267,7 @@ namespace ReClassNET.Forms
             // 
             // associationInfoLabel
             // 
-            this.associationInfoLabel.Location = new System.Drawing.Point(6, 21);
+            this.associationInfoLabel.Location = new System.Drawing.Point(6, 17);
             this.associationInfoLabel.Name = "associationInfoLabel";
             this.associationInfoLabel.Size = new System.Drawing.Size(525, 28);
             this.associationInfoLabel.TabIndex = 0;
@@ -247,7 +283,7 @@ namespace ReClassNET.Forms
             this.commentsGroupBox.Controls.Add(this.showPointerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showIntegerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showFloatCheckBox);
-            this.commentsGroupBox.Location = new System.Drawing.Point(6, 39);
+            this.commentsGroupBox.Location = new System.Drawing.Point(6, 29);
             this.commentsGroupBox.Name = "commentsGroupBox";
             this.commentsGroupBox.Size = new System.Drawing.Size(265, 186);
             this.commentsGroupBox.TabIndex = 3;
@@ -343,7 +379,7 @@ namespace ReClassNET.Forms
             this.displayGroupBox.Controls.Add(this.showTextCheckBox);
             this.displayGroupBox.Controls.Add(this.showNodeOffsetCheckBox);
             this.displayGroupBox.Controls.Add(this.showNodeAddressCheckBox);
-            this.displayGroupBox.Location = new System.Drawing.Point(283, 39);
+            this.displayGroupBox.Location = new System.Drawing.Point(283, 29);
             this.displayGroupBox.Name = "displayGroupBox";
             this.displayGroupBox.Size = new System.Drawing.Size(265, 186);
             this.displayGroupBox.TabIndex = 2;
@@ -440,7 +476,7 @@ namespace ReClassNET.Forms
             this.colorsSettingTabPage.Location = new System.Drawing.Point(4, 22);
             this.colorsSettingTabPage.Name = "colorsSettingTabPage";
             this.colorsSettingTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 348);
+            this.colorsSettingTabPage.Size = new System.Drawing.Size(554, 346);
             this.colorsSettingTabPage.TabIndex = 1;
             this.colorsSettingTabPage.Text = "Colors";
             this.colorsSettingTabPage.UseVisualStyleBackColor = true;
@@ -449,7 +485,7 @@ namespace ReClassNET.Forms
             // 
             this.themeSettingsGroupBox.Controls.Add(this.themeComboBox);
             this.themeSettingsGroupBox.Controls.Add(this.themeLabel);
-            this.themeSettingsGroupBox.Location = new System.Drawing.Point(9, 246);
+            this.themeSettingsGroupBox.Location = new System.Drawing.Point(9, 6);
             this.themeSettingsGroupBox.Name = "themeSettingsGroupBox";
             this.themeSettingsGroupBox.Size = new System.Drawing.Size(539, 45);
             this.themeSettingsGroupBox.TabIndex = 29;
@@ -508,7 +544,7 @@ namespace ReClassNET.Forms
             this.nodeColorGroupBox.Controls.Add(this.nodeNameLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeClassLabel);
             this.nodeColorGroupBox.Controls.Add(this.nodeNameColorBox);
-            this.nodeColorGroupBox.Location = new System.Drawing.Point(9, 42);
+            this.nodeColorGroupBox.Location = new System.Drawing.Point(9, 135);
             this.nodeColorGroupBox.Name = "nodeColorGroupBox";
             this.nodeColorGroupBox.Size = new System.Drawing.Size(539, 200);
             this.nodeColorGroupBox.TabIndex = 28;
@@ -756,7 +792,7 @@ namespace ReClassNET.Forms
             // backgroundLabel
             // 
             this.backgroundLabel.AutoSize = true;
-            this.backgroundLabel.Location = new System.Drawing.Point(6, 14);
+            this.backgroundLabel.Location = new System.Drawing.Point(8, 112);
             this.backgroundLabel.Name = "backgroundLabel";
             this.backgroundLabel.Size = new System.Drawing.Size(161, 13);
             this.backgroundLabel.TabIndex = 1;
@@ -765,7 +801,7 @@ namespace ReClassNET.Forms
             // backgroundColorBox
             // 
             this.backgroundColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.backgroundColorBox.Location = new System.Drawing.Point(175, 11);
+            this.backgroundColorBox.Location = new System.Drawing.Point(175, 109);
             this.backgroundColorBox.Name = "backgroundColorBox";
             this.backgroundColorBox.Size = new System.Drawing.Size(123, 20);
             this.backgroundColorBox.TabIndex = 0;
@@ -777,7 +813,7 @@ namespace ReClassNET.Forms
             this.colorPresetsGroupBox.Controls.Add(this.loadPresetButton);
             this.colorPresetsGroupBox.Controls.Add(this.deletePresetButton);
             this.colorPresetsGroupBox.Controls.Add(this.presetLabel);
-            this.colorPresetsGroupBox.Location = new System.Drawing.Point(9, 297);
+            this.colorPresetsGroupBox.Location = new System.Drawing.Point(9, 57);
             this.colorPresetsGroupBox.Name = "colorPresetsGroupBox";
             this.colorPresetsGroupBox.Size = new System.Drawing.Size(539, 47);
             this.colorPresetsGroupBox.TabIndex = 30;
@@ -881,7 +917,7 @@ namespace ReClassNET.Forms
             this.typeDefinitionsSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.typeDefinitionsSettingsTabPage.Name = "typeDefinitionsSettingsTabPage";
             this.typeDefinitionsSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 348);
+            this.typeDefinitionsSettingsTabPage.Size = new System.Drawing.Size(554, 346);
             this.typeDefinitionsSettingsTabPage.TabIndex = 2;
             this.typeDefinitionsSettingsTabPage.Text = "Type Definitions";
             this.typeDefinitionsSettingsTabPage.UseVisualStyleBackColor = true;
@@ -1278,7 +1314,7 @@ namespace ReClassNET.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 434);
+            this.ClientSize = new System.Drawing.Size(586, 466);
             this.Controls.Add(this.bannerBox);
             this.Controls.Add(this.settingsTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -1292,6 +1328,8 @@ namespace ReClassNET.Forms
             this.settingsTabControl.ResumeLayout(false);
             this.generalSettingsTabPage.ResumeLayout(false);
             this.generalSettingsTabPage.PerformLayout();
+            this.cppGeneratorGroupBox.ResumeLayout(false);
+            this.cppGeneratorGroupBox.PerformLayout();
             this.fileAssociationGroupBox.ResumeLayout(false);
             this.commentsGroupBox.ResumeLayout(false);
             this.commentsGroupBox.PerformLayout();
@@ -1325,6 +1363,8 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.CheckBox colorizeIconsCheckBox;
 		private System.Windows.Forms.CheckBox roundedPanelsCheckBox;
 		private System.Windows.Forms.CheckBox enhancedCaretCheckBox;
+		private System.Windows.Forms.CheckBox cppGeneratorShowOffsetCheckBox;
+		private System.Windows.Forms.CheckBox cppGeneratorShowPaddingCheckBox;
 		private System.Windows.Forms.CheckBox highlightChangedValuesCheckBox;
 		private System.Windows.Forms.GroupBox colorPresetsGroupBox;
 		private System.Windows.Forms.ComboBox presetComboBox;
@@ -1428,5 +1468,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.TextBox nintTypeTextBox;
 		private System.Windows.Forms.Label utf32TextSettingsLabel;
 		private System.Windows.Forms.TextBox utf32TextTypeTextBox;
+		private System.Windows.Forms.GroupBox cppGeneratorGroupBox;
 	}
 }

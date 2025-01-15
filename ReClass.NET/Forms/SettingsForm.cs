@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using DarkModeForms;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -20,6 +18,7 @@ namespace ReClassNET.Forms
 	{
 		private readonly Settings settings;
 		private readonly CppTypeMapping typeMapping;
+		private static readonly string[] colorPresetDefaultNames = { "Default Light", "Default Dark", "Default Black" };
 		private List<ColorPreset> presets;
 
 		public TabControl SettingsTabControl => settingsTabControl;
@@ -79,8 +78,8 @@ namespace ReClassNET.Forms
 			}
 
 			presetComboBox.Items.Clear();
-			presetComboBox.Items.Add("Default Light");
-			presetComboBox.Items.Add("Default Dark");
+			foreach (var name in colorPresetDefaultNames) 
+				presetComboBox.Items.Add(name);
 			if (presets != null)  // Add null check
 			{
 				foreach (var preset in presets)
@@ -114,7 +113,16 @@ namespace ReClassNET.Forms
 
 				var preset = ColorPreset.CreateFrom(settings, name);
 
-				var existingIndex = presets.FindIndex(p => p.Name == name);
+				foreach (var s in colorPresetDefaultNames)
+				{
+					if (name.ToLower().Equals(s.ToLower()))
+					{
+						MessageBox.Show($"Preset '{name}' is static and can not be altered.", "Static Preset", MessageBoxButtons.OK);
+						return;
+					}
+				}
+
+				var existingIndex = presets.FindIndex(p => p.Name.ToLower().Equals(name.ToLower()));
 				if (existingIndex != -1)
 				{
 					if (MessageBox.Show($"Preset '{name}' already exists. Overwrite?",
@@ -290,11 +298,20 @@ namespace ReClassNET.Forms
 			settings.ClassColor = Color.FromArgb(32, 32, 128);
 		}
 
-		private void ApplyDefaultDarkPreset()
+		private void ApplyDefaultDarkPreset(bool black = false)
 		{
-			settings.BackgroundColor = Color.FromArgb(0, 0, 0);
-			settings.SelectedColor = Color.FromArgb(43, 43, 43);
-			settings.HiddenColor = Color.FromArgb(43, 43, 43);
+			if (black)
+			{
+				settings.BackgroundColor = Color.FromArgb(0, 0, 0);
+				settings.SelectedColor = Color.FromArgb(43, 43, 43);
+				settings.HiddenColor = Color.FromArgb(43, 43, 43);
+			}
+			else
+			{
+				settings.BackgroundColor = Color.FromArgb(43, 43, 43);
+				settings.SelectedColor = Color.FromArgb(0, 0, 0);
+				settings.HiddenColor = Color.FromArgb(0, 0, 0);
+			}
 			settings.OffsetColor = Color.FromArgb(255, 0, 0);
 			settings.AddressColor = Color.FromArgb(0, 200, 0);
 			settings.HexColor = Color.FromArgb(255, 255, 255);
@@ -305,7 +322,8 @@ namespace ReClassNET.Forms
 			settings.CommentColor = Color.FromArgb(0, 200, 0);
 			settings.TextColor = Color.FromArgb(128, 128, 128);
 			settings.VTableColor = Color.FromArgb(0, 255, 0);
-			settings.ClassColor = Color.FromArgb(240, 240, 240); // MS 78, 201, 176
+			settings.PluginColor = Color.FromArgb(255, 0, 255);
+			settings.ClassColor = Color.FromArgb(240, 240, 240);
 		}
 
 		private void RefreshColorBindings()
@@ -327,19 +345,25 @@ namespace ReClassNET.Forms
 		{
 			if (presetComboBox.SelectedIndex < 0) return;
 
-			if (presetComboBox.SelectedIndex == 0) // Default Light
+			if (presetComboBox.SelectedIndex < colorPresetDefaultNames.Count())
 			{
-				ApplyDefaultLightPreset();
-				deletePresetButton.Enabled = false;
-			}
-			else if (presetComboBox.SelectedIndex == 1) // Default Dark
-			{
-				ApplyDefaultDarkPreset();
+				switch (presetComboBox.SelectedIndex)
+				{
+					case 0:
+						ApplyDefaultLightPreset();
+						break;
+					case 1:
+						ApplyDefaultDarkPreset(false/*black*/);
+						break;
+					case 2:
+						ApplyDefaultDarkPreset(true/*black*/);
+						break;
+				}
 				deletePresetButton.Enabled = false;
 			}
 			else
 			{
-				var preset = presets[presetComboBox.SelectedIndex - 2];
+				var preset = presets[presetComboBox.SelectedIndex - colorPresetDefaultNames.Count()];
 				preset.ApplyTo(settings);
 				deletePresetButton.Enabled = true;
 			}
@@ -413,7 +437,9 @@ namespace ReClassNET.Forms
 			SetBinding(colorizeIconsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ColorizeIcons));
 			SetBinding(roundedPanelsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RoundedPanels));
 			SetBinding(enhancedCaretCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.EnhancedCaret));
-			
+			SetBinding(cppGeneratorShowOffsetCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.CppGeneratorShowOffset));
+			SetBinding(cppGeneratorShowPaddingCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.CppGeneratorShowPadding));
+
 			colorizeIconsCheckBox.CheckedChanged += (_, _2) =>
 			{
 				foreach (Form form in Application.OpenForms)

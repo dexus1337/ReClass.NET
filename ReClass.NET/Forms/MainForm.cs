@@ -485,7 +485,7 @@ namespace ReClassNET.Forms
 
 		private void generateCppCodeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ShowCodeGeneratorForm(new CppCodeGenerator(currentProject.TypeMapping));
+			ShowCodeGeneratorForm(new CppCodeGenerator(currentProject.TypeMapping, Program.Settings.CppGeneratorShowOffset, Program.Settings.CppGeneratorShowPadding));
 		}
 
 		private void generateCSharpCodeToolStripMenuItem_Click(object sender, EventArgs e)

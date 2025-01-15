@@ -29,7 +29,7 @@ namespace ReClassNET.Forms
 			if (csharp)
 				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CSharpCodeGenerator());
 			else
-				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping));
+				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping, Program.Settings.CppGeneratorShowOffset, Program.Settings.CppGeneratorShowPadding));
 		}
 
 		public void ShowCodeGeneratorForm(ICodeGenerator generator)

@@ -1,8 +1,6 @@
 using System;
 using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
@@ -11,8 +9,6 @@ using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Logger;
-using ReClassNET.MemoryScanner.Comparer;
-using ReClassNET.MemoryScanner;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
@@ -128,7 +124,7 @@ namespace ReClassNET.CodeGenerator
 
 		public Language Language => Language.Cpp;
 
-		public CppCodeGenerator(CppTypeMapping typeMapping)
+		public CppCodeGenerator(CppTypeMapping typeMapping, bool showOffset = true, bool showPadding = true)
 		{
 			nodeTypeToTypeDefinationMap = new Dictionary<Type, string>
 			{
@@ -156,11 +152,13 @@ namespace ReClassNET.CodeGenerator
 				[typeof(Vector3Node)] = typeMapping.TypeVector3,
 				[typeof(Vector4Node)] = typeMapping.TypeVector4
 			};
+			ShowOffset = showOffset;
+			ShowPadding = showPadding;
 		}
 
-		public bool ShowOffset { get; set; } = true; // MS Setting
+		public bool ShowOffset { get; set; } = true; 
 
-		public bool ShowPadding { get; set; } = true; // MS Setting
+		public bool ShowPadding { get; set; } = true;
 
 		public string GenerateCode(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger)
 		{
