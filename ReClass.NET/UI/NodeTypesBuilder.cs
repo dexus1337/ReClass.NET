@@ -8,6 +8,7 @@ using ReClassNET.Controls;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Nodes;
 using ReClassNET.Plugins;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ReClassNET.UI
 {
@@ -23,7 +24,7 @@ namespace ReClassNET.UI
 			defaultNodeTypeGroupList.Add(new[] { typeof(NIntNode), typeof(Int64Node), typeof(Int32Node), typeof(Int16Node), typeof(Int8Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(NUIntNode), typeof(UInt64Node), typeof(UInt32Node), typeof(UInt16Node), typeof(UInt8Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(BoolNode), typeof(BitFieldNode), typeof(EnumNode) });
-			defaultNodeTypeGroupList.Add(new[] { typeof(FloatNode), typeof(DoubleNode), typeof(CustomNode) }); // MS
+			defaultNodeTypeGroupList.Add(new[] { typeof(FloatNode), typeof(DoubleNode), typeof(CustomNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(Vector4Node), typeof(Vector3Node), typeof(Vector2Node), typeof(Matrix4x4Node), typeof(Matrix3x4Node), typeof(Matrix3x3Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(Utf8TextNode), typeof(Utf8TextPtrNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(PointerNode), typeof(ArrayNode), typeof(UnionNode) });
@@ -190,6 +191,26 @@ namespace ReClassNET.UI
 			}
 
 			return items;
+		}
+
+		public static void UpdateToolStripItems(ToolStripItemCollection Items)
+		{
+			Contract.Requires(Items != null);
+
+			foreach (ToolStripItem toolStripItem in Items)
+			{
+				if (toolStripItem is TypeToolStripMenuItem typeToolStripMenuItem)
+				{
+					if (typeToolStripMenuItem.Value != null)
+					{
+						if (typeToolStripMenuItem.Value.IsSubclassOf(typeof(BaseNode)))
+						{
+							NodeTypesBuilder.GetNodeInfoFromType(typeToolStripMenuItem.Value, out var label, out var icon, out var shortcutKeys);
+							typeToolStripMenuItem.ShortcutKeys = shortcutKeys;
+						}
+					}
+				}
+			}
 		}
 
 		private static void GetNodeInfoFromType(Type nodeType, out string label, out Image icon, out Keys shortcutKeys)
