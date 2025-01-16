@@ -8,6 +8,7 @@ namespace ReClassNET.Util
 	{
 		public string Name { get; set; }
 		public Color BackgroundColor { get; set; }
+		public Color EditedTextColor { get; set; }
 		public Color SelectedColor { get; set; }
 		public Color HiddenColor { get; set; }
 		public Color OffsetColor { get; set; }
@@ -26,6 +27,7 @@ namespace ReClassNET.Util
 		public void ApplyTo(Settings settings)
 		{
 			settings.BackgroundColor = BackgroundColor;
+			settings.EditedTextColor = EditedTextColor;
 			settings.SelectedColor = SelectedColor;
 			settings.HiddenColor = HiddenColor;
 			settings.OffsetColor = OffsetColor;
@@ -48,6 +50,7 @@ namespace ReClassNET.Util
 			{
 				Name = name,
 				BackgroundColor = settings.BackgroundColor,
+				EditedTextColor = settings.EditedTextColor,
 				SelectedColor = settings.SelectedColor,
 				HiddenColor = settings.HiddenColor,
 				OffsetColor = settings.OffsetColor,

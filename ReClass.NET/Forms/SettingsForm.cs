@@ -45,6 +45,8 @@ namespace ReClassNET.Forms
 			typeDefinitionsSettingsTabPage.ImageIndex = 2;
 			hotkeysSettingsTabPage.ImageIndex = 3;
 
+			UpdatePluginComboBox();
+
 			SetGeneralBindings();
 			SetColorBindings();
 			SetTypeDefinitionBindings();
@@ -68,6 +70,23 @@ namespace ReClassNET.Forms
 			loadPresetButton.Click += loadPresetButton_Click;
 			deletePresetButton.Click += deletePresetButton_Click;
 			presetComboBox.SelectedIndexChanged += presetComboBox_SelectedIndexChanged;
+		}
+
+		public void UpdatePluginComboBox()
+		{
+			defaultPluginComboBox.Items.Clear();
+			var providers = Program.CoreFunctions.FunctionProviders.ToArray();
+			defaultPluginComboBox.Items.AddRange(providers);
+			for (int i = 0; i < providers.Length; i++)
+			{
+				if (providers[i].Equals(Program.Settings.DefaultPlugin))
+				{
+					defaultPluginComboBox.SelectedIndex = i;
+					break;
+				}				
+			}
+			if (defaultPluginComboBox.SelectedIndex < 0)
+				defaultPluginComboBox.SelectedIndex = 0;
 		}
 
 		private void LoadPresets()
@@ -286,6 +305,7 @@ namespace ReClassNET.Forms
 		private void ApplyDefaultLightPreset()
 		{
 			settings.BackgroundColor = Color.FromArgb(255, 255, 255);
+			settings.EditedTextColor = DarkMode.OScolors.TextActive;
 			settings.SelectedColor = Color.FromArgb(240, 240, 240);
 			settings.HiddenColor = Color.FromArgb(240, 240, 240);
 			settings.OffsetColor = Color.FromArgb(255, 0, 0);
@@ -316,6 +336,8 @@ namespace ReClassNET.Forms
 				settings.SelectedColor = Color.FromArgb(0, 0, 0);
 				settings.HiddenColor = Color.FromArgb(0, 0, 0);
 			}
+
+			settings.EditedTextColor = DarkMode.OScolors.TextActive;
 			settings.OffsetColor = Color.FromArgb(255, 0, 0);
 			settings.AddressColor = Color.FromArgb(0, 200, 0);
 			settings.HexColor = Color.FromArgb(255, 255, 255);
@@ -343,6 +365,7 @@ namespace ReClassNET.Forms
 				}
 			}
 			backgroundColorBox.DataBindings[nameof(ColorBox.Color)].ReadValue();
+			editedTextColorColorBox.DataBindings[nameof(ColorBox.Color)].ReadValue();
 		}
 
 		private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -443,6 +466,7 @@ namespace ReClassNET.Forms
 			SetBinding(enhancedCaretCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.EnhancedCaret));
 			SetBinding(cppGeneratorShowOffsetCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.CppGeneratorShowOffset));
 			SetBinding(cppGeneratorShowPaddingCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.CppGeneratorShowPadding));
+			SetBinding(defaultPluginComboBox, nameof(ComboBox.Text), settings, nameof(Settings.DefaultPlugin));
 
 			colorizeIconsCheckBox.CheckedChanged += (_, _2) =>
 			{
@@ -470,6 +494,7 @@ namespace ReClassNET.Forms
 		private void SetColorBindings()
 		{
 			SetBinding(backgroundColorBox, nameof(ColorBox.Color), settings, nameof(Settings.BackgroundColor));
+			SetBinding(editedTextColorColorBox, nameof(ColorBox.Color), settings, nameof(Settings.EditedTextColor));
 
 			SetBinding(nodeSelectedColorBox, nameof(ColorBox.Color), settings, nameof(Settings.SelectedColor));
 			SetBinding(nodeHiddenColorBox, nameof(ColorBox.Color), settings, nameof(Settings.HiddenColor));

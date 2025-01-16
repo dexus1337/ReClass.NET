@@ -11,7 +11,7 @@ bool g_IsDumpAnalysis = false;
 static std::wstring String2Wstring(const std::string& in, int code_page = 936)
 {
 	LPCSTR psz_src = in.c_str();
-	int len = in.size();
+	size_t len = in.size();
 
 	int size = MultiByteToWideChar(code_page, 0, (LPCSTR)psz_src, len, 0, 0);
 	if (size <= 0)
@@ -27,7 +27,7 @@ static std::wstring String2Wstring(const std::string& in, int code_page = 936)
 			pwsz_dst[i] = pwsz_dst[i + 1];
 	}
 	std::wstring wstr(pwsz_dst);
-	delete pwsz_dst;
+	delete[] pwsz_dst;
 	return wstr;
 }
 
@@ -92,7 +92,7 @@ static bool RunAppWithRedirection(
 	si.hStdOutput = output ? output : ::GetStdHandle(STD_OUTPUT_HANDLE);
 	si.hStdError = error ? error : ::GetStdHandle(STD_ERROR_HANDLE);
 
-	wchar_t* command_dup = wcsdup(command);
+	wchar_t* command_dup = _wcsdup(command);
 
 	if (::CreateProcessW(application,
 						 command_dup,

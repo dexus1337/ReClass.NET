@@ -42,10 +42,13 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(general, nameof(settings.StayOnTop), e => settings.StayOnTop = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RunAsAdmin), e => settings.RunAsAdmin = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RandomizeWindowTitle), e => settings.RandomizeWindowTitle = XElementSerializer.ToBool(e));
-					XElementSerializer.TryRead(general, nameof(settings.DarkMode), e => settings.DarkMode =
-						(DarkModeForms.DarkModeCS.DisplayMode)int.Parse(XElementSerializer.ToString(e)));
+					XElementSerializer.TryRead(general, nameof(settings.DarkMode), e => settings.DarkMode = (DarkModeForms.DarkModeCS.DisplayMode)int.Parse(XElementSerializer.ToString(e)));
 					XElementSerializer.TryRead(general, nameof(settings.ColorizeIcons), e => settings.ColorizeIcons = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RoundedPanels), e => settings.RoundedPanels = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.EnhancedCaret), e => settings.EnhancedCaret = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.CppGeneratorShowOffset), e => settings.CppGeneratorShowOffset = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.CppGeneratorShowPadding), e => settings.CppGeneratorShowPadding = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.DefaultPlugin), e => settings.DefaultPlugin = XElementSerializer.ToString(e));
 					// Load hotkeys
 					XElementSerializer.TryRead(general, "NodeHotkeys", e =>
 					{
@@ -84,6 +87,7 @@ namespace ReClassNET.Util
 				if (colors != null)
 				{
 					XElementSerializer.TryRead(colors, nameof(settings.BackgroundColor), e => settings.BackgroundColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(colors, nameof(settings.EditedTextColor), e => settings.EditedTextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(colors, nameof(settings.SelectedColor), e => settings.SelectedColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(colors, nameof(settings.HiddenColor), e => settings.HiddenColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(colors, nameof(settings.OffsetColor), e => settings.OffsetColor = XElementSerializer.ToColor(e));
@@ -165,7 +169,11 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.RandomizeWindowTitle), settings.RandomizeWindowTitle),
 						XElementSerializer.ToXml(nameof(settings.DarkMode), (int)settings.DarkMode),
 						XElementSerializer.ToXml(nameof(settings.ColorizeIcons), settings.ColorizeIcons),
-						XElementSerializer.ToXml(nameof(settings.RoundedPanels), settings.RoundedPanels)
+						XElementSerializer.ToXml(nameof(settings.RoundedPanels), settings.RoundedPanels),
+						XElementSerializer.ToXml(nameof(settings.EnhancedCaret), settings.EnhancedCaret),
+						XElementSerializer.ToXml(nameof(settings.CppGeneratorShowOffset), settings.CppGeneratorShowOffset),
+						XElementSerializer.ToXml(nameof(settings.CppGeneratorShowPadding), settings.CppGeneratorShowPadding),
+						XElementSerializer.ToXml(nameof(settings.DefaultPlugin), settings.DefaultPlugin)
 					),
 					new XElement(
 						XmlDisplayElement,
@@ -184,6 +192,7 @@ namespace ReClassNET.Util
 					new XElement(
 						XmlColorsElement,
 						XElementSerializer.ToXml(nameof(settings.BackgroundColor), settings.BackgroundColor),
+						XElementSerializer.ToXml(nameof(settings.EditedTextColor), settings.EditedTextColor),
 						XElementSerializer.ToXml(nameof(settings.SelectedColor), settings.SelectedColor),
 						XElementSerializer.ToXml(nameof(settings.HiddenColor), settings.HiddenColor),
 						XElementSerializer.ToXml(nameof(settings.OffsetColor), settings.OffsetColor),
@@ -228,42 +237,37 @@ namespace ReClassNET.Util
 				// If old directory doesn't exist, no migration needed
 				if (!Directory.Exists(oldPath)) return;
 
-				// Check for files to migrate
-				string oldSettingsPath = Path.Combine(oldPath, Constants.SettingsFile);
-				string oldPresetsPath = Path.Combine(oldPath, "ColorPresets.xml");
-
 				// Ensure new directory exists
 				EnsureSettingsDirectoryAvailable();
 
-				// Migrate settings file if it exists
-				if (File.Exists(oldSettingsPath))
+				// Check for files to migrate
+				foreach (var filePath in Directory.EnumerateFileSystemEntries(oldPath))
 				{
-					string newSettingsPath = Path.Combine(PathUtil.SettingsFolderPath, Constants.SettingsFile);
-					if (!File.Exists(newSettingsPath))
+					string fileName = Path.GetFileName(filePath);
+					string path = Path.Combine(oldPath, fileName);
+					if (File.Exists(path))
 					{
-						File.Copy(oldSettingsPath, newSettingsPath, false);
-					}
-				}
-
-				// Migrate color presets if they exist
-				if (File.Exists(oldPresetsPath))
-				{
-					string newPresetsPath = Path.Combine(PathUtil.SettingsFolderPath, "ColorPresets.xml");
-					if (!File.Exists(newPresetsPath))
-					{
-						File.Copy(oldPresetsPath, newPresetsPath, false);
+						string newPath = Path.Combine(PathUtil.SettingsFolderPath, fileName);
+						if (!File.Exists(newPath))
+						{
+							File.Copy(path, newPath, false);
+							try
+							{
+								File.Delete(path);
+							}
+							catch
+							{
+								// Ignore deletion errors
+							}
+						}
 					}
 				}
 
 				// Optionally delete old files after successful migration
 				try
 				{
-					if (File.Exists(oldSettingsPath)) File.Delete(oldSettingsPath);
-					if (File.Exists(oldPresetsPath)) File.Delete(oldPresetsPath);
 					if (Directory.Exists(oldPath) && !Directory.EnumerateFileSystemEntries(oldPath).Any())
-					{
 						Directory.Delete(oldPath);
-					}
 				}
 				catch
 				{

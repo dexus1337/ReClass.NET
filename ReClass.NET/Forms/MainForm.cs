@@ -129,6 +129,14 @@ namespace ReClassNET.Forms
 			GlobalWindowManager.AddWindow(this);
 
 			pluginManager.LoadAllPlugins(PluginManager.PluginsPath, Program.Logger);
+			try
+			{
+				Program.CoreFunctions.SetActiveFunctionsProvider(Program.Settings.DefaultPlugin);
+			}
+			catch
+			{
+				Program.CoreFunctions.SetActiveFunctionsProvider("Default");
+			}
 
 			toolStrip.Items.AddRange(NodeTypesBuilder.CreateToolStripButtons(ReplaceSelectedNodesWithType).ToArray());
 			changeTypeToolStripMenuItem.DropDownItems.AddRange(NodeTypesBuilder.CreateToolStripMenuItems(ReplaceSelectedNodesWithType, false).ToArray());
@@ -863,8 +871,8 @@ namespace ReClassNET.Forms
 			{
 				if (kvp.Value == keyData)
 				{
-					if (memoryViewControl != null)
-					{
+					if (memoryViewControl != null && !memoryViewControl.EditorMode)
+					{						
 						ReplaceSelectedNodesWithType(kvp.Key);
 						return true; // Return true to indicate we handled the key
 					}

@@ -66,6 +66,8 @@ namespace ReClassNET.Forms
 		private ColorBox nodePluginColorBox;
 		private System.Windows.Forms.Label nodeClassLabel;
 		private ColorBox nodeClassColorBox;
+		private System.Windows.Forms.Label editedTextColorLabel;
+		private ColorBox editedTextColorColorBox; 
 		private System.Windows.Forms.Label floatSettingsLabel;
 		private System.Windows.Forms.TextBox floatTypeTextBox;
 		private System.Windows.Forms.Label uint64SettingsLabel;
@@ -153,6 +155,8 @@ namespace ReClassNET.Forms
 		{
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.generalSettingsTabPage = new System.Windows.Forms.TabPage();
+            this.defaultPluginGroupBox = new System.Windows.Forms.GroupBox();
+            this.defaultPluginComboBox = new System.Windows.Forms.ComboBox();
             this.cppGeneratorGroupBox = new System.Windows.Forms.GroupBox();
             this.cppGeneratorShowOffsetCheckBox = new System.Windows.Forms.CheckBox();
             this.cppGeneratorShowPaddingCheckBox = new System.Windows.Forms.CheckBox();
@@ -220,6 +224,8 @@ namespace ReClassNET.Forms
             this.loadPresetButton = new System.Windows.Forms.Button();
             this.deletePresetButton = new System.Windows.Forms.Button();
             this.presetLabel = new System.Windows.Forms.Label();
+            this.editedTextColorLabel = new System.Windows.Forms.Label();
+            this.editedTextColorColorBox = new ReClassNET.Controls.ColorBox();
             this.typeDefinitionsSettingsTabPage = new System.Windows.Forms.TabPage();
             this.utf32TextSettingsLabel = new System.Windows.Forms.Label();
             this.utf32TextTypeTextBox = new System.Windows.Forms.TextBox();
@@ -273,6 +279,7 @@ namespace ReClassNET.Forms
             this.bannerBox = new ReClassNET.Controls.BannerBox();
             this.settingsTabControl.SuspendLayout();
             this.generalSettingsTabPage.SuspendLayout();
+            this.defaultPluginGroupBox.SuspendLayout();
             this.cppGeneratorGroupBox.SuspendLayout();
             this.fileAssociationGroupBox.SuspendLayout();
             this.commentsGroupBox.SuspendLayout();
@@ -300,6 +307,7 @@ namespace ReClassNET.Forms
             // 
             // generalSettingsTabPage
             // 
+            this.generalSettingsTabPage.Controls.Add(this.defaultPluginGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.cppGeneratorGroupBox);
             this.generalSettingsTabPage.Controls.Add(this.randomizeWindowTitleCheckBox);
             this.generalSettingsTabPage.Controls.Add(this.fileAssociationGroupBox);
@@ -315,13 +323,32 @@ namespace ReClassNET.Forms
             this.generalSettingsTabPage.Text = "General";
             this.generalSettingsTabPage.UseVisualStyleBackColor = true;
             // 
+            // defaultPluginGroupBox
+            // 
+            this.defaultPluginGroupBox.Controls.Add(this.defaultPluginComboBox);
+            this.defaultPluginGroupBox.Location = new System.Drawing.Point(283, 214);
+            this.defaultPluginGroupBox.Name = "defaultPluginGroupBox";
+            this.defaultPluginGroupBox.Size = new System.Drawing.Size(265, 45);
+            this.defaultPluginGroupBox.TabIndex = 7;
+            this.defaultPluginGroupBox.TabStop = false;
+            this.defaultPluginGroupBox.Text = "Default Plugin";
+            // 
+            // defaultPluginComboBox
+            // 
+            this.defaultPluginComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.defaultPluginComboBox.FormattingEnabled = true;
+            this.defaultPluginComboBox.Location = new System.Drawing.Point(6, 17);
+            this.defaultPluginComboBox.Name = "defaultPluginComboBox";
+            this.defaultPluginComboBox.Size = new System.Drawing.Size(253, 21);
+            this.defaultPluginComboBox.TabIndex = 2;
+            // 
             // cppGeneratorGroupBox
             // 
             this.cppGeneratorGroupBox.Controls.Add(this.cppGeneratorShowOffsetCheckBox);
             this.cppGeneratorGroupBox.Controls.Add(this.cppGeneratorShowPaddingCheckBox);
             this.cppGeneratorGroupBox.Location = new System.Drawing.Point(6, 214);
             this.cppGeneratorGroupBox.Name = "cppGeneratorGroupBox";
-            this.cppGeneratorGroupBox.Size = new System.Drawing.Size(542, 45);
+            this.cppGeneratorGroupBox.Size = new System.Drawing.Size(265, 45);
             this.cppGeneratorGroupBox.TabIndex = 6;
             this.cppGeneratorGroupBox.TabStop = false;
             this.cppGeneratorGroupBox.Text = "CppGenerator";
@@ -598,6 +625,8 @@ namespace ReClassNET.Forms
             this.colorsSettingTabPage.Controls.Add(this.backgroundLabel);
             this.colorsSettingTabPage.Controls.Add(this.backgroundColorBox);
             this.colorsSettingTabPage.Controls.Add(this.colorPresetsGroupBox);
+            this.colorsSettingTabPage.Controls.Add(this.editedTextColorLabel);
+            this.colorsSettingTabPage.Controls.Add(this.editedTextColorColorBox);
             this.colorsSettingTabPage.Location = new System.Drawing.Point(4, 22);
             this.colorsSettingTabPage.Name = "colorsSettingTabPage";
             this.colorsSettingTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -917,7 +946,7 @@ namespace ReClassNET.Forms
             // backgroundLabel
             // 
             this.backgroundLabel.AutoSize = true;
-            this.backgroundLabel.Location = new System.Drawing.Point(8, 112);
+            this.backgroundLabel.Location = new System.Drawing.Point(8, 113);
             this.backgroundLabel.Name = "backgroundLabel";
             this.backgroundLabel.Size = new System.Drawing.Size(161, 13);
             this.backgroundLabel.TabIndex = 1;
@@ -926,7 +955,7 @@ namespace ReClassNET.Forms
             // backgroundColorBox
             // 
             this.backgroundColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.backgroundColorBox.Location = new System.Drawing.Point(175, 109);
+            this.backgroundColorBox.Location = new System.Drawing.Point(172, 110);
             this.backgroundColorBox.Name = "backgroundColorBox";
             this.backgroundColorBox.Size = new System.Drawing.Size(123, 20);
             this.backgroundColorBox.TabIndex = 0;
@@ -989,6 +1018,23 @@ namespace ReClassNET.Forms
             this.presetLabel.Size = new System.Drawing.Size(40, 13);
             this.presetLabel.TabIndex = 3;
             this.presetLabel.Text = "Preset:";
+            // 
+            // editedTextColorLabel
+            // 
+            this.editedTextColorLabel.AutoSize = true;
+            this.editedTextColorLabel.Location = new System.Drawing.Point(299, 113);
+            this.editedTextColorLabel.Name = "editedTextColorLabel";
+            this.editedTextColorLabel.Size = new System.Drawing.Size(91, 13);
+            this.editedTextColorLabel.TabIndex = 3;
+            this.editedTextColorLabel.Text = "Edited Text Color:";
+            // 
+            // editedTextColorColorBox
+            // 
+            this.editedTextColorColorBox.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.editedTextColorColorBox.Location = new System.Drawing.Point(418, 110);
+            this.editedTextColorColorBox.Name = "editedTextColorColorBox";
+            this.editedTextColorColorBox.Size = new System.Drawing.Size(123, 20);
+            this.editedTextColorColorBox.TabIndex = 2;
             // 
             // typeDefinitionsSettingsTabPage
             // 
@@ -1475,6 +1521,7 @@ namespace ReClassNET.Forms
             this.settingsTabControl.ResumeLayout(false);
             this.generalSettingsTabPage.ResumeLayout(false);
             this.generalSettingsTabPage.PerformLayout();
+            this.defaultPluginGroupBox.ResumeLayout(false);
             this.cppGeneratorGroupBox.ResumeLayout(false);
             this.cppGeneratorGroupBox.PerformLayout();
             this.fileAssociationGroupBox.ResumeLayout(false);
@@ -1499,6 +1546,8 @@ namespace ReClassNET.Forms
 		}
 
 		#endregion
-		
+
+		private System.Windows.Forms.GroupBox defaultPluginGroupBox;
+		private System.Windows.Forms.ComboBox defaultPluginComboBox;
 	}
 }

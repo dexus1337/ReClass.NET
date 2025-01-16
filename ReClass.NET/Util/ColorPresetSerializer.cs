@@ -37,6 +37,7 @@ namespace ReClassNET.Util
 					var preset = new ColorPreset { Name = presetElement.Attribute("name")?.Value };
 
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.BackgroundColor), e => preset.BackgroundColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.EditedTextColor), e => preset.EditedTextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.SelectedColor), e => preset.SelectedColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.HiddenColor), e => preset.HiddenColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.OffsetColor), e => preset.OffsetColor = XElementSerializer.ToColor(e));
@@ -51,7 +52,6 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.VTableColor), e => preset.VTableColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.PluginColor), e => preset.PluginColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.ClassColor), e => preset.ClassColor = XElementSerializer.ToColor(e));
-
 					presets.Add(preset);
 				}
 			}
@@ -73,6 +73,7 @@ namespace ReClassNET.Util
 						select new XElement(XmlPresetElement,
 							new XAttribute("name", preset.Name),
 							XElementSerializer.ToXml(nameof(ColorPreset.BackgroundColor), preset.BackgroundColor),
+							XElementSerializer.ToXml(nameof(ColorPreset.EditedTextColor), preset.EditedTextColor),
 							XElementSerializer.ToXml(nameof(ColorPreset.SelectedColor), preset.SelectedColor),
 							XElementSerializer.ToXml(nameof(ColorPreset.HiddenColor), preset.HiddenColor),
 							XElementSerializer.ToXml(nameof(ColorPreset.OffsetColor), preset.OffsetColor),
@@ -118,6 +119,7 @@ namespace ReClassNET.Util
 					var preset = new ColorPreset { Name = presetElement.Attribute("name")?.Value };
 
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.BackgroundColor), e => preset.BackgroundColor = XElementSerializer.ToColor(e));
+					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.EditedTextColor), e => preset.EditedTextColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.SelectedColor), e => preset.SelectedColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.HiddenColor), e => preset.HiddenColor = XElementSerializer.ToColor(e));
 					XElementSerializer.TryRead(presetElement, nameof(ColorPreset.OffsetColor), e => preset.OffsetColor = XElementSerializer.ToColor(e));

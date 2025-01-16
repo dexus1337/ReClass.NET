@@ -143,6 +143,14 @@ namespace ReClassNET.Forms
 				if (pluginManager.LoadPlugin(ofd.FileName))
 				{
 					UpdatePluginsInfo(pluginManager);
+					try
+					{
+						Program.CoreFunctions.SetActiveFunctionsProvider(Program.Settings.DefaultPlugin); 
+					}						
+					catch
+					{
+						Program.CoreFunctions.SetActiveFunctionsProvider("Default");
+					}
 				}
 			}
 		}

@@ -63,17 +63,14 @@ namespace DarkModeForms
 			}
 		}
 
+		public DarkModeCS DarkMode { get { return darkMode; } }
+
 		public void UpdateDarkMode()
 		{
 			if (!DesignMode && !LicenseManager.UsageMode.Equals(LicenseUsageMode.Designtime) && darkMode != null)
 			{
 				darkMode.ApplyTheme(Program.Settings.DarkMode);
 			}
-		}
-
-		public DarkModeCS GetDarkMode()
-		{
-			return darkMode;
 		}
 	}
 }

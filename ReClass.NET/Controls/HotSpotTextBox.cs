@@ -45,7 +45,7 @@ namespace ReClassNET.Controls
 			if (Visible)
 			{
 				BackColor = Program.Settings.BackgroundColor;
-//				ForeColor = Program.Settings.PlanTextColor; // MS?
+				ForeColor = Program.Settings.EditedTextColor;
 
 				if (currentHotSpot != null)
 				{

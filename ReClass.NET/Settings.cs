@@ -33,6 +33,8 @@ namespace ReClassNET
 
 		public bool CppGeneratorShowPadding { get; set; } = true;
 
+		public string DefaultPlugin { get; set; } = "Default";
+
 		// Node Drawing Settings
 
 		public bool ShowNodeAddress { get; set; } = true;
@@ -65,6 +67,8 @@ namespace ReClassNET
 
 		public Color BackgroundColor { get; set; } = Color.FromArgb(255, 255, 255);
 
+		public Color EditedTextColor { get; set; } = Color.FromArgb(0, 0, 0);
+
 		public Color SelectedColor { get; set; } = Color.FromArgb(240, 240, 240);
 
 		public Color HiddenColor { get; set; } = Color.FromArgb(240, 240, 240);
@@ -96,7 +100,7 @@ namespace ReClassNET
 		public CustomDataMap CustomData { get; } = new CustomDataMap();
 
 		// HotKeys
-		internal Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys> // MS Form
+		internal Dictionary<Type, Keys> _nodeShortcuts = new Dictionary<Type, Keys>
 		{
 			{ typeof(Hex8Node), Keys.Control | Keys.Shift | Keys.B },
 			{ typeof(Hex16Node), 0 },
