@@ -111,7 +111,8 @@ RUN apt-get update \
 
 Process Selection
 
-![image](https://github.com/user-attachments/assets/f7b327dc-50d7-44d5-b033-9c398cb5e999)
+![image](https://github.com/user-attachments/assets/8a794152-1573-46c4-9c1f-8387977de614)
+
 
 PS4
 
@@ -134,15 +135,16 @@ Code Generator
 ![](https://abload.de/img/codegenerator24qzce.jpg)
 
 Plugins  
-![image](https://github.com/user-attachments/assets/83532067-00e2-4a23-8e83-cd2cbfc540e1)
-![image](https://github.com/user-attachments/assets/3c0843d3-c48a-4b27-b23b-cb953f32a380)
+![image](https://github.com/user-attachments/assets/1f083968-01be-42a3-af6d-ef1a75926748)
+![image](https://github.com/user-attachments/assets/39b32252-02a0-4c30-ae4c-e44cdefd7367)
 
 
 Settings  
-![image](https://github.com/user-attachments/assets/338b41ee-69e7-411c-8e57-3729e70378b7)
-![image](https://github.com/user-attachments/assets/219f47b8-7fdf-49c7-99bf-9b64f82f3ee0)
-![image](https://github.com/user-attachments/assets/a561947e-3660-4705-9c64-4f615a020f50)
-![image](https://github.com/user-attachments/assets/aede026b-b875-429a-8ef2-5eceb6b47f21)
+![image](https://github.com/user-attachments/assets/a4d0daca-6246-4f8f-8160-b51afbe29037)
+![image](https://github.com/user-attachments/assets/26cc4b55-ebfd-421e-af7b-98d0203f2954)
+![image](https://github.com/user-attachments/assets/0cd4ee64-e074-4865-ae31-753309e08611)
+![image](https://github.com/user-attachments/assets/6da9d41d-ed2d-4bc6-a369-f4130844ddca)
+![image](https://github.com/user-attachments/assets/89953f25-fea3-4061-a2b8-c2759d62ee6d)
 
 
 ## Authors / Special Thanks
