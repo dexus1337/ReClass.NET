@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ReClassNET.Debugger;
 
 namespace ReClassNET.Core
@@ -9,6 +9,8 @@ namespace ReClassNET.Core
 
 	public interface ICoreProcessFunctions
 	{
+		int ConnectServer(string ip, short port);
+
 		void EnumerateProcesses(EnumerateProcessCallback callbackProcess);
 
 		void EnumerateRemoteSectionsAndModules(IntPtr process, EnumerateRemoteSectionCallback callbackSection, EnumerateRemoteModuleCallback callbackModule);
@@ -34,5 +36,7 @@ namespace ReClassNET.Core
 		void HandleDebugEvent(ref DebugEvent evt);
 
 		bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set);
+
+		bool OpenDumpFile(IntPtr dumpFilePath);
 	}
 }

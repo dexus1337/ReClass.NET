@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
@@ -23,6 +23,7 @@ namespace ReClassNET.Forms
 
 		private bool isScanning = false;
 		private DateTime lastRefineTime;
+		  
 
 		public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process)
 		{
@@ -33,7 +34,6 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-
 			valueTypeComboBox.SetAvailableValues(
 				ScanValueType.Byte,
 				ScanValueType.Short,

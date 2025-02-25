@@ -22,6 +22,7 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Function
   - Function Pointer
   - Unions
+- Configurable Shortcuts for Nodes
 - Automatic Node Dissection
 - Highlight changed memory
 - Pointer Preview
@@ -45,6 +46,11 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Plugins can interact with the ReClass.NET windows
   - Plugins can provide node infos which will be displayed (example: class informations for Frostbite games)
   - Plugins can implement custom nodes with load/save and code generation support
+- DarkMode
+- Configurable Editor Colors
+  - Import/Export of Editor Themes
+- Open MiniDumps
+- Basic Networking-functionality
 
 ## Plugins
 - [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin)
@@ -52,14 +58,19 @@ This is a port of ReClass to the .NET platform with lots of additional features.
 - [MemoryPipe Plugin](https://github.com/ReClassNET/ReClass.NET-MemoryPipePlugin)
 - [LoadBinary Plugin](https://github.com/ReClassNET/ReClass.NET-LoadBinaryPlugin)
 - [Handle Abuser Plugin](https://github.com/ReClassNET/ReClass.NET-HandleAbuser)
-- Unreal Plugin (not available anymore) (by [DrP3pp3r](https://github.com/DrP3pp3r))
+- [Unreal Plugin](https://github.com/TetzkatLipHoka/ReClass.NET-UnrealPlugin) (by [DrP3pp3r](https://github.com/DrP3pp3r))
 - [DriverReader](https://github.com/niemand-sec/ReClass.NET-DriverReader) (by [Niemand](https://github.com/niemand-sec))
+
+- [Playstation 4: Frame4 Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-Frame4Plugin)
+- [Playstation 4: PS4Debug Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-PS4DebugPlugin)
+
+
 
 To install a plugin just copy it in the "Plugins" folder.
 If you want to develop your own plugin just learn from the code of the [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin) and [Frostbite Plugin](https://github.com/ReClassNET/ReClass.NET-FrostbitePlugin) repositories. If you have developed a nice plugin, leave me a message and I will add it to the list above.
 
 ## Installation
-Just download the [latest version](https://github.com/ReClassNET/ReClass.NET/releases) and start the x86 / x64 version or let the launcher decide.
+Just download the [latest version](https://github.com/TetzkatLipHoka/ReClass.NET/releases) and start the x86 / x64 version or let the launcher decide.
 
 ## Tips
 - Lots of elements have a context menu. Just right-click it and see what you can do there.
@@ -97,14 +108,24 @@ RUN apt-get update \
 [Youtube Playlist](https://www.youtube.com/playlist?list=PLO246BmtoITanq3ygMCL8_w0eov4D8hjk)
 
 ## Screenshots
-Process Selection  
-![](https://abload.de/img/processgya2k.jpg)
+
+Process Selection
+
+![image](https://github.com/user-attachments/assets/8a794152-1573-46c4-9c1f-8387977de614)
+
+
+PS4
+
+![image](https://github.com/user-attachments/assets/c8501516-482d-4264-9128-c5542183fcb8)
+
 
 Memory Viewer  
-![](https://abload.de/img/memoryviewerb4y1s.jpg)
+![image](https://github.com/user-attachments/assets/d0ea7cc9-e89e-427f-965a-d57061531b5d)
+
 
 Memory Scanner  
-![](https://abload.de/img/scannerytub1.jpg)
+![image](https://github.com/user-attachments/assets/7805d290-1406-42a1-b87f-891508b2d0ed)
+
 
 Pointer Preview  
 ![](https://abload.de/img/memorypreview2gsfp.jpg)
@@ -114,11 +135,17 @@ Code Generator
 ![](https://abload.de/img/codegenerator24qzce.jpg)
 
 Plugins  
-![](https://abload.de/img/plugin1mda4r.jpg)
-![](https://abload.de/img/plugin25dxk1.jpg)
+![image](https://github.com/user-attachments/assets/1f083968-01be-42a3-af6d-ef1a75926748)
+![image](https://github.com/user-attachments/assets/39b32252-02a0-4c30-ae4c-e44cdefd7367)
+
 
 Settings  
-![](https://abload.de/img/settings8sz4b.jpg)
+![image](https://github.com/user-attachments/assets/a4d0daca-6246-4f8f-8160-b51afbe29037)
+![image](https://github.com/user-attachments/assets/26cc4b55-ebfd-421e-af7b-98d0203f2954)
+![image](https://github.com/user-attachments/assets/0cd4ee64-e074-4865-ae31-753309e08611)
+![image](https://github.com/user-attachments/assets/6da9d41d-ed2d-4bc6-a369-f4130844ddca)
+![image](https://github.com/user-attachments/assets/89953f25-fea3-4061-a2b8-c2759d62ee6d)
+
 
 ## Authors / Special Thanks
 - [KN4CK3R](https://github.com/KN4CK3R)
@@ -136,3 +163,18 @@ Settings
 - [DrP3pp3r](https://github.com/DrP3pp3r)
 - [ko1N](https://github.com/ko1N)
 - [Niemand](https://github.com/niemand-sec) (see his talk at [BlackHat Europe 2019 (London) "Unveiling the underground world of Anti-Cheats"](https://www.blackhat.com/eu-19/briefings/schedule/index.html#unveiling-the-underground-world-of-anti-cheats-17358))
+- [Pharaoh2k](https://github.com/Pharaoh2k/)
+- [Frans Bouma](https://github.com/FransBouma/)
+- [João Vítor Moutinho Rocha](https://github.com/jvmr10/)
+- [kapai](https://github.com/mkapai/)
+- [sakiodre](https://github.com/sakiodre/)
+- [кафіф](https://github.com/cafeed28/)
+- [Gabriel-Marian Cristei](https://github.com/cristeigabriel/)
+- [Peter Elmegaard](https://github.com/Elmegaard/)
+- [Deniz Ozmus](https://github.com/dozmus/)
+- [FynnTW](https://github.com/FynnTW/)
+- [TechForBad](https://github.com/TechForBad/)
+- [PeaceBeUponYou](https://github.com/PeaceBeUponYou/)
+- [user23333](https://github.com/user23333/)
+- [Pinwhell](https://github.com/pinwhell/)
+- [Nu](https://github.com/Autoplay1999/)

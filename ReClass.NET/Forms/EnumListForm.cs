@@ -11,6 +11,7 @@ namespace ReClassNET.Forms
 	public partial class EnumListForm : IconForm
 	{
 		private readonly ReClassNetProject project;
+		
 
 		public EnumDescription SelectedItem => itemListBox.SelectedItem as EnumDescription;
 
@@ -21,7 +22,6 @@ namespace ReClassNET.Forms
 			this.project = project;
 
 			InitializeComponent();
-
 			ShowFilteredEnums();
 		}
 

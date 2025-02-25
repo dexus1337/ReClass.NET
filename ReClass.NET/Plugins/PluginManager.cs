@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Windows.Forms;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Core;
 using ReClassNET.DataExchange.ReClass;
@@ -16,12 +17,13 @@ namespace ReClassNET.Plugins
 {
 	internal sealed class PluginManager
 	{
+		public static string PluginsPath => Path.Combine(Application.StartupPath, Constants.PluginsFolder);
 		private readonly List<PluginInfo> plugins = new List<PluginInfo>();
 
 		private readonly IPluginHost host;
 
 		public IEnumerable<PluginInfo> Plugins => plugins;
-
+		public IPluginHost Host => host;	
 		public PluginManager(IPluginHost host)
 		{
 			Contract.Requires(host != null);
@@ -64,71 +66,111 @@ namespace ReClassNET.Plugins
 
 			foreach (var fi in files)
 			{
-				FileVersionInfo fvi;
-				try
-				{
-					fvi = FileVersionInfo.GetVersionInfo(fi.FullName);
+				LoadPlugin(fi);
+			}
+		}
 
-					if (checkProductName && fvi.ProductName != PluginInfo.PluginName && fvi.ProductName != PluginInfo.PluginNativeName)
-					{
-						continue;
-					}
+		public bool LoadPlugin(FileInfo file, bool checkProductName = true)
+		{
+			FileVersionInfo fvi;
+
+			try
+			{
+				fvi = FileVersionInfo.GetVersionInfo(file.FullName);
+
+				if (checkProductName && fvi.ProductName != PluginInfo.PluginName && fvi.ProductName != PluginInfo.PluginNativeName)
+				{
+					return false;
 				}
-				catch
+				var pi = new PluginInfo(file.FullName, fvi);
+				if (!pi.IsNative)
 				{
-					continue;
-				}
+					pi.Interface = CreatePluginInstance(pi.FilePath);
 
-				try
-				{
-					var pi = new PluginInfo(fi.FullName, fvi);
-					if (!pi.IsNative)
+					if (!pi.Interface.Initialize(host))
 					{
-						pi.Interface = CreatePluginInstance(pi.FilePath);
-
-						if (!pi.Interface.Initialize(host))
-						{
-							continue;
-						}
-
-						RegisterNodeInfoReaders(pi);
-						RegisterCustomNodeTypes(pi);
-					}
-					else
-					{
-						pi.NativeHandle = CreateNativePluginInstance(pi.FilePath);
-
-						Program.CoreFunctions.RegisterFunctions(
-							pi.Name,
-							new NativeCoreWrapper(pi.NativeHandle)
-						);
+						return false;
 					}
 
-					plugins.Add(pi);
+					RegisterNodeInfoReaders(pi);
+					RegisterCustomNodeTypes(pi);
 				}
-				catch (Exception ex)
+				else
 				{
-					logger.Log(ex);
+					pi.NativeHandle = CreateNativePluginInstance(pi.FilePath);
+					if (pi.NativeHandle == null)
+					{
+						throw new Exception($"Failed to load library: { pi.FilePath }");
+					}
+					Program.CoreFunctions.RegisterFunctions(
+						pi.Name,
+						new NativeCoreWrapper(pi.NativeHandle)
+					);
+
+
+				}
+
+				plugins.Add(pi);
+			}
+			catch(Exception e)
+			{
+				host.Logger.Log(e);
+				return false;
+			}
+			return true;
+		}
+		public bool LoadPlugin(string path)
+		{
+			try
+			{
+				if (!File.Exists(path))
+				{
+					return false;
+				}
+				FileInfo file = new FileInfo(path);
+				if (file.Exists)
+				{
+					return LoadPlugin(file);
 				}
 			}
+			catch (Exception ex)
+			{
+				host.Logger.Log(ex);
+			}
+			return false;
 		}
 
 		public void UnloadAllPlugins()
 		{
 			foreach (var pi in plugins)
 			{
-				if (pi.Interface != null) // Exclude native plugins
-				{
-					DeregisterNodeInfoReaders(pi);
-					DeregisterCustomNodeTypes(pi);
-				}
-
-				pi.Dispose();
+				UnloadPlugin(pi);
 			}
 
 			plugins.Clear();
 		}
 
+		public void UnloadPlugin(PluginInfo plugin, bool bAlsoRemove = false)
+		{
+			Contract.Requires(plugin != null);
+			if (plugin.Interface != null)
+			{
+				DeregisterNodeInfoReaders(plugin);
+				DeregisterCustomNodeTypes(plugin);
+			}
+			if (plugin.IsNative)
+			{
+				Program.CoreFunctions.UnregisterFunctions(plugin.Name);
+				NativeMethods.FreeLibrary(plugin.NativeHandle);
+			}
+
+			plugin.Dispose();
+			if (bAlsoRemove)
+			{
+				plugins.Remove(plugin);
+			}
+
+		}
 		private static Plugin CreatePluginInstance(string filePath)
 		{
 			Contract.Requires(filePath != null);
@@ -201,7 +243,7 @@ namespace ReClassNET.Plugins
 
 			if (customNodeTypes.NodeTypes == null || customNodeTypes.Serializer == null || customNodeTypes.CodeGenerator == null)
 			{
-				throw new ArgumentException(); // TODO
+				throw new ArgumentException("Failed to load custom node types"); // TODO
 			}
 
 			foreach (var nodeType in customNodeTypes.NodeTypes)

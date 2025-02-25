@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 
@@ -49,12 +49,23 @@ namespace ReClassNET.Native
 
 			return plattformId.Value;
 		}
-
+		internal static INativeMethods Get()
+		{
+			return nativeMethods;
+		}
 		public static IntPtr LoadLibrary(string name)
 		{
 			Contract.Requires(name != null);
 
 			return nativeMethods.LoadLibrary(name);
+		}
+
+		public static IntPtr LoadLibraryEx(string name, int flags)
+		{
+			Contract.Requires(name != null);
+			Contract.Requires(nativeMethods is NativeMethodsWindows);
+
+			return NativeMethodsWindows.LoadLibraryEx(name, IntPtr.Zero, flags);
 		}
 
 		public static IntPtr GetProcAddress(IntPtr handle, string name)

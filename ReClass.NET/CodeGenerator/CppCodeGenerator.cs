@@ -124,7 +124,7 @@ namespace ReClassNET.CodeGenerator
 
 		public Language Language => Language.Cpp;
 
-		public CppCodeGenerator(CppTypeMapping typeMapping)
+		public CppCodeGenerator(CppTypeMapping typeMapping, bool showOffset = true, bool showPadding = true)
 		{
 			nodeTypeToTypeDefinationMap = new Dictionary<Type, string>
 			{
@@ -152,7 +152,13 @@ namespace ReClassNET.CodeGenerator
 				[typeof(Vector3Node)] = typeMapping.TypeVector3,
 				[typeof(Vector4Node)] = typeMapping.TypeVector4
 			};
+			ShowOffset = showOffset;
+			ShowPadding = showPadding;
 		}
+
+		public bool ShowOffset { get; set; } = true; 
+
+		public bool ShowPadding { get; set; } = true;
 
 		public string GenerateCode(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger)
 		{
@@ -160,7 +166,23 @@ namespace ReClassNET.CodeGenerator
 			using var iw = new IndentedTextWriter(sw, "\t");
 
 			iw.WriteLine($"// Created with {Constants.ApplicationName} {Constants.ApplicationVersion} by {Constants.Author}");
+			iw.WriteLine($"// {DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss")}");
 			iw.WriteLine();
+
+			using (var en = classes.OrderBy(c => c.Name).GetEnumerator())
+			{
+				if (en.MoveNext())
+				{
+					iw.WriteLine($"class {en.Current.Name};");
+
+					while (en.MoveNext())
+					{
+						iw.WriteLine($"class {en.Current.Name};");
+					}
+
+					iw.WriteLine();
+				}
+			}
 
 			using (var en = enums.GetEnumerator())
 			{
@@ -214,13 +236,16 @@ namespace ReClassNET.CodeGenerator
 			{
 				if (en.MoveNext())
 				{
-					WriteClass(iw, en.Current, classes, logger);
+					if (en.Current.MemorySize > 0)
+						WriteClass(iw, en.Current, classes, logger);
 
 					while (en.MoveNext())
 					{
-						iw.WriteLine();
-
-						WriteClass(iw, en.Current, classes, logger);
+						if (en.Current.MemorySize > 0)
+						{
+							iw.WriteLine();
+							WriteClass(iw, en.Current, classes, logger);
+						}
 					}
 				}
 			}
@@ -286,10 +311,15 @@ namespace ReClassNET.CodeGenerator
 			Contract.Requires(@class != null);
 			Contract.Requires(classes != null);
 
+			var isAligned = (@class.MemorySize % 4) == 0;
+			var skipFirstMember = false;
+
+			if (!isAligned)
+				writer.WriteLine("#pragma pack(push, 1)");
+
 			writer.Write("class ");
 			writer.Write(@class.Name);
 
-			var skipFirstMember = false;
 			if (@class.Nodes.FirstOrDefault() is ClassInstanceNode inheritedFromNode)
 			{
 				skipFirstMember = true;
@@ -304,10 +334,12 @@ namespace ReClassNET.CodeGenerator
 				writer.Write(@class.Comment);
 			}
 
+			writer.Write(" {");
 			writer.WriteLine();
-			
-			writer.WriteLine("{");
-			writer.WriteLine("public:");
+
+//			writer.WriteLine();			
+//			writer.WriteLine("{");
+//			writer.WriteLine("public:");
 			writer.Indent++;
 
 			var nodes = @class.Nodes
@@ -325,9 +357,10 @@ namespace ReClassNET.CodeGenerator
 					.OfType<VirtualMethodNode>();
 				foreach (var node in virtualMethodNodes)
 				{
-					writer.Write("virtual void ");
+					writer.Write("virtual "); // "virtual void "
 					writer.Write(node.MethodName);
-					writer.WriteLine("();");
+					writer.WriteLine(" = 0;");
+//					writer.WriteLine("();");
 				}
 			}
 
@@ -349,8 +382,13 @@ namespace ReClassNET.CodeGenerator
 
 			writer.Indent--;
 			writer.Write("}; //Size: 0x");
-			writer.WriteLine($"{@class.MemorySize:X04}");
+//			writer.WriteLine($"{@class.MemorySize:X04}");
+			writer.WriteLine($"{@class.MemorySize:X} ({@class.MemorySize:D})");
 
+			if (!isAligned)
+				writer.WriteLine("#pragma pack(pop)");
+
+			writer.WriteLine();
 			writer.WriteLine($"static_assert(sizeof({@class.Name}) == 0x{@class.MemorySize:X});");
 		}
 
@@ -367,6 +405,7 @@ namespace ReClassNET.CodeGenerator
 
 			var fill = 0;
 			var fillStart = 0;
+			var isPrivate = true;
 
 			static BaseNode CreatePaddingMember(int offset, int count)
 			{
@@ -374,7 +413,8 @@ namespace ReClassNET.CodeGenerator
 				{
 					Offset = offset,
 					Count = count,
-					Name = $"pad_{offset:X04}"
+					Name = $"pad_{offset:X04}",
+					IsPadding = true
 				};
 
 				node.ChangeInnerNode(new Utf8CharacterNode());
@@ -395,18 +435,43 @@ namespace ReClassNET.CodeGenerator
 					continue;
 				}
 
+				if (ShowPadding)
+				{
 				if (fill != 0)
 				{
+						if (!isPrivate)
+						{
+							writer.Indent--;
+							writer.WriteLine("private:");
+							writer.Indent++;
+							isPrivate = true;
+						}
 					WriteNode(writer, CreatePaddingMember(fillStart, fill), logger);
 
 					fill = 0;
 				}
 
+					if (isPrivate)
+					{
+						writer.Indent--;
+						writer.WriteLine("public:");
+						writer.Indent++;
+						isPrivate = false;
+					}
+				}
+
 				WriteNode(writer, member, logger);
 			}
 
-			if (fill != 0)
+			if (fill != 0 && ShowPadding)
 			{
+				if (!isPrivate)
+				{
+					writer.Indent--;
+					writer.WriteLine("private:");
+					writer.Indent++;
+					isPrivate = true;
+				}
 				WriteNode(writer, CreatePaddingMember(fillStart, fill), logger);
 			}
 		}
@@ -421,8 +486,8 @@ namespace ReClassNET.CodeGenerator
 		{
 			Contract.Requires(writer != null);
 			Contract.Requires(node != null);
-
 			var custom = GetCustomCodeGeneratorForNode(node);
+
 			if (custom != null)
 			{
 				if (custom.WriteNode(writer, node, WriteNode, logger))
@@ -437,47 +502,157 @@ namespace ReClassNET.CodeGenerator
 			if (simpleType != null)
 			{
 				//$"{type} {node.Name}; //0x{node.Offset.ToInt32():X04} {node.Comment}".Trim();
-				writer.Write(simpleType);
-				writer.Write(" ");
-				writer.Write(node.Name);
-				writer.Write("; //0x");
-				writer.Write($"{node.Offset:X04}");
+				if (ShowOffset)
+#if RECLASSNET64
+					writer.Write($"/* {node.Offset:X08} */ ");
+#else
+					writer.Write($"/* {node.Offset:X04} */ ");
+#endif
+				if (node.IsCustomType)
+				{
+					writer.Write(node.Name.Substring(1));
+				}
+				else
+				{
+					writer.Write(simpleType);
+					writer.Write(" ");
+					writer.Write(node.Name);
+					writer.Write(";");
+				}
+//				writer.Write("; //0x");
+//				writer.Write($"{node.Offset:X04}");
 				if (!string.IsNullOrEmpty(node.Comment))
 				{
-					writer.Write(" ");
+//					writer.Write(" ");
+					writer.Write(" // ");
 					writer.Write(node.Comment);
 				}
 				writer.WriteLine();
 			}
 			else if (node is BaseWrapperNode)
 			{
-				writer.Write(ResolveWrappedType(node, false, logger));
-				writer.Write("; //0x");
-				writer.Write($"{node.Offset:X04}");
+				if (ShowOffset)
+#if RECLASSNET64
+					writer.Write($"/* {node.Offset:X08} */ ");
+#else
+					writer.Write($"/* {node.Offset:X04} */ ");
+#endif
+				if (node.IsCustomType)
+				{
+					writer.Write(node.Name.Substring(1));
+				}
+				else
+				{
+					writer.Write(ResolveWrappedType(node, false, logger));
+				}
+				writer.Write(";");
+//				writer.Write("; //0x");
+//				writer.Write($"{node.Offset:X04}");
 				if (!string.IsNullOrEmpty(node.Comment))
 				{
-					writer.Write(" ");
+//					writer.Write(" ");
+					writer.Write(" // ");
 					writer.Write(node.Comment);
 				}
 				writer.WriteLine();
 			}
 			else if (node is UnionNode unionNode)
 			{
-				writer.Write("union //0x");
-				writer.Write($"{node.Offset:X04}");
+				if (ShowOffset)
+#if RECLASSNET64
+					writer.Write($"/* {node.Offset:X08} */ ");
+#else
+					writer.Write($"/* {node.Offset:X04} */ ");
+#endif
+
+				writer.Write("union {");
+//				writer.Write($"{node.Offset:X04}");
+				writer.Indent++;
 				if (!string.IsNullOrEmpty(node.Comment))
 				{
-					writer.Write(" ");
+//					writer.Write(" ");
+					writer.Write(" // ");
 					writer.Write(node.Comment);
 				}
 				writer.WriteLine();
-				writer.WriteLine("{");
-				writer.Indent++;
+//				writer.WriteLine("{");
+//				writer.Indent++;
+
+				var origShowOffsetValue = ShowOffset;
+				var origShowPaddingValue = ShowPadding;
+				ShowOffset = false;
+				ShowPadding = false;
 
 				WriteNodes(writer, unionNode.Nodes, logger);
 
+				ShowOffset = origShowOffsetValue;
+				ShowPadding = origShowPaddingValue;
+
 				writer.Indent--;
 				writer.WriteLine("};");
+			}
+			else if (node is BitFieldNode bitFieldNode)
+			{
+				WriteNodes(writer, bitFieldNode.Nodes, logger);
+				int doneBits = 0;
+				foreach (var snode in bitFieldNode.Nodes)
+				{
+					if (snode is SingleBitNode singleBitNode)
+					{
+						doneBits += singleBitNode.BitCount;
+						if (doneBits > bitFieldNode.Bits)
+							break;
+					
+						simpleType = GetTypeDefinition(bitFieldNode.InnerNode, logger);
+						simpleType = simpleType == null ? "bool" : simpleType;
+//						if (ShowOffset)
+#if RECLASSNET64
+//						writer.Write($"/* {node.Offset:X08} */ ");
+#else
+//						writer.Write($"/* {node.Offset:X04} */ ");
+#endif
+
+						writer.Write(simpleType);
+						writer.Write(" ");
+						writer.Write(singleBitNode.Name);
+						writer.Write($":{singleBitNode.BitCount}");
+						writer.Write("; //0x");
+						writer.Write($"{node.Offset+singleBitNode.Offset:X04}, bit#:{doneBits - singleBitNode.BitCount}");
+						if (!string.IsNullOrEmpty(singleBitNode.Comment))
+						{
+//							writer.Write(" ");
+							writer.Write(" // ");
+							writer.Write(singleBitNode.Comment);
+						}
+						writer.WriteLine();
+					}
+					else
+						logger.Log(LogLevel.Error, $"Skipping node with unhandled type: {snode.GetType()}");
+				}
+			}
+			else if (node is SingleBitNode singleBitNode)
+			{
+				
+			}
+			else if (node is CustomNode customNode)
+			{
+				if (ShowOffset)
+#if RECLASSNET64
+					writer.Write($"/* {node.Offset:X08} */ ");
+#else
+					writer.Write($"/* {node.Offset:X04} */ ");
+#endif
+
+				writer.Write(node.Name);
+				writer.Write(";");
+
+				if (!string.IsNullOrEmpty(node.Comment))
+				{
+					writer.Write(" // ");
+					writer.Write(node.Comment);
+				}
+
+				writer.WriteLine();
 			}
 			else
 			{
@@ -527,12 +702,12 @@ namespace ReClassNET.CodeGenerator
 					pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
 					return pointerNode;
 				}
-				case BitFieldNode bitFieldNode:
-				{
-					var underlayingNode = bitFieldNode.GetUnderlayingNode();
-					underlayingNode.CopyFromNode(node);
-					return underlayingNode;
-				}
+				//case BitFieldNode bitFieldNode:
+				//{
+				//	var underlayingNode = bitFieldNode.GetUnderlayingNode();
+				//	underlayingNode.CopyFromNode(node);
+				//	return underlayingNode;
+				//}
 				case BaseHexNode hexNode:
 				{
 					var arrayNode = new ArrayNode { Count = hexNode.MemorySize };
@@ -611,10 +786,14 @@ namespace ReClassNET.CodeGenerator
 						{
 							sb.Prepend(' ');
 						}
+						sb.Prepend('*');
 						sb.Prepend("void");
 						break;
 					}
 
+					sb.Prepend(' ');
+					sb.Prepend('*');
+					isAnonymousExpression = true;
 					lastWrapperNode = pointerNode;
 					currentNode = pointerNode.InnerNode;
 				}
@@ -626,6 +805,9 @@ namespace ReClassNET.CodeGenerator
 						sb.Append(')');
 					}
 
+					if (currentNode.IsPadding)
+						sb.Append($"[0x{arrayNode.Count:X}]");
+					else
 					sb.Append($"[{arrayNode.Count}]");
 
 					lastWrapperNode = arrayNode;

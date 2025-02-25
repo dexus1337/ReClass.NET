@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
@@ -19,6 +19,8 @@ namespace ReClassNET.Forms
 {
 	public partial class CodeForm : IconForm
 	{
+		
+    
 		public CodeForm(ICodeGenerator generator, IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger)
 		{
 			Contract.Requires(generator != null);

@@ -48,7 +48,10 @@ namespace ReClassNET.Nodes
 			x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;
 			if (!IsWrapped)
 			{
+				int xx = x;
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name);
+				if (IsCustomType)
+					AddText(context, xx, y, context.Settings.IndexColor, HotSpot.NoneId, GetCustomType());
 			}
 			x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "[");
 			x = AddText(context, x, y, context.Settings.IndexColor, IsReadOnly ? HotSpot.NoneId : 0, Count.ToString());
@@ -61,7 +64,10 @@ namespace ReClassNET.Nodes
 			x = AddIcon(context, x, y, context.IconProvider.RightArrow, 3, HotSpotType.Click) + context.Font.Width;
 
 			x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<Size={MemorySize}>") + context.Font.Width;
-			x = AddIcon(context, x + 2, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
+			if (ShowWrappedTypeChangerIcon)
+			{
+				x = AddIcon(context, x + 2, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
+			}
 
 			x += context.Font.Width;
 			x = AddComment(context, x, y);

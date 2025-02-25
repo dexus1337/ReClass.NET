@@ -7,10 +7,13 @@ using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.UI;
 using ReClassNET.Util;
+using SD.Tools.Algorithmia.GeneralDataStructures;
+using SD.Tools.Algorithmia.GeneralDataStructures.EventArguments;
 
 namespace ReClassNET.Nodes
 {
 	public delegate void NodeEventHandler(BaseNode sender);
+	public delegate void NodeToggleHandler(BaseNode sender, bool state);
 
 	[DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 	[ContractClass(typeof(BaseNodeContract))]
@@ -24,14 +27,25 @@ namespace ReClassNET.Nodes
 
 		private static int nodeIndex = 0;
 
-		private string name = string.Empty;
+		private CommandifiedMember<string, Constants.GeneralPurposeChangeType> name;
 		private string comment = string.Empty;
 
 		/// <summary>Gets or sets the offset of the node.</summary>
 		public int Offset { get; set; }
 
 		/// <summary>Gets or sets the name of the node. If a new name was set the property changed event gets fired.</summary>
-		public virtual string Name { get => name; set { if (value != null && name != value) { name = value; NameChanged?.Invoke(this); } } }
+		public virtual string Name
+		{
+			get => name.MemberValue;
+			set
+			{
+				if (value == null)
+				{
+					return;
+				}
+				name.MemberValue = value;
+			}
+		}
 
 		/// <summary>Gets or sets the comment of the node.</summary>
 		public string Comment { get => comment; set { if (value != null && comment != value) { comment = value; CommentChanged?.Invoke(this); } } }
@@ -39,8 +53,11 @@ namespace ReClassNET.Nodes
 		/// <summary>Gets or sets the parent node.</summary>
 		public BaseNode ParentNode { get; internal set; }
 
-		/// <summary>Gets a value indicating whether this node is wrapped into an other node.</summary>
+		/// <summary>Gets a value indicating whether this node is wrapped into an other node. </summary>
 		public bool IsWrapped => ParentNode is BaseWrapperNode;
+
+		/// <summary>All nodes that are wrapped can't be selected except classnodes because they have a context menu</summary>
+		public bool CanBeSelected => !IsWrapped || (this is ClassNode);
 
 		/// <summary>Gets or sets a value indicating whether this node is hidden.</summary>
 		public bool IsHidden { get; set; }
@@ -51,8 +68,11 @@ namespace ReClassNET.Nodes
 		/// <summary>Size of the node in bytes.</summary>
 		public abstract int MemorySize { get; }
 
+		/// <summary>Gets or sets a value indicating whether this node is padding.</summary>
+		public bool IsPadding { get; set; }
 		public event NodeEventHandler NameChanged;
 		public event NodeEventHandler CommentChanged;
+		public event NodeToggleHandler OnLevelToggled;
 
 		protected GrowingList<bool> LevelsOpen { get; } = new GrowingList<bool>(false);
 
@@ -97,11 +117,14 @@ namespace ReClassNET.Nodes
 			Contract.Ensures(name != null);
 			Contract.Ensures(comment != null);
 
-			Name = $"N{nodeIndex++:X08}";
+			name = new CommandifiedMember<string, Constants.GeneralPurposeChangeType>("Name", Constants.GeneralPurposeChangeType.None, $"N{nodeIndex++:X08}");
+			name.ValueChanged += Name_ValueChanged;
 			Comment = string.Empty;
 
 			LevelsOpen[0] = true;
 		}
+
+		private void Name_ValueChanged(object sender, MemberChangedEventArgs<Constants.GeneralPurposeChangeType, string> e) => NameChanged?.Invoke(this);
 
 		public abstract void GetUserInterfaceInfo(out string name, out Image icon);
 
@@ -236,6 +259,15 @@ namespace ReClassNET.Nodes
 		/// <returns>The calculated height.</returns>
 		public abstract int CalculateDrawnHeight(DrawContext context);
 
+		/// <summary>
+		/// Called when this node has been created, initialized and the parent node has been assigned. For some nodes
+		/// Additional work has to be performed, this work can be done in a derived method of this method.
+		/// </summary>
+		public virtual void PerformPostInitWork()
+		{
+			// nop
+		}
+
 		/// <summary>Updates the node from the given <paramref name="spot"/>. Sets the <see cref="Name"/> and <see cref="Comment"/> of the node.</summary>
 		/// <param name="spot">The spot.</param>
 		public virtual void Update(HotSpot spot)
@@ -257,8 +289,15 @@ namespace ReClassNET.Nodes
 		internal void ToggleLevelOpen(int level)
 		{
 			LevelsOpen[level] = !LevelsOpen[level];
+			OnLevelToggled?.Invoke(this, LevelsOpen[level]);
 		}
 
+		/// <summary>Sets the default level.</summary>
+		/// <param name="open">True to open.</param>
+		internal void SetLevelDefaultOpen(bool open)
+		{
+			LevelsOpen.DefaultValue = open;
+		}
 		/// <summary>Sets the specific level.</summary>
 		/// <param name="level">The level to set.</param>
 		/// <param name="open">True to open.</param>
@@ -267,6 +306,12 @@ namespace ReClassNET.Nodes
 			LevelsOpen[level] = open;
 		}
 
+		/// <summary>Gets the specific level.</summary>
+		/// <param name="level">The level to set.</param>
+		internal bool GetLevelOpen(int level)
+		{
+			return LevelsOpen[level];
+		}
 		/// <summary>Adds a <see cref="HotSpot"/> the user can interact with.</summary>
 		/// <param name="context">The drawing context.</param>
 		/// <param name="spot">The spot.</param>
@@ -367,7 +412,7 @@ namespace ReClassNET.Nodes
 			Contract.Requires(context != null);
 			Contract.Requires(context.Graphics != null);
 
-			if (y > context.ClientArea.Bottom || y + height < 0 || IsWrapped)
+			if (y > context.ClientArea.Bottom || y + height < 0 || !CanBeSelected)
 			{
 				return;
 			}
@@ -519,6 +564,25 @@ namespace ReClassNET.Nodes
 			{
 				AddIcon(context, 0, y, Properties.Resources.B16x16_Error, HotSpot.NoneId, HotSpotType.None);
 			}
+		}
+
+		/// <summary></summary>
+		/// <returns></returns>
+		public bool IsCustomType { get => (Name.Length > 0 && Name[0] == '#'); }
+
+		/// <summary></summary>
+		/// <returns></returns>
+		public string GetCustomType()
+		{
+			string name = Name;
+			int len;
+			if (name.IndexOf('*') != -1)
+				len = name.LastIndexOf('*') + 1;
+			else
+				len = name.LastIndexOf(' ');
+			if (len == -1)
+				return Name;
+			return name.Substring(0, len);
 		}
 	}
 

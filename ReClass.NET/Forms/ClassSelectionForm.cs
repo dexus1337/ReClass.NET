@@ -11,6 +11,7 @@ namespace ReClassNET.Forms
 	public partial class ClassSelectionForm : IconForm
 	{
 		private readonly List<ClassNode> allClasses;
+		 
 
 		public ClassNode SelectedClass => classesListBox.SelectedItem as ClassNode;
 
@@ -20,8 +21,7 @@ namespace ReClassNET.Forms
 
 			allClasses = classes.ToList();
 
-			InitializeComponent();
-
+			InitializeComponent();     
 			ShowFilteredClasses();
 		}
 

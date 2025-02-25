@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using ReClassNET.AddressParser;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
 using ReClassNET.UI;
@@ -16,7 +17,8 @@ namespace ReClassNET.Nodes
 
 		public PointerNode()
 		{
-			LevelsOpen.DefaultValue = true;
+			LevelsOpen.DefaultValue = false;
+			InnerNodeChanged += UpdateInnerNode;
 		}
 
 		public override void Initialize()
@@ -26,6 +28,12 @@ namespace ReClassNET.Nodes
 			((BaseContainerNode)node.InnerNode).AddBytes(16 * IntPtr.Size);
 
 			ChangeInnerNode(node);
+		}
+
+		public void UpdateInnerNode(BaseNode sender)
+		{
+			if (InnerNode is ClassInstanceNode c)
+				c.InnerNode.SetLevelDefaultOpen(false);
 		}
 
 		public override void GetUserInterfaceInfo(out string name, out Image icon)
@@ -86,6 +94,7 @@ namespace ReClassNET.Nodes
 				x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, "<void>") + context.Font.Width;
 			}
 			x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType) + context.Font.Width;
+			x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
 
 			var ptr = context.Memory.ReadIntPtr(Offset);
 
@@ -104,6 +113,13 @@ namespace ReClassNET.Nodes
 
 			if (LevelsOpen[context.Level] && InnerNode != null)
 			{
+				var innerNode = InnerNode;
+
+				if (InnerNode is ClassInstanceNode ClassInnerNode)
+				{
+					innerNode = ClassInnerNode.InnerNode;
+					InnerNode.SetLevelOpen(context.Level, LevelsOpen[context.Level]);
+				}
 				memory.Size = InnerNode.MemorySize;
 				memory.UpdateFrom(context.Process, ptr);
 
@@ -133,6 +149,40 @@ namespace ReClassNET.Nodes
 				height += InnerNode.CalculateDrawnHeight(context);
 			}
 			return height;
+		}
+		
+		public override void PerformPostInitWork()
+		{
+			base.PerformPostInitWork();
+
+			var parentClass = ParentNode as ClassNode;
+			if (parentClass == null)
+			{
+				return;
+			}
+
+			var process = Program.RemoteProcess;
+			IntPtr address;
+			try
+			{
+				address = process.ParseAddress(parentClass.AddressFormula);
+			}
+			catch (ParseException)
+			{
+				address = IntPtr.Zero;
+			}
+
+			var memoryBuffer = new MemoryBuffer() { Size = parentClass.MemorySize};
+			memoryBuffer.UpdateFrom(process, address);
+			var ptr = memoryBuffer.ReadIntPtr(Offset);
+
+			var classNode = ((ClassInstanceNode)InnerNode)?.InnerNode as ClassNode;
+			if (classNode == null)
+			{
+				return;
+			}
+
+			classNode.AddressFormula = ptr.ToString(Constants.AddressHexFormat);
 		}
 	}
 }

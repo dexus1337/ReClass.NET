@@ -12,6 +12,7 @@ namespace ReClassNET.Forms
 	public partial class EnumEditorForm : IconForm
 	{
 		private readonly EnumDescription @enum;
+		
 
 		public EnumEditorForm(EnumDescription @enum)
 		{

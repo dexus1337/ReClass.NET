@@ -2,18 +2,26 @@
 #include <tlhelp32.h>
 #include <psapi.h>
 #include <filesystem>
-
 #include "NativeCore.hpp"
+#include "ServerRemoteTool.h"
+#include "Utils.h"
 
 enum class Platform
 {
 	Unknown,
 	X86,
-	X64
+	X64,
+	ARM32,
+	ARM64
 };
 
 Platform GetProcessPlatform(HANDLE process)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return Platform::Unknown;
+	}
+
 	static USHORT processorArchitecture = PROCESSOR_ARCHITECTURE_UNKNOWN;
 	if (processorArchitecture == PROCESSOR_ARCHITECTURE_UNKNOWN)
 	{
@@ -43,7 +51,7 @@ Platform GetProcessPlatform(HANDLE process)
 	return Platform::Unknown;
 }
 
-void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess)
+void EnumerateProcessesWindows(EnumerateProcessCallback callbackProcess)
 {
 	if (callbackProcess == nullptr)
 	{
@@ -87,4 +95,15 @@ void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess)
 
 		CloseHandle(handle);
 	}
+}
+
+void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess)
+{
+	if (callbackProcess == nullptr)
+	{
+		return;
+	}
+
+	if (ServerManager::getInstance()->IsConnected()) EnumerateProcessesServer(callbackProcess);
+	else EnumerateProcessesWindows(callbackProcess);
 }

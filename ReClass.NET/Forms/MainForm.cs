@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,10 @@ using ReClassNET.AddressParser;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
 using ReClassNET.Core;
+using ReClassNET.DataExchange.IDA;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Extensions;
+using ReClassNET.Logger;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 using ReClassNET.MemoryScanner.Comparer;
@@ -22,6 +25,7 @@ using ReClassNET.Project;
 using ReClassNET.UI;
 using ReClassNET.Util;
 using ReClassNET.Util.Conversion;
+using SD.Tools.Algorithmia.Commands;
 
 namespace ReClassNET.Forms
 {
@@ -32,7 +36,7 @@ namespace ReClassNET.Forms
 
 		private ReClassNetProject currentProject;
 		public ReClassNetProject CurrentProject => currentProject;
-
+		public MemoryViewControl MemoryViewControl => memoryViewControl;
 		private ClassNode currentClassNode;
 
 		private readonly MemoryBuffer memoryViewBuffer = new MemoryBuffer();
@@ -44,7 +48,7 @@ namespace ReClassNET.Forms
 		public ProjectView ProjectView => projectView;
 
 		public MenuStrip MainMenu => mainMenuStrip;
-
+		public static string PluginsFolder => PluginManager.PluginsPath;
 		public ClassNode CurrentClassNode
 		{
 			get => currentClassNode;
@@ -95,15 +99,44 @@ namespace ReClassNET.Forms
 			};
 
 			pluginManager = new PluginManager(new DefaultPluginHost(this, Program.RemoteProcess, Program.Logger));
+
+			CommandQueueManagerSingleton.GetInstance().CommandQueueActionPerformed += OnCommandQueueActionPerformed;
+
 		}
+
 
 		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
+			if (Properties.Settings.Default.FormWidth == 0)
+			{
+				Properties.Settings.Default.FormWidth = this.Width;
+				Properties.Settings.Default.FormHeight = this.Height;
+				Properties.Settings.Default.FormLocationX = this.Location.X;
+				Properties.Settings.Default.FormLocationY = this.Location.Y;
+				Properties.Settings.Default.Maximized = (WindowState == FormWindowState.Maximized);
+				Properties.Settings.Default.Save();
+			}
+			else
+			{
+				this.Location = new Point(Properties.Settings.Default.FormLocationX, Properties.Settings.Default.FormLocationY);
+				this.Size = new Size(Properties.Settings.Default.FormWidth, Properties.Settings.Default.FormHeight);
+				if (Properties.Settings.Default.Maximized)
+					WindowState = FormWindowState.Maximized;
+			}
+
 			GlobalWindowManager.AddWindow(this);
 
-			pluginManager.LoadAllPlugins(Path.Combine(Application.StartupPath, Constants.PluginsFolder), Program.Logger);
+			pluginManager.LoadAllPlugins(PluginManager.PluginsPath, Program.Logger);
+			try
+			{
+				Program.CoreFunctions.SetActiveFunctionsProvider(Program.Settings.DefaultPlugin);
+			}
+			catch
+			{
+				Program.CoreFunctions.SetActiveFunctionsProvider("Default");
+			}
 
 			toolStrip.Items.AddRange(NodeTypesBuilder.CreateToolStripButtons(ReplaceSelectedNodesWithType).ToArray());
 			changeTypeToolStripMenuItem.DropDownItems.AddRange(NodeTypesBuilder.CreateToolStripMenuItems(ReplaceSelectedNodesWithType, false).ToArray());
@@ -135,10 +168,26 @@ namespace ReClassNET.Forms
 			{
 				AttachToProcess(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo]);
 			}
+
+			SetStateOfUndoRedoButtons();
 		}
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
+			if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
+			{
+				Properties.Settings.Default.FormLocationX = this.Location.X;
+				Properties.Settings.Default.FormLocationY = this.Location.Y;
+			}
+			if (WindowState == FormWindowState.Normal)
+			{
+				Properties.Settings.Default.FormWidth = this.Size.Width;
+				Properties.Settings.Default.FormHeight = this.Size.Height;
+			}
+			Properties.Settings.Default.Maximized = (WindowState == FormWindowState.Maximized);
+
+			Properties.Settings.Default.Save();
+
 			pluginManager.UnloadAllPlugins();
 
 			GlobalWindowManager.RemoveWindow(this);
@@ -272,6 +321,40 @@ namespace ReClassNET.Forms
 				{
 					projectView.SelectedClass = selectedClassNode;
 				}
+			}
+		}
+
+		private void cloneClassMenuItem_Click(object sender, EventArgs e)
+		{
+			using var csf = new ClassSelectionForm(currentProject.Classes.OrderBy(c => c.Name));
+
+			if (csf.ShowDialog() == DialogResult.OK)
+			{
+				var selectedClassNode = csf.SelectedClass;
+				if (selectedClassNode != null)
+				{
+					var selectedNodes = selectedClassNode.Nodes;
+
+					var newClassNode = ClassNode.Create();
+					selectedNodes.ForEach(newClassNode.AddNode);
+					projectView.SelectedClass = newClassNode;
+				}
+			}
+		}
+
+		private void importClassMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var path = ShowOpenCppFileDialog();
+				if (path != null)
+				{
+					CppClassImporter.Load(path, new NullLogger());
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
 			}
 		}
 
@@ -411,7 +494,7 @@ namespace ReClassNET.Forms
 
 		private void generateCppCodeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ShowCodeGeneratorForm(new CppCodeGenerator(currentProject.TypeMapping));
+			ShowCodeGeneratorForm(new CppCodeGenerator(currentProject.TypeMapping, Program.Settings.CppGeneratorShowOffset, Program.Settings.CppGeneratorShowPadding));
 		}
 
 		private void generateCSharpCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -440,11 +523,33 @@ namespace ReClassNET.Forms
 				{
 					AttachToProcess(pb.SelectedProcess);
 
-					if (pb.LoadSymbols)
+					if (pb.LoadSymbols && !pb.networkingForm.mConnected) //TODO, Load Server Symbols
 					{
 						LoadAllSymbolsForCurrentProcess();
 					}
 				}
+			}
+		}
+
+		private void openDumpFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var path = ShowOpenDumpFileDialog();
+				if (path != null)
+				{
+					using var pb = new ProcessBrowserForm(Program.Settings.LastProcess);
+					if (pb.SelectedProcess != null)
+					{
+						AttachToProcess(pb.SelectedProcess);
+					}
+
+					OpenDumpFile(path);
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
 			}
 		}
 
@@ -502,6 +607,7 @@ namespace ReClassNET.Forms
 
 			createClassFromNodesToolStripMenuItem.Enabled = count > 0 && !nodeIsClass;
 			dissectNodesToolStripMenuItem.Enabled = count > 0 && !nodeIsClass;
+			searchClassValuesToolStripMenuItem.Enabled = count == 1 && nodeIsClass;
 			searchForEqualValuesToolStripMenuItem.Enabled = count == 1 && nodeIsSearchableValueNode;
 
 			pasteNodesToolStripMenuItem.Enabled = count == 1 && ReClassClipboard.ContainsNodes;
@@ -732,6 +838,14 @@ namespace ReClassNET.Forms
 			}
 		}
 
+		private void showCodeOfClassSharpToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (memoryViewControl.GetSelectedNodes().FirstOrDefault()?.Node is ClassNode node)
+			{
+				ShowPartialCodeGeneratorForm(new[] { node }, true);
+			}
+		}
+
 		private void shrinkClassToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var node = memoryViewControl.GetSelectedNodes().Select(s => s.Node).FirstOrDefault();
@@ -746,7 +860,27 @@ namespace ReClassNET.Forms
 			}
 		}
 
-#endregion
+		#endregion
+
+
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+
+			// Handle all key combinations, whether they have modifiers or not
+			foreach (var kvp in Program.Settings._nodeShortcuts)
+			{
+				if (kvp.Value == keyData)
+				{
+					if (memoryViewControl != null && !memoryViewControl.EditorMode)
+					{						
+						ReplaceSelectedNodesWithType(kvp.Key);
+						return true; // Return true to indicate we handled the key
+					}
+				}
+			}
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
+
 
 		private void MainForm_DragEnter(object sender, DragEventArgs e)
 		{
@@ -832,12 +966,43 @@ namespace ReClassNET.Forms
 			var parentContainer = node?.GetParentContainer();
 			var nodeIsClass = node is ClassNode;
 			var isContainerNode = node is BaseContainerNode;
+			var isBitsContainer = node?.ParentNode?.GetType() == typeof(BitFieldNode);
 
 			addBytesToolStripDropDownButton.Enabled = parentContainer != null || isContainerNode;
 			insertBytesToolStripDropDownButton.Enabled = selectedNodes.Count == 1 && parentContainer != null && !isContainerNode;
+			initClassToolStripMenuItem.Enabled = nodeIsClass;
+			initClassFromRTTIToolStripBarMenuItem.Enabled = nodeIsClass;
 
-			var enabled = selectedNodes.Count > 0 && !nodeIsClass;
-			toolStrip.Items.OfType<TypeToolStripButton>().ForEach(b => b.Enabled = enabled);
+			var enabled = selectedNodes.Count > 0 && !nodeIsClass && !isBitsContainer;
+			Type sbt = typeof(SingleBitNode);
+			toolStrip.Items.OfType<TypeToolStripButton>().ForEach(b =>
+			{
+				if (b.Value == sbt)
+					b.Enabled = isBitsContainer;
+				else
+					b.Enabled = enabled;
+
+			}
+			);
+		}
+
+		public void RebuildToolbarButtons()
+		{
+			// Remove all node type buttons
+			var nodeTypeSeparatorIndex = toolStrip.Items.IndexOf(nodeTypesToolStripSeparator);
+			while (toolStrip.Items.Count > nodeTypeSeparatorIndex + 1)
+			{
+				toolStrip.Items.RemoveAt(nodeTypeSeparatorIndex + 1);
+			}
+
+			// Rebuild node type buttons
+			toolStrip.Items.AddRange(NodeTypesBuilder.CreateToolStripButtons(ReplaceSelectedNodesWithType).ToArray());
+		}
+
+		public void RebuildTypeChangeDropDownItems()
+		{
+			changeTypeToolStripMenuItem.DropDownItems.Clear();
+			changeTypeToolStripMenuItem.DropDownItems.AddRange(NodeTypesBuilder.CreateToolStripMenuItems(ReplaceSelectedNodesWithType, false).ToArray());
 		}
 
 		private void memoryViewControl_ChangeClassTypeClick(object sender, NodeClickEventArgs e)
@@ -879,6 +1044,16 @@ namespace ReClassNET.Forms
 						if (!refNode.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(e.Node.GetParentClass(), selectedClassNode))
 						{
 							refNode.ChangeInnerNode(selectedClassNode);
+						}
+						else if (refNode is PointerNode pn)
+						{
+							if (pn.InnerNode is ClassInstanceNode cn)
+							{
+								if (!cn.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(cn.GetParentClass(), selectedClassNode))
+								{
+									cn.ChangeInnerNode(selectedClassNode);
+								}
+							}
 						}
 					}
 				}
@@ -943,6 +1118,17 @@ namespace ReClassNET.Forms
 			}
 
 			ShowPartialCodeGeneratorForm(new[] { classNode });
+		}
+
+		private void showCodeOfClassToolStripMenuItem3_Click(object sender, EventArgs e)
+		{
+			var classNode = projectView.SelectedClass;
+			if (classNode == null)
+			{
+				return;
+			}
+
+			ShowPartialCodeGeneratorForm(new[] { classNode }, true);
 		}
 
 		private void enableHierarchyViewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1027,7 +1213,7 @@ namespace ReClassNET.Forms
 		{
 			var process = Program.RemoteProcess;
 
-			var classNode = CurrentClassNode;
+			var classNode = (args.Node as ClassNode) ?? CurrentClassNode;
 			if (classNode != null)
 			{
 				memoryViewBuffer.Size = classNode.MemorySize;
@@ -1050,6 +1236,74 @@ namespace ReClassNET.Forms
 				args.Node = classNode;
 				args.BaseAddress = address;
 			}
+		}
+		
+		private void initClassToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var selectedNodes = memoryViewControl.GetSelectedNodes();
+			var node = selectedNodes.FirstOrDefault()?.Node;
+			if (node == null || !(node is ClassNode))
+			{
+				return;
+			}
+
+			var cmd = new UndoablePeriodCommand("InitClassFromRTTI");
+			CommandQueueManagerSingleton.GetInstance().BeginUndoablePeriod(cmd);
+			memoryViewControl.InitCurrentClassFromRTTI(node as ClassNode);
+			CommandQueueManagerSingleton.GetInstance().EndUndoablePeriod(cmd);
+		}
+
+
+		private void SetStateOfUndoRedoButtons()
+		{
+			undoToolbarMenuItem.Enabled = CommandQueueManagerSingleton.GetInstance().CanUndo(Program.CommandQueueID);
+			redoToolbarMenuItem.Enabled = CommandQueueManagerSingleton.GetInstance().CanDo(Program.CommandQueueID);
+		}
+
+
+		private void OnCommandQueueActionPerformed(object sender, CommandQueueActionPerformedEventArgs e)
+		{
+			SetStateOfUndoRedoButtons();
+		}
+
+
+		private void undoToolbarMenuItem_Click(object sender, EventArgs e)
+		{
+			CommandQueueManagerSingleton.GetInstance().UndoLastCommand();
+		}
+
+
+		private void redoToolbarMenuItem_Click(object sender, EventArgs e)
+		{
+			CommandQueueManagerSingleton.GetInstance().RedoLastCommand();
+		}
+
+		private void searchClassValuesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var node = memoryViewControl.GetSelectedNodes().Select(s => s.Node).FirstOrDefault();
+			if (!(node is ClassNode classNode))
+			{
+				return;
+			}
+
+			var process = Program.RemoteProcess;
+			IntPtr startAddress;
+
+			try
+			{
+				startAddress = process.ParseAddress(classNode.AddressFormula);
+			}
+			catch (ParseException)
+			{
+				startAddress = IntPtr.Zero;
+			}
+
+			var stopAddress = startAddress.ToInt64() + classNode.MemorySize;
+
+			var scanner = new ScannerForm(Program.RemoteProcess);
+			scanner.StartAddressText = startAddress.ToString("X");
+			scanner.StopAddressText = stopAddress.ToString("X");
+			scanner.Show();
 		}
 	}
 }

@@ -29,6 +29,7 @@ namespace ReClassNET.Forms
 		private volatile bool acceptNewRecords = true;
 
 		public event StopEventHandler Stop;
+		
 
 		public FoundCodeForm(RemoteProcess process, IntPtr address, HardwareBreakpointTrigger trigger)
 		{
@@ -37,7 +38,6 @@ namespace ReClassNET.Forms
 			this.process = process;
 
 			InitializeComponent();
-
 			foundCodeDataGridView.AutoGenerateColumns = false;
 			infoTextBox.Font = new Font(FontFamily.GenericMonospace, infoTextBox.Font.Size);
 

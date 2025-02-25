@@ -16,16 +16,20 @@ using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 using ReClassNET.UI;
+using SD.Tools.Algorithmia.Commands;
 
 namespace ReClassNET.Forms
 {
 	public partial class MainForm
 	{
-		public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses)
+		public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses, bool csharp = false)
 		{
 			Contract.Requires(partialClasses != null);
 
-			ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping));
+			if (csharp)
+				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CSharpCodeGenerator());
+			else
+				ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping, Program.Settings.CppGeneratorShowOffset, Program.Settings.CppGeneratorShowPadding));
 		}
 
 		public void ShowCodeGeneratorForm(ICodeGenerator generator)
@@ -69,6 +73,13 @@ namespace ReClassNET.Forms
 			Program.RemoteProcess.UpdateProcessInformations();
 
 			Program.Settings.LastProcess = Program.RemoteProcess.UnderlayingProcess.Name;
+		}
+
+		public void OpenDumpFile(String dumpFilePath)
+		{
+			Contract.Requires(dumpFilePath != null);
+
+			Program.RemoteProcess.OpenDumpFile(dumpFilePath);
 		}
 
 		/// <summary>Sets the current project.</summary>
@@ -151,7 +162,10 @@ namespace ReClassNET.Forms
 			var node = memoryViewControl.GetSelectedNodes().Select(h => h.Node).FirstOrDefault();
 			if (node == null)
 			{
-				return;
+				node = CurrentClassNode;
+
+				if (node == null)
+					return;
 			}
 
 			(node as BaseContainerNode ?? node.GetParentContainer())?.AddBytes(bytes);
@@ -207,11 +221,39 @@ namespace ReClassNET.Forms
 			return null;
 		}
 
+		public static string ShowOpenDumpFileDialog()
+		{
+			using var ofd = new OpenFileDialog
+			{
+				CheckFileExists = true,
+				Filter = $"Crash Dump Files |*.dmp;*.hdmp;*.mdmp;*.kdmp"
+			};
+
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				return ofd.FileName;
+			}
+
+			return null;
+		}
+
+		public static string ShowOpenCppFileDialog()
+		{
+			using var ofd = new OpenFileDialog();
+			ofd.CheckFileExists = true;
+			ofd.Filter = $@"Cpp files |*.cpp;*.h";
+			return ofd.ShowDialog() == DialogResult.OK ? ofd.FileName : null;
+		}
+
 		/// <summary>Loads the file as a new project.</summary>
 		/// <param name="path">Full pathname of the file.</param>
 		public void LoadProjectFromPath(string path)
 		{
 			Contract.Requires(path != null);
+
+			CommandQueueManagerSingleton.GetInstance().ResetActiveCommandQueue();
+			CommandQueueManagerSingleton.GetInstance().BeginNonUndoablePeriod();		// we don't want to trigger undo/redo activity while loading
+			CommandQueueManagerSingleton.GetInstance().RaiseEvents = false;
 
 			var project = new ReClassNetProject();
 
@@ -224,6 +266,10 @@ namespace ReClassNET.Forms
 			}
 
 			SetProject(project);
+
+			// Done loading, resume undo/redo activity
+			CommandQueueManagerSingleton.GetInstance().RaiseEvents = true;
+			CommandQueueManagerSingleton.GetInstance().EndNonUndoablePeriod();
 		}
 
 		/// <summary>Loads the file into the given project.</summary>
@@ -299,6 +345,40 @@ namespace ReClassNET.Forms
 						.GroupWhile((s1, s2) => s1.Node.Offset + s1.Node.MemorySize == s2.Node.Offset)
 				});
 
+			BaseNode innerType = null;
+			if (type == typeof(PointerNode))
+			{
+				var noneClass = new ClassNode(false)
+				{
+					Name = "None"
+				};
+
+				var baseTypes = new ClassNode(false)
+				{
+					Name = @"Base type..."
+				};
+
+				using var csf = new ClassSelectionForm(currentProject.Classes.OrderBy(c => c.Name).Prepend(noneClass).Prepend(baseTypes));
+
+				if (csf.ShowDialog() == DialogResult.OK && csf.SelectedClass != noneClass)
+				{
+					if (csf.SelectedClass == baseTypes)
+					{
+						using var baseTypeForm = new TypeSelectionForm();
+						if (baseTypeForm.ShowDialog() == DialogResult.OK)
+						{
+							innerType = baseTypeForm.SelectedType;
+						}
+					}
+					else
+					{
+						innerType = csf.SelectedClass;
+					}
+				}
+
+			}
+
+
 			foreach (var containerPartitions in hotSpotPartitions)
 			{
 				containerPartitions.Container.BeginUpdate();
@@ -310,10 +390,70 @@ namespace ReClassNET.Forms
 					{
 						var selected = hotSpotsToReplace.Dequeue();
 
-						var node = BaseNode.CreateInstanceFromType(type);
+						// Use a single command here to wrap all state changes into one single undoable object, so everything gets undone/redone in 1 go
+						var cmd = new UndoablePeriodCommand("Replace node");
+						CommandQueueManagerSingleton.GetInstance().BeginUndoablePeriod(cmd);
+						var node = BaseNode.CreateInstanceFromType(type, innerType == null);
+
+						if (containerPartitions.Container is BitFieldNode && !containerPartitions.Container.CanHandleChildNode(node))
+							break;
 
 						var createdNodes = new List<BaseNode>();
 						containerPartitions.Container.ReplaceChildNode(selected.Node, node, ref createdNodes);
+
+						if (innerType != null)
+						{
+							if (innerType is ClassNode)
+							{
+								var classInstanceNode = (ClassInstanceNode)BaseNode.CreateInstanceFromType(typeof(ClassInstanceNode), false);
+								classInstanceNode.ChangeInnerNode(innerType);
+								var rootWrapperNode = node.GetRootWrapperNode();
+								rootWrapperNode.ChangeInnerNode(classInstanceNode);
+							}
+							else
+							{
+								var rootWrapperNode = node.GetRootWrapperNode();
+								rootWrapperNode.ChangeInnerNode(innerType);
+							}
+						}
+
+						if (node is PointerNode ptrNode)
+						{
+							var vtable = selected.Process.ReadRemoteIntPtr(selected.Address);
+							vtable = selected.Process.ReadRemoteIntPtr(vtable);
+							var rtti = selected.Process.ReadRemoteRuntimeTypeInformation(vtable);
+							if (rtti != null)
+							{
+								var classInsNode = (ptrNode.InnerNode as ClassInstanceNode);
+								var className = rtti.Split(new[] { " : " }, StringSplitOptions.None)[0];
+								ptrNode.Name = "m_p" + className;
+
+								var existedClass = currentProject.Classes.Where(c => c.Name.IndexOf(className, StringComparison.Ordinal) >= 0).ToList();
+								if (existedClass.Count > 0)
+								{
+									var selectedClassNode = existedClass[0];
+									if (classInsNode.CanChangeInnerNodeTo(selectedClassNode))
+									{
+										if (!classInsNode.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(classInsNode.GetParentClass(), selectedClassNode))
+										{
+											var oldClassNode = classInsNode.InnerNode as ClassNode;
+											classInsNode.ChangeInnerNode(selectedClassNode);
+											currentProject.Remove(oldClassNode);
+										}
+									}
+								}
+								else
+								{
+									classInsNode.InnerNode.Name = className;
+
+									var classNode = classInsNode.InnerNode as ClassNode;
+									var vtableNode = new VirtualMethodTableNode();
+									vtableNode.Initialize();
+									classNode.ReplaceChildNode(classNode.Nodes[0], vtableNode, ref createdNodes);
+									vtableNode.Name = "VTable_" + className;
+								}
+							}
+						}
 
 						node.IsSelected = true;
 
@@ -329,6 +469,8 @@ namespace ReClassNET.Forms
 								hotSpotsToReplace.Enqueue(new MemoryViewControl.SelectedNodeInfo(createdNode, selected.Process, selected.Memory, selected.Address + createdNode.Offset - node.Offset, selected.Level));
 							}
 						}
+						// Mark the end of the activities that have to be tracked with this single command
+						CommandQueueManagerSingleton.GetInstance().EndUndoablePeriod(cmd);
 					}
 				}
 
@@ -545,7 +687,7 @@ namespace ReClassNET.Forms
 			ClearSelection();
 		}
 
-		private bool IsCycleFree(ClassNode parent, ClassNode node)
+		public bool IsCycleFree(ClassNode parent, ClassNode node)
 		{
 			if (ClassUtil.IsCyclicIfClassIsAccessibleFromParent(parent, node, CurrentProject.Classes))
 			{

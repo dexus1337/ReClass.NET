@@ -24,7 +24,6 @@ namespace ReClassNET
 			this.classesView = classesView;
 
 			InitializeComponent();
-
 			sectionsDataGridView.AutoGenerateColumns = false;
 
 			if (process.IsValid)

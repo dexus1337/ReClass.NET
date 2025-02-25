@@ -36,6 +36,16 @@ namespace ReClassNET.Forms
 		private CancellationTokenSource cts;
 
 		private string addressFilePath;
+		
+		public string StartAddressText
+		{
+			set => startAddressTextBox.Text = value;
+		}
+
+		public string StopAddressText
+		{
+			set => stopAddressTextBox.Text = value;
+		}
 
 		public ScannerForm(RemoteProcess process)
 		{

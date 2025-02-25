@@ -45,6 +45,7 @@ namespace ReClassNET.Controls
 			if (Visible)
 			{
 				BackColor = Program.Settings.BackgroundColor;
+				ForeColor = Program.Settings.EditedTextColor;
 
 				if (currentHotSpot != null)
 				{
@@ -52,6 +53,86 @@ namespace ReClassNET.Controls
 					Select(0, TextLength);
 				}
 			}
+		}
+
+		protected override bool ProcessCmdKey(ref Message m, Keys keyData)
+		{	
+			if (!Program.Settings.EnhancedCaret)
+			{
+				// Checks if we're on some address.
+				var selectionPredicate = (char c) =>
+				{
+					c = Char.ToLower(c);
+					return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || c == 'x';
+				};
+
+				if (keyData == (Keys.Control | Keys.Left))
+				{
+					if (SelectionStart > 0 && !string.IsNullOrEmpty(Text))
+					{
+						var atEnd = SelectionStart == Text.Length;
+						var selectionInText = Math.Min(SelectionStart, Text.Length - 1);
+						var currChar = () => Text[selectionInText - 1];
+						bool currMatchesPredicate = (atEnd && selectionPredicate(Text[selectionInText])) || selectionPredicate(currChar());
+
+						if (currMatchesPredicate)
+						{
+							while (selectionInText > 0 && selectionPredicate(currChar()))
+							{
+								selectionInText -= 1;
+							}
+						}
+						else
+						{
+							selectionInText -= 1;
+							while (selectionInText > 0 && !selectionPredicate(currChar()))
+							{
+								selectionInText -= 1;
+							}
+						}
+
+						selectionInText = Math.Max(selectionInText, 0);
+						SelectionStart = selectionInText;
+						SelectionLength = 0;
+
+						return true;
+					}
+				}
+				else if (keyData == (Keys.Control | Keys.Right))
+				{
+					var maxSelectionStart = Text.Length;
+					if (!string.IsNullOrEmpty(Text) && SelectionStart != maxSelectionStart)
+					{
+						var selectionInText = Math.Min(SelectionStart, Text.Length - 1);
+						var currChar = () => Text[selectionInText];
+						bool currMatchesPredicate = selectionPredicate(currChar());
+
+						if (currMatchesPredicate)
+						{
+							while (selectionInText < maxSelectionStart && selectionPredicate(currChar()))
+							{
+								selectionInText += 1;
+							}
+						}
+						else
+						{
+							selectionInText += 1;
+					        	while (selectionInText < maxSelectionStart && !selectionPredicate(currChar()))
+							{
+								selectionInText += 1;
+							}
+						}
+
+						selectionInText = Math.Min(selectionInText, maxSelectionStart);
+						SelectionStart = selectionInText;
+						SelectionLength = 0;
+
+						return true;
+					}
+				}
+			}
+
+			return base.ProcessCmdKey(ref m, keyData);
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

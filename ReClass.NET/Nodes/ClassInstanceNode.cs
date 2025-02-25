@@ -8,7 +8,7 @@ namespace ReClassNET.Nodes
 	public class ClassInstanceNode : BaseClassWrapperNode
 	{
 		public override int MemorySize => InnerNode.MemorySize;
-
+		public string InstanceName = "Instance";
 		protected override bool PerformCycleCheck => true;
 
 		public override void GetUserInterfaceInfo(out string name, out Image icon)
@@ -34,14 +34,15 @@ namespace ReClassNET.Nodes
 
 			var tx = x;
 			x = AddAddressOffset(context, x, y);
-
-			x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, "Instance") + context.Font.Width;
+			if (InstanceName.Length > 0)
+				x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, InstanceName) + context.Font.Width;
 			if (!IsWrapped)
 			{
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name) + context.Font.Width;
 			}
-			x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<{InnerNode.Name}>") + context.Font.Width;
-			x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
+			x = AddText(context, x, y, context.Settings.ClassColor, HotSpot.NoneId, $"<{InnerNode.Name}>") + context.Font.Width; // ValueColor
+			if (ShowWrappedTypeChangerIcon)
+				x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
 
 			x = AddComment(context, x, y);
 

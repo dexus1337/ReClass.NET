@@ -13,6 +13,8 @@ namespace ReClassNET.Forms
 	{
 		private const string NoPreviousProcess = "No previous process";
 
+		public NetworkingForm networkingForm;
+
 		private static readonly string[] commonProcesses = 
 		{
 			"[system process]", "system", "svchost.exe", "services.exe", "wininit.exe",
@@ -134,6 +136,17 @@ namespace ReClassNET.Forms
 				filter = $"name like '%{filter}%' or path like '%{filter}%' or CONVERT(id, System.String) like '%{filter}%'";
 			}
 			((DataTable)processDataGridView.DataSource).DefaultView.RowFilter = filter;
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			networkingForm = new NetworkingForm();
+			networkingForm.ShowDialog();
+
+			if (networkingForm.mConnected == true)
+			{
+				RefreshProcessList();
+			}
 		}
 	}
 }

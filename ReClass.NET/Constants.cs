@@ -1,4 +1,4 @@
-﻿namespace ReClassNET
+namespace ReClassNET
 {
 	public class Constants
 	{
@@ -6,17 +6,17 @@
 
 		public const string ApplicationExecutableName = ApplicationName + ".exe";
 
-		public const string ApplicationVersion = "1.2";
+		public const string ApplicationVersion = "1.2.1";
 
 		public const string LauncherExecutableName = ApplicationName + "_Launcher.exe";
 
 		public const string Author = "KN4CK3R";
 
-		public const string HomepageUrl = "https://github.com/ReClassNET/ReClass.NET";
+		public const string HomepageUrl = "https://github.com/TetzkatLipHoka/ReClass.NET";
 
-		public const string HelpUrl = "https://github.com/ReClassNET/ReClass.NET/issues";
+		public const string HelpUrl = "https://github.com/TetzkatLipHoka/ReClass.NET/issues";
 
-		public const string PluginUrl = "https://github.com/ReClassNET/ReClass.NET#plugins";
+		public const string PluginUrl = "https://github.com/TetzkatLipHoka/ReClass.NET#plugins";
 
 #if RECLASSNET64
 		public const string Platform = "x64";
@@ -38,6 +38,15 @@
 
 			public const string FileExtRegister = "registerfileext";
 			public const string FileExtUnregister = "unregisterfileext";
+		}
+
+		/// <summary>
+		/// Change type for commandified members in classes which is used to signal what change occurred exactly. As we don't use this feature of the commandified
+		/// class, this enum is defined to simply signal 'no specific change other than it changed' happened. 
+		/// </summary>
+		public enum GeneralPurposeChangeType
+		{
+			None
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ReClassNET.Nodes
 {
@@ -6,6 +6,8 @@ namespace ReClassNET.Nodes
 	{
 		/// <summary>Gets or sets the inner node.</summary>
 		public BaseNode InnerNode { get; private set; }
+
+		public bool ShowWrappedTypeChangerIcon = true;
 
 		/// <summary>Gets signaled if the inner node was changed.</summary>
 		public event NodeEventHandler InnerNodeChanged;
@@ -22,9 +24,9 @@ namespace ReClassNET.Nodes
 
 		/// <summary>Changes the inner node.</summary>
 		/// <param name="node">The new node.</param>
-		public void ChangeInnerNode(BaseNode node)
+		public void ChangeInnerNode(BaseNode node, bool force = false)
 		{
-			if (!CanChangeInnerNodeTo(node))
+			if (!force && !CanChangeInnerNodeTo(node))
 			{
 				throw new InvalidOperationException($"Can't change inner node to '{node?.GetType().ToString() ?? "null"}'");
 			}
@@ -37,11 +39,14 @@ namespace ReClassNET.Nodes
 				{
 					node.ParentNode = this;
 				}
-
-				InnerNodeChanged?.Invoke(this);
-
-				GetParentContainer()?.ChildHasChanged(this);
+				NotifyChildChanged();
 			}
+		}
+		public void NotifyChildChanged()
+		{
+			InnerNodeChanged?.Invoke(this);
+
+			GetParentContainer()?.ChildHasChanged(this);
 		}
 
 		/// <summary>

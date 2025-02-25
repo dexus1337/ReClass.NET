@@ -1,3 +1,5 @@
+// File: NodeTypesBuilder.cs
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -5,8 +7,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ReClassNET.Controls;
+using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Nodes;
 using ReClassNET.Plugins;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ReClassNET.UI
 {
@@ -14,6 +18,7 @@ namespace ReClassNET.UI
 	{
 		private static readonly List<Type[]> defaultNodeTypeGroupList = new List<Type[]>();
 		private static readonly Dictionary<Plugin, IReadOnlyList<Type>> pluginNodeTypes = new Dictionary<Plugin, IReadOnlyList<Type>>();
+		private static readonly HashSet<Type> nodeTypesWhichCanOverflowInToolbar;
 
 		static NodeTypesBuilder()
 		{
@@ -21,12 +26,33 @@ namespace ReClassNET.UI
 			defaultNodeTypeGroupList.Add(new[] { typeof(NIntNode), typeof(Int64Node), typeof(Int32Node), typeof(Int16Node), typeof(Int8Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(NUIntNode), typeof(UInt64Node), typeof(UInt32Node), typeof(UInt16Node), typeof(UInt8Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(BoolNode), typeof(BitFieldNode), typeof(EnumNode) });
-			defaultNodeTypeGroupList.Add(new[] { typeof(FloatNode), typeof(DoubleNode) });
+			defaultNodeTypeGroupList.Add(new[] { typeof(FloatNode), typeof(DoubleNode), typeof(CustomNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(Vector4Node), typeof(Vector3Node), typeof(Vector2Node), typeof(Matrix4x4Node), typeof(Matrix3x4Node), typeof(Matrix3x3Node) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(Utf8TextNode), typeof(Utf8TextPtrNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(PointerNode), typeof(ArrayNode), typeof(UnionNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(ClassInstanceNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(VirtualMethodTableNode), typeof(FunctionNode), typeof(FunctionPtrNode) });
+
+			// define the node types which can overflow in the toolbar if the window is too narrow. Add types here which aren't used that much 
+			nodeTypesWhichCanOverflowInToolbar = new HashSet<Type> { typeof(NIntNode), typeof(NUIntNode), typeof(BitFieldNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode) } ;
+		}
+
+		public static List<Type[]> GetNodeTypes()
+		{
+			return defaultNodeTypeGroupList;
+		}
+
+		public static List<BaseNode> GetNodes()
+		{
+			var nodes = (
+				from nodeTypeGroup in defaultNodeTypeGroupList
+				from nodeType in nodeTypeGroup
+				select BaseNode.CreateInstanceFromType(nodeType, false)).ToList();
+			foreach (var node in nodes)
+			{
+				node.Name = node.GetType().Name;
+			}
+			return nodes;
 		}
 
 		public static void AddPluginNodeGroup(Plugin plugin, IReadOnlyList<Type> nodeTypes)
@@ -57,14 +83,16 @@ namespace ReClassNET.UI
 
 			return CreateToolStripItems(t =>
 			{
-				GetNodeInfoFromType(t, out var label, out var icon);
+				GetNodeInfoFromType(t, out var label, out var icon, out var shortcutKeys);
 
-				var item = new TypeToolStripButton
+				var item = new TypeToolStripMenuItem
 				{
 					Value = t,
 					ToolTipText = label,
 					DisplayStyle = ToolStripItemDisplayStyle.Image,
-					Image = icon
+					Image = icon,
+					ShortcutKeys = shortcutKeys,
+					Overflow = nodeTypesWhichCanOverflowInToolbar.Contains(t) ? ToolStripItemOverflow.AsNeeded : ToolStripItemOverflow.Never,
 				};
 				item.Click += clickHandler;
 				return item;
@@ -74,7 +102,7 @@ namespace ReClassNET.UI
 				Image = p.Icon
 			}, t =>
 			{
-				GetNodeInfoFromType(t, out var label, out var icon);
+				GetNodeInfoFromType(t, out var label, out var icon, out var shortcutKeys);
 
 				var item = new TypeToolStripMenuItem
 				{
@@ -95,13 +123,14 @@ namespace ReClassNET.UI
 
 			var items = CreateToolStripItems(t =>
 			{
-				GetNodeInfoFromType(t, out var label, out var icon);
+				GetNodeInfoFromType(t, out var label, out var icon, out var shortcutKeys);
 
 				var item = new TypeToolStripMenuItem
 				{
 					Value = t,
 					Text = label,
-					Image = icon
+					Image = icon,
+					ShortcutKeys = shortcutKeys,
 				};
 				item.Click += clickHandler;
 				return item;
@@ -166,9 +195,36 @@ namespace ReClassNET.UI
 			return items;
 		}
 
-		private static void GetNodeInfoFromType(Type nodeType, out string label, out Image icon)
+		public static void UpdateToolStripItems(ToolStripItemCollection Items)
+		{
+			Contract.Requires(Items != null);
+
+			foreach (ToolStripItem toolStripItem in Items)
+			{
+				if (toolStripItem is TypeToolStripMenuItem typeToolStripMenuItem)
+				{
+					if (typeToolStripMenuItem.Value != null)
+					{
+						if (typeToolStripMenuItem.Value.IsSubclassOf(typeof(BaseNode)))
+						{
+							NodeTypesBuilder.GetNodeInfoFromType(typeToolStripMenuItem.Value, out var label, out var icon, out var shortcutKeys);
+							typeToolStripMenuItem.ShortcutKeys = shortcutKeys;
+						}
+					}
+				}
+			}
+		}
+
+		private static void GetNodeInfoFromType(Type nodeType, out string label, out Image icon, out Keys shortcutKeys)
 		{
 			Contract.Requires(nodeType != null);
+
+			var rawShortcut = Program.Settings.GetShortcutKeyForNodeType(nodeType);
+
+			// Only set ShortcutKeys for shortcuts with modifiers
+			shortcutKeys = (rawShortcut & (Keys.Control | Keys.Alt | Keys.Shift)) != 0
+				? rawShortcut
+				: Keys.None;
 
 			var node = BaseNode.CreateInstanceFromType(nodeType, false);
 			if (node == null)

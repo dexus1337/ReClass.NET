@@ -306,15 +306,7 @@ namespace ReClassNET.Controls
 					}
 					else if (hotSpot.Type == HotSpotType.ChangeClassType || hotSpot.Type == HotSpotType.ChangeWrappedType || hotSpot.Type == HotSpotType.ChangeEnumType)
 					{
-						var handler = hotSpot.Type switch
-						{
-							HotSpotType.ChangeClassType => ChangeClassTypeClick,
-							HotSpotType.ChangeWrappedType => ChangeWrappedTypeClick,
-							HotSpotType.ChangeEnumType => ChangeEnumTypeClick
-						};
-
-						handler?.Invoke(this, new NodeClickEventArgs(hitObject, hotSpot.Address, hotSpot.Memory, e.Button, e.Location));
-
+						InvokeTypeChangeEvent(hotSpot.Type, new NodeClickEventArgs(hitObject, hotSpot.Address, hotSpot.Memory, e.Button, e.Location));
 						break;
 					}
 				}
@@ -327,7 +319,17 @@ namespace ReClassNET.Controls
 
 			base.OnMouseClick(e);
 		}
+		public void InvokeTypeChangeEvent(HotSpotType tp, NodeClickEventArgs e)
+		{
+			var handler = tp switch
+			{
+				HotSpotType.ChangeClassType => ChangeClassTypeClick,
+				HotSpotType.ChangeWrappedType => ChangeWrappedTypeClick,
+				HotSpotType.ChangeEnumType => ChangeEnumTypeClick
+			};
 
+			handler?.Invoke(this, e);
+		}
 		protected override void OnMouseDoubleClick(MouseEventArgs e)
 		{
 			Contract.Requires(e != null);
@@ -470,7 +472,7 @@ namespace ReClassNET.Controls
 
 						return true;
 					}
-					if ((key == Keys.Down || key == Keys.Up) && selectionCaret != null && selectionAnchor != null)
+					if ((key == Keys.Down || key == Keys.Up || key == Keys.Home || key == Keys.End) && selectionCaret != null && selectionAnchor != null)
 					{
 						HotSpot toSelect;
 						bool isAtEnd;
@@ -489,7 +491,7 @@ namespace ReClassNET.Controls
 							toSelect = temp.FirstOrDefault();
 							isAtEnd = toSelect != null && toSelect == temp.LastOrDefault();
 						}
-						else
+						else if (key == Keys.Up)
 						{
 							var temp = query
 								.TakeWhile(h => h.Node != selectionCaret.Node)
@@ -498,7 +500,23 @@ namespace ReClassNET.Controls
 							toSelect = temp.LastOrDefault();
 							isAtEnd = toSelect != null && toSelect == temp.FirstOrDefault();
 						}
+						else if (key == Keys.Home)
+						{
+							var temp = query
+								.Skip(1) // skip top-level class node
+								.ToList();
 
+							toSelect = temp.FirstOrDefault();
+							isAtEnd = toSelect != null && toSelect == temp.FirstOrDefault();
+						}
+						else
+						{
+							var temp = query.ToList();
+
+							toSelect = temp.LastOrDefault();
+							isAtEnd = toSelect != null && toSelect == temp.LastOrDefault();
+						}
+ 
 						if (toSelect != null && !(toSelect.Node is ClassNode))
 						{
 							if (modifier != Keys.Shift)
@@ -703,6 +721,24 @@ namespace ReClassNET.Controls
 			hotSpotEditBox.Hide();
 
 			VerticalScroll.Value = VerticalScroll.Minimum;
+		}
+		
+		public void InitCurrentClassFromRTTI(ClassNode classNode)
+		{
+			var args = new DrawContextRequestEventArgs { Node = classNode };
+
+			var requestHandler = DrawContextRequested;
+			requestHandler?.Invoke(this, args);
+			var view = new DrawContext
+					   {
+						   Settings = args.Settings,
+						   Process = args.Process,
+						   Memory = args.Memory,
+						   CurrentTime = args.CurrentTime,
+						   Address = args.BaseAddress,
+						   Level = 0,
+					   };
+			classNode.InitFromRTTI(view);
 		}
 	}
 }

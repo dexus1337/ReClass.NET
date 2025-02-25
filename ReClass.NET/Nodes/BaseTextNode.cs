@@ -52,9 +52,9 @@ namespace ReClassNET.Nodes
 			{
 				x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name);
 			}
-			x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "[");
+			x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NoneId, "["); // IndexColor
 			x = AddText(context, x, y, context.Settings.IndexColor, 0, length.ToString());
-			x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "]") + context.Font.Width;
+			x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NoneId, "]") + context.Font.Width; // IndexColor
 
 			x = AddText(context, x, y, context.Settings.TextColor, HotSpot.NoneId, "= '");
 			x = AddText(context, x, y, context.Settings.TextColor, 1, text.LimitLength(150));

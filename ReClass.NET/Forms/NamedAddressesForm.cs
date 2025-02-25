@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -48,6 +48,11 @@ namespace ReClassNET.Forms
 		private void namedAddressesListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			removeAddressIconButton.Enabled = namedAddressesListBox.SelectedIndex != -1;
+			if (namedAddressesListBox.SelectedItem is BindingDisplayWrapper<KeyValuePair<IntPtr, string>> namedAddress)
+			{
+				addressTextBox.Text = namedAddress.Value.Key.ToString("X16");
+				nameTextBox.Text = namedAddress.Value.Value.ToString();
+			}
 		}
 
 		private void addAddressIconButton_Click(object sender, EventArgs e)

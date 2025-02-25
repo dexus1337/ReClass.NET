@@ -18,6 +18,10 @@
     <TargetFrameworkProfile />
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Workaround for issue https://github.com/microsoft/ClangSharp/issues/129 -->
+    <RuntimeIdentifier>$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
@@ -109,23 +113,58 @@
     <ApplicationIcon>Resources\Icon\ReClassNet.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClangSharp, Version=16.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClangSharp.16.0.0\lib\netstandard2.0\ClangSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ClangSharp.Interop, Version=16.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClangSharp.Interop.16.0.0\lib\netstandard2.0\ClangSharp.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="ColorCode, Version=1.0.1.62759, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\ColorCode.dll</HintPath>
+    </Reference>
+    <Reference Include="CppAst, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CppAst.0.14.0\lib\netstandard2.0\CppAst.dll</HintPath>
     </Reference>
     <Reference Include="Dia2Lib">
       <HintPath>..\Dependencies\Dia2Lib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ExceptionMessageBox, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Microsoft.ExceptionMessageBox.dll</HintPath>
     </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="SD.Tools.Algorithmia, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.Tools.Algorithmia.1.4.0\lib\net452\SD.Tools.Algorithmia.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.Tools.BCLExtensions, Version=1.2.2.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.Tools.BCLExtensions.1.2.2\lib\net452\SD.Tools.BCLExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -145,12 +184,15 @@
     <Compile Include="AddressParser\Token.cs" />
     <Compile Include="AddressParser\Tokenizer.cs" />
     <Compile Include="CodeGenerator\Language.cs" />
+    <Compile Include="ColorPreset.cs" />
     <Compile Include="Core\CoreFunctionsManager.cs" />
     <Compile Include="Core\DataExchange.cs" />
     <Compile Include="Core\ICoreProcessFunctions.cs" />
     <Compile Include="Core\IInternalCoreFunctions.cs" />
     <Compile Include="Core\InternalCoreFunctions.cs" />
     <Compile Include="Core\NativeCoreWrapper.cs" />
+    <Compile Include="DarkModeCS.cs" />
+    <Compile Include="DataExchange\IDA\CppClassImporter.cs" />
     <Compile Include="DataExchange\ReClass\ReClassClipboard.cs" />
     <Compile Include="DataExchange\ReClass\ReClassNetFile.Constants.cs" />
     <Compile Include="DataExchange\ReClass\ReClassNetFile.Read.cs" />
@@ -179,6 +221,18 @@
     <Compile Include="Extensions\PointExtension.cs" />
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\XAttributeExtensions.cs" />
+    <Compile Include="FlatComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FlatProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FlatTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\DarkModeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\EnumEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -196,6 +250,15 @@
     </Compile>
     <Compile Include="Forms\EnumSelectionForm.Designer.cs">
       <DependentUpon>EnumSelectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HotkeyInputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainForm.Functions.cs">
       <SubType>Form</SubType>
@@ -231,11 +294,23 @@
     <Compile Include="Forms\InputCorrelatorForm.Designer.cs">
       <DependentUpon>InputCorrelatorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NetworkingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkingForm.Designer.cs">
+      <DependentUpon>NetworkingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ScannerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ScannerForm.Designer.cs">
       <DependentUpon>ScannerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TypeSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TypeSelectionForm.Designer.cs">
+      <DependentUpon>TypeSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\KeyboardInput.cs" />
     <Compile Include="Input\KeyboardHotkey.cs" />
@@ -279,11 +354,13 @@
     <Compile Include="Memory\Section.cs" />
     <Compile Include="Memory\SimplePeHeader.cs" />
     <Compile Include="Memory\UnionDataType.cs" />
+    <Compile Include="Messenger.cs" />
     <Compile Include="Native\INativeMethods.cs" />
     <Compile Include="Native\NativeMethods.Unix.cs" />
     <Compile Include="Native\NativeMethods.Windows.cs" />
     <Compile Include="Nodes\ArrayNode.cs" />
     <Compile Include="Nodes\BaseClassWrapperNode.cs" />
+    <Compile Include="Nodes\CustomNode.cs" />
     <Compile Include="Nodes\BaseFunctionNode.cs" />
     <Compile Include="Nodes\BaseWrapperArrayNode.cs" />
     <Compile Include="Nodes\BaseWrapperNode.cs" />
@@ -294,6 +371,7 @@
     <Compile Include="Nodes\NIntNode.cs" />
     <Compile Include="Nodes\PointerNode.cs" />
     <Compile Include="Nodes\NUIntNode.cs" />
+    <Compile Include="Nodes\SingleBitNode.cs" />
     <Compile Include="Nodes\UnionNode.cs" />
     <Compile Include="Project\CppTypeMapping.cs" />
     <Compile Include="Project\EnumDescription.cs" />
@@ -395,6 +473,7 @@
     </Compile>
     <Compile Include="Util\BitString.cs" />
     <Compile Include="Util\CircularBuffer.cs" />
+    <Compile Include="Util\ColorPresetSerializer.cs" />
     <Compile Include="Util\CommandLineArgs.cs" />
     <Compile Include="Util\Conversion\BigEndianBitConverter.cs" />
     <Compile Include="Util\Conversion\EndianBitConverter.cs" />
@@ -561,6 +640,9 @@
     <EmbeddedResource Include="Forms\InputCorrelatorForm.resx">
       <DependentUpon>InputCorrelatorForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkingForm.resx">
+      <DependentUpon>NetworkingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ScannerForm.resx">
       <DependentUpon>ScannerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -602,12 +684,18 @@
     <EmbeddedResource Include="Forms\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TypeSelectionForm.resx">
+      <DependentUpon>TypeSelectionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Debugger\RemoteDebugger.Handler.cs" />
+    <None Include="packages.config" />
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1022,6 +1110,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Images\B16x16_Button_NUInt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\B16x16_Button_AutoName.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Images\B16x16_Button_Custom.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

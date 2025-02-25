@@ -17,3 +17,5 @@ EXPORTS
 	InitializeInput
 	GetPressedKeys
 	ReleaseInput
+	ConnectServer
+	OpenDumpFile

@@ -102,5 +102,40 @@ namespace ReClassNET.Controls
 			rect.Height--;
 			e.Graphics.DrawRectangle(Pens.Black, rect);
 		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+
+			// Ensure colorPanel shows the correct color
+			if (colorPanel != null)
+			{
+				colorPanel.BackColor = color;
+			}
+		}
+
+		// Override this to prevent theme changes from affecting our color display
+		protected override void OnBackColorChanged(EventArgs e)
+		{
+			base.OnBackColorChanged(e);
+
+			// Preserve the color panel's color
+			if (colorPanel != null)
+			{
+				colorPanel.BackColor = color;
+			}
+		}
+
+		// Add this to ensure color is maintained during system events
+		protected override void OnSystemColorsChanged(EventArgs e)
+		{
+			base.OnSystemColorsChanged(e);
+
+			// Restore the correct color
+			if (colorPanel != null)
+			{
+				colorPanel.BackColor = color;
+			}
+		}
 	}
 }

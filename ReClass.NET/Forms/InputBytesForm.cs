@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using ReClassNET.UI;
@@ -8,6 +8,7 @@ namespace ReClassNET.Forms
 	public partial class InputBytesForm : IconForm
 	{
 		private readonly int currentSize;
+		   
 
 		public int Bytes => (int)bytesNumericUpDown.Value;
 
@@ -16,7 +17,6 @@ namespace ReClassNET.Forms
 			this.currentSize = currentSize;
 
 			InitializeComponent();
-
 			bytesNumericUpDown.Maximum = int.MaxValue;
 
 			FormatLabelText(currentSizeLabel, currentSize);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
@@ -21,6 +21,7 @@ namespace ReClassNET.Forms
 		}
 
 		private readonly List<LogItem> items = new List<LogItem>();
+		
 
 		public LogForm()
 		{

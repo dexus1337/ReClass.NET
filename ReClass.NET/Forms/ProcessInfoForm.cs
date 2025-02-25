@@ -19,6 +19,7 @@ namespace ReClassNET.Forms
 
 		/// <summary>The context menu of the sections grid view.</summary>
 		public ContextMenuStrip GridContextMenu => contextMenuStrip;
+		
 
 		public ProcessInfoForm(IProcessReader process)
 		{

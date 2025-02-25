@@ -40,14 +40,24 @@ namespace ReClassNET.Nodes
 					{
 						x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.NoneId, "->") + view.Font.Width;
 						x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.ReadOnlyId, namedAddress) + view.Font.Width;
+
+						if (view.Settings.ShowCommentRtti)
+						{
+							var rtti = view.Process.ReadRemoteRuntimeTypeInformation(view.Process.ReadRemoteIntPtr(ivalue));
+							if (!string.IsNullOrEmpty(rtti))
+							{
+								x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.NoneId, "->") + view.Font.Width;
+								x = AddText(view, x, y, view.Settings.VTableColor, HotSpot.ReadOnlyId, rtti) + view.Font.Width;
+							}
+						}
 					}
 
 					if (view.Settings.ShowCommentRtti)
 					{
-						var rtti = view.Process.ReadRemoteRuntimeTypeInformation(ivalue);
+						var rtti = GetAssociatedRemoteRuntimeTypeInformation(view, ivalue);
 						if (!string.IsNullOrEmpty(rtti))
 						{
-							x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.ReadOnlyId, rtti) + view.Font.Width;
+							x = AddText(view, x, y, view.Settings.VTableColor, HotSpot.ReadOnlyId, rtti) + view.Font.Width; // OffsetColor
 						}
 					}
 
@@ -109,6 +119,11 @@ namespace ReClassNET.Nodes
 			}
 
 			return x;
+		}
+
+		public string GetAssociatedRemoteRuntimeTypeInformation(DrawContext context, IntPtr ivalue)
+		{
+			return context.Process.ReadRemoteRuntimeTypeInformation(ivalue);
 		}
 	}
 }

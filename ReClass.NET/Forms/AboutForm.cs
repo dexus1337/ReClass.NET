@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ReClassNET.UI;
@@ -7,10 +7,12 @@ namespace ReClassNET.Forms
 {
 	public partial class AboutForm : IconForm
 	{
+		
+
 		public AboutForm()
 		{
-			InitializeComponent();
-
+		  InitializeComponent();
+			
 			bannerBox.Icon = Properties.Resources.ReClassNet.ToBitmap();
 			bannerBox.Title = Constants.ApplicationName;
 			bannerBox.Text = $"Version: {Constants.ApplicationVersion}";
